@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-pt" class="scroll-smooth">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -31,14 +31,15 @@
     </script>
 
     <style>
-
-        /* Portal de Negociação (views) */
         .view { display: none; }
         .view.active { display: block; animation: fadeInPortal 0.35s ease; }
-        @keyframes fadeInPortal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInPortal {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         .nav-blur { background: rgba(255, 255, 255, 0.9); backdrop-filter: saturate(180%) blur(20px); }
-        .hero-pattern { 
+        .hero-pattern {
             background-color: #ffffff;
             background-image: radial-gradient(#00264d 0.5px, transparent 0.5px);
             background-size: 24px 24px;
@@ -46,7 +47,7 @@
         }
         .soft-shadow { box-shadow: 0 10px 30px -10px rgba(0, 38, 77, 0.1); }
         .cycle-line { background: repeating-linear-gradient(90deg, #FF6600 0, #FF6600 5px, transparent 5px, transparent 10px); }
-        
+
         @keyframes bounce-slow {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -59,6 +60,11 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
         .whatsapp-pulse { animation: pulse-whatsapp 2s infinite; }
+
+        input[type="date"]::-webkit-calendar-picker-indicator,
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-white text-slate-800 font-sans antialiased text-left">
@@ -78,7 +84,7 @@
                     <span class="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">Gestão e Cobrança</span>
                 </div>
             </div>
-            
+
             <div class="hidden lg:flex items-center space-x-10 text-[10px] font-bold uppercase tracking-widest">
                 <a href="#home" class="text-navy hover:text-accent transition-colors">Início</a>
                 <a href="#ciclo" class="text-navy hover:text-accent transition-colors">O Ciclo</a>
@@ -89,7 +95,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <header id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
         <div class="absolute inset-0 hero-pattern"></div>
         <div class="max-w-7xl mx-auto px-6 relative z-10">
@@ -133,7 +139,7 @@
 
             <div class="relative grid md:grid-cols-4 gap-12">
                 <div class="absolute top-10 left-0 w-full h-px cycle-line hidden md:block opacity-20"></div>
-                
+
                 <div class="relative z-10 group">
                     <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-navy shadow-sm border border-slate-100 mb-8 group-hover:bg-navy group-hover:text-white transition-all duration-500">
                         <i class="fas fa-shield-halved text-2xl"></i>
@@ -173,7 +179,7 @@
     <section id="servicos" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid lg:grid-cols-3 gap-8">
-                
+
                 <div class="lg:row-span-2 bg-navy text-white p-12 rounded-[3rem] flex flex-col justify-between">
                     <div>
                         <h2 class="font-serif text-4xl mb-6 leading-tight italic">Nossa atuação é a extensão do seu faturamento.</h2>
@@ -222,7 +228,7 @@
     <!-- Autoatendimento -->
     <section id="autoatendimento" class="py-24 bg-navy relative overflow-hidden">
         <div class="absolute top-0 right-0 w-1/2 h-full bg-accent/5 -skew-x-12 translate-x-1/2"></div>
-        
+
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="grid lg:grid-cols-2 gap-20 items-center">
                 <div class="text-white">
@@ -237,10 +243,8 @@
                     </ul>
                 </div>
 
-
                 <div class="bg-white rounded-[3rem] p-1 shadow-2xl">
                     <div class="bg-white rounded-[2.8rem] p-8 md:p-10 border border-slate-100">
-                        <!-- Portal de Negociação (integrado ao layout do site) -->
                         <div class="flex items-center justify-between mb-6">
                             <div>
                                 <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 font-sans">Ambiente seguro</p>
@@ -256,7 +260,7 @@
                         <!-- VIEWS -->
                         <div class="view active" id="vStart">
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
-                                Acesse suas ofertas personalizadas informando seu documento.
+                                Informe seus dados para localizarmos seu cadastro e suas pendências com segurança.
                             </p>
 
                             <div class="bg-slate-50 p-2 rounded-2xl flex gap-2 mb-4 border border-slate-100">
@@ -270,12 +274,25 @@
                                 </button>
                             </div>
 
-                            <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00"
-                                class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent text-center font-bold tracking-widest transition font-sans">
+                            <div class="grid gap-4">
+                                <input id="docInput" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00"
+                                    class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent text-center font-bold tracking-widest transition font-sans">
+
+                                <input id="nameInput" type="text" autocomplete="off" placeholder="Nome completo / Razão social"
+                                    class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans">
+
+                                <input id="phoneInput" type="tel" inputmode="numeric" autocomplete="off" placeholder="5511999999999"
+                                    class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans">
+
+                                <input id="emailInput" type="email" autocomplete="off" placeholder="usuario@email.com"
+                                    class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans">
+                            </div>
+
+                            <p id="startError" class="mt-4 text-sm text-red-500 font-semibold hidden font-sans"></p>
 
                             <button id="btnConsultar" type="button"
                                 class="w-full mt-4 bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans flex items-center justify-center gap-2">
-                                Localizar Contratos
+                                Localizar Cadastro
                             </button>
 
                             <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest font-sans text-center">
@@ -307,44 +324,174 @@
                             </p>
                         </div>
 
-                        <div class="view" id="vNext">
-                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Suas Ofertas</h4>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans" id="cardsIntro">
-                                Identificamos as seguintes pendências para negociação:
+                        <div class="view" id="vBlocked">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Acesso temporariamente bloqueado</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
+                                Por segurança, o acesso foi temporariamente bloqueado devido a múltiplas tentativas inválidas.
+                                Tente novamente mais tarde ou entre em contato com nosso atendimento.
                             </p>
-
-                            <div class="grid gap-4 mb-6" id="cardsGrid"></div>
-
-                            <button id="btnAuto" type="button"
+                            <button id="btnBlockedHumano" type="button"
                                 class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
-                                Negociar agora
-                            </button>
-
-                            <button id="btnHumano" type="button"
-                                class="w-full mt-3 bg-white border-2 border-slate-100 text-navy font-bold py-5 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans">
-                                Falar com Atendente
+                                Falar com atendente
                             </button>
                         </div>
 
+                        <div class="view" id="vNext">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Pendências localizadas</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans" id="cardsIntro">
+                                Identificamos as seguintes pendências para análise:
+                            </p>
+                            <div class="grid gap-4 mb-6" id="cardsGrid"></div>
+                        </div>
+
                         <div class="view" id="vNoRecord">
-                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Nada encontrado</h4>
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Documento não localizado</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans" id="noRecordMsg">
-                                Não localizamos pendências para este documento. Verifique os dados e tente novamente.
+                                Documento não localizado em nossa base.
                             </p>
                             <button id="btnNovaConsultaNoRecord" type="button"
                                 class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
-                                Nova Consulta
+                                Realizar nova pesquisa
+                            </button>
+                        </div>
+
+                        <div class="view" id="vNoDebt">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Nenhuma pendência localizada</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
+                                Não há pendências em aberto com os credores localizados na assessoria QuatroC.
+                            </p>
+                            <button id="btnNovaConsultaNoDebt" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Nova pesquisa
+                            </button>
+                        </div>
+
+                        <div class="view" id="vActiveAgreement">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Acordo ativo identificado</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
+                                Já existe uma negociação ativa vinculada a este contrato.
+                            </p>
+
+                            <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50 mb-5">
+                                <div class="flex justify-between mb-3">
+                                    <span class="text-slate-500 text-sm font-sans">Valor do acordo</span>
+                                    <strong class="text-navy font-sans" id="activeAgreementValue">R$ 0,00</strong>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500 text-sm font-sans">Vencimento</span>
+                                    <strong class="text-navy font-sans" id="activeAgreementDue">--/--/----</strong>
+                                </div>
+                            </div>
+
+                            <button id="btnAgreementHumano" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Falar com atendente
+                            </button>
+                        </div>
+
+                        <div class="view" id="vNegotiate">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Negociação automática</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans" id="negotiationSubtitle">
+                                Selecione a data desejada para pagamento.
+                            </p>
+
+                            <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50 mb-5">
+                                <div class="flex justify-between mb-3">
+                                    <span class="text-slate-500 text-sm font-sans">Credor</span>
+                                    <strong class="text-navy font-sans" id="negotiationCreditor">-</strong>
+                                </div>
+                                <div class="flex justify-between mb-3">
+                                    <span class="text-slate-500 text-sm font-sans">Contrato</span>
+                                    <strong class="text-navy font-sans" id="negotiationContract">-</strong>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500 text-sm font-sans">Proposta de quitação</span>
+                                    <strong class="text-navy font-sans" id="negotiationProposal">R$ 0,00</strong>
+                                </div>
+                            </div>
+
+                            <input id="paymentDateInput" type="date"
+                                class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans">
+
+                            <p id="negotiationError" class="mt-4 text-sm text-red-500 font-semibold hidden font-sans"></p>
+
+                            <button id="btnConfirmNegotiation" type="button"
+                                class="w-full mt-4 bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Confirmar negociação
+                            </button>
+
+                            <button id="btnNegotiationHumano" type="button"
+                                class="w-full mt-3 bg-white border-2 border-slate-100 text-navy font-bold py-5 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans">
+                                Falar com atendente
+                            </button>
+                        </div>
+
+                        <div class="view" id="vNegotiationSuccess">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Negociação concluída</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
+                                Sua negociação foi realizada com sucesso. Em caso de dúvida, nosso atendimento permanece disponível.
+                            </p>
+                            <button id="btnSuccessNewSearch" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Nova pesquisa
+                            </button>
+                        </div>
+
+                        <div class="view" id="vIraSchedule">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Solicitar agendamento</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
+                                Preencha as informações abaixo para enviarmos sua solicitação ao time responsável.
+                            </p>
+
+                            <div class="grid gap-4">
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <input id="iraDate1" type="date" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                    <input id="iraTime1" type="time" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                </div>
+
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <input id="iraDate2" type="date" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                    <input id="iraTime2" type="time" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                </div>
+
+                                <input id="iraStreet" type="text" placeholder="Logradouro" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraNumber" type="text" placeholder="Número" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraDistrict" type="text" placeholder="Bairro" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraZip" type="text" placeholder="CEP" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraCity" type="text" placeholder="Cidade" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraReference" type="text" placeholder="Ponto de referência" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraResponsible" type="text" placeholder="Nome do responsável" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraEmail" type="email" placeholder="E-mail para contato" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                <input id="iraWhatsapp" type="tel" placeholder="WhatsApp" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                            </div>
+
+                            <p id="iraError" class="mt-4 text-sm text-red-500 font-semibold hidden font-sans"></p>
+
+                            <button id="btnSubmitIra" type="button"
+                                class="w-full mt-4 bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Enviar solicitação
+                            </button>
+                        </div>
+
+                        <div class="view" id="vIraSuccess">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Solicitação enviada</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
+                                As informações foram enviadas ao nosso time responsável. Em breve retornaremos com a confirmação do agendamento.
+                            </p>
+                            <button id="btnIraSuccessNewSearch" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Nova pesquisa
                             </button>
                         </div>
 
                         <div class="view" id="vError">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Não foi possível concluir</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans" id="errorMsg">
-                                Não foi possível se conectar. Verifique sua conexão e tente novamente.
+                                Nosso sistema está temporariamente indisponível. Tente novamente em alguns minutos ou fale com nosso atendimento.
                             </p>
                             <button id="btnNovaConsultaErr" type="button"
                                 class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
-                                Nova Consulta
+                                Nova pesquisa
                             </button>
                         </div>
 
@@ -357,8 +504,7 @@
                 </div>
 
                 <!-- TERMS OVERLAY -->
-                <div id="termsOverlay" class="fixed inset-0 hidden items-center justify-center z-[100] p-6"
-                     aria-hidden="true">
+                <div id="termsOverlay" class="fixed inset-0 hidden items-center justify-center z-[100] p-6" aria-hidden="true">
                     <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
                     <div class="relative bg-white rounded-3xl w-full max-w-lg p-8 border border-slate-100 shadow-2xl">
                         <h3 class="text-navy font-bold text-xl font-sans mb-3">Termos e Política</h3>
@@ -372,18 +518,18 @@
                         </button>
                     </div>
                 </div>
-
+            </div>
         </div>
     </section>
 
-    <!-- Contato: Integrado ao Bitrix24 -->
+    <!-- Contato -->
     <section id="contato" class="py-24 bg-white px-6">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="font-serif text-4xl text-navy mb-4 italic">Solicitar Diagnóstico Especializado</h2>
                 <p class="text-slate-500 font-medium leading-relaxed max-w-lg mx-auto">Preencha os dados abaixo. Um consultor sénior entrará em contacto para realizar a auditoria da sua carteira.</p>
             </div>
-            
+
             <form id="diagnostico-form" class="bg-neutralBg p-10 md:p-16 rounded-[4rem] shadow-sm border border-slate-100">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="space-y-2">
@@ -419,7 +565,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="mt-12 text-center">
                     <button type="submit" class="w-full md:w-auto md:px-24 bg-navy text-white font-bold py-6 rounded-3xl hover:bg-navy-light transition shadow-2xl uppercase tracking-[0.2em] text-xs font-sans">Solicitar Auditoria Gratuita</button>
                     <p id="form-status" class="mt-6 text-[10px] font-bold uppercase tracking-widest hidden font-sans"></p>
@@ -494,16 +640,13 @@
     </div>
 
     <script>
-        /**
-         * CONFIGURAÇÃO BITRIX24 PRODUÇÃO
-         */
         const BITRIX_ENDPOINT = "https://grupoasserth.bitrix24.com.br/rest/1/15a2h0vrp7wfb31l/crm.lead.add.json";
 
         document.getElementById('diagnostico-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = this.querySelector('button');
             const status = document.getElementById('form-status');
-            
+
             const nomeContato = document.getElementById('nome_contato').value;
             const nomeEmpresa = document.getElementById('nome_empresa').value;
             const emailCorp = document.getElementById('email_corporativo').value;
@@ -514,7 +657,6 @@
             btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2 text-[10px]"></i> PROCESSANDO SOLICITAÇÃO...';
             btn.disabled = true;
 
-            // Payload formatado para Bitrix24
             const payload = {
                 fields: {
                     "TITLE": `Lead Portal Quatro C: ${nomeEmpresa}`,
@@ -548,32 +690,12 @@
                 status.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Houve um erro no envio. Por favor, tente o WhatsApp para um retorno imediato.';
                 status.classList.remove('hidden', 'text-green-600');
                 status.classList.add('text-red-500');
-                console.error("CORS Error: This form must be hosted on a real server (HTTPS) to communicate with Bitrix24.");
+                console.error("Erro formulário Bitrix:", error);
             } finally {
                 btn.innerHTML = 'Solicitar Auditoria Gratuita';
                 btn.disabled = false;
             }
         });
-
-        function handleSimSearch() {
-            const doc = document.getElementById('doc-id').value;
-            const searchBox = document.getElementById('search-box');
-            const resultBox = document.getElementById('result-box');
-            const btn = document.querySelector('#search-box button');
-
-            if (!doc.trim()) {
-                alert("Por favor, informe o documento para consulta.");
-                return;
-            }
-
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
-            btn.disabled = true;
-
-            setTimeout(() => {
-                searchBox.classList.add('hidden');
-                resultBox.classList.remove('hidden');
-            }, 1800);
-        }
 
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('main-nav');
@@ -587,497 +709,830 @@
         });
     </script>
 
-
     <script>
-      // =========================
-      // PORTAL DE NEGOCIAÇÃO (motor do autoatendimento)
-      // Integrado ao layout do site (Tailwind + paleta do site)
-      // =========================
+        // ===========================================
+        // PORTAL DE AUTOATENDIMENTO
+        // ===========================================
 
-      // Ponte Cloudflare Worker -> n8n
-      const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+        const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
-      // Chats
-      const CHAT_LINK_SASCAR        = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
-      const CHAT_LINK_IRA           = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
-      const CHAT_LINK_AMIL_DEFAULT  = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
-      const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
+        const CHAT_LINK_SASCAR        = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
+        const CHAT_LINK_IRA           = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
+        const CHAT_LINK_AMIL_DEFAULT  = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
+        const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
 
-      // Logos por credor
-      const LOGO_AMIL     = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
-      const LOGO_MICHELIN = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
-      const LOGO_SHAM     = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
-      const LOGO_REDE     = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
+        const LOGO_AMIL     = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
+        const LOGO_MICHELIN = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
+        const LOGO_SHAM     = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
+        const LOGO_REDE     = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
 
-      const $ = (id) => document.getElementById(id);
+        const $ = (id) => document.getElementById(id);
 
-      function onlyDigits(str){ return (str||"").replace(/\D/g,""); }
-      function isCPF(d){ return d.length === 11; }
-      function isCNPJ(d){ return d.length === 14; }
+        let currentView = "vStart";
+        let docType = "CPF";
+        let currentDoc = "";
+        let sessionId = Date.now().toString();
+        let foundRecord = null;
+        let selectedCard = null;
+        let lastHumanChat = CHAT_LINK_AMIL_DEFAULT;
 
-      function norm(str){
-        return (str||"").toString().toUpperCase()
-          .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-          .replace(/\s+/g," ").trim();
-      }
-
-      function formatBRL(v){
-        const n = Number(String(v ?? "0").replace(/[^0-9,.-]/g,"").replace(".","").replace(",", ".")) || 0;
-        return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-      }
-
-      // ====== De/Para credor (nome + logo + chat) ======
-      function getCredorPresentation(credorRaw, unidade){
-        const c = norm(credorRaw);
-
-        const isAmilHosp =
-          c.includes("AMIL HOSPITAIS") ||
-          c.includes("REDE AMERICAS IMPAR") ||
-          c.includes("REDE AMERICAS");
-
-        if (isAmilHosp){
-          const nomeUnidade = (unidade && String(unidade).trim()) ? String(unidade).trim() : "Atendimento Hospitalar";
-          const logo = c.includes("REDE AMERICAS") ? LOGO_REDE : LOGO_AMIL;
-          const chat = c.includes("REDE AMERICAS") ? CHAT_LINK_REDE_AMERICAS : CHAT_LINK_AMIL_DEFAULT;
-          return { nome: nomeUnidade, logo, chat, credorTag: c };
+        function onlyDigits(str) {
+            return String(str || "").replace(/\D/g, "");
         }
 
-        if (c.includes("AMIL OPERADORAS")){
-          return { nome:"Amil", logo:LOGO_AMIL, chat:CHAT_LINK_AMIL_DEFAULT, credorTag:c };
+        function isCPF(d) {
+            return d.length === 11;
         }
 
-        if (c.includes("SASCAR_IRA")){
-          return { nome:"Michelin | Equipamentos", logo:LOGO_MICHELIN, chat:CHAT_LINK_IRA, credorTag:c };
+        function isCNPJ(d) {
+            return d.length === 14;
         }
 
-        if (c.includes("SASCAR FIXA VARIAVEL")){
-          return { nome:"Michelin Connect Fleet", logo:LOGO_MICHELIN, chat:CHAT_LINK_SASCAR, credorTag:c };
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
         }
 
-        if (c.includes("SANTA HELENA")){
-          return { nome:"Santa Helena Saúde", logo:LOGO_SHAM, chat:CHAT_LINK_AMIL_DEFAULT, credorTag:c };
+        function isValidPhone(phone) {
+            const digits = onlyDigits(phone);
+            return digits.length >= 11 && digits.length <= 13;
         }
 
-        return { nome: credorRaw || "Projeto", logo: "", chat: CHAT_LINK_AMIL_DEFAULT, credorTag:c };
-      }
-
-      function openChat(url){
-        window.open(url, "_blank", "noopener,noreferrer");
-      }
-
-      // Máscaras
-      function maskCPF(digits){
-        const d = digits.slice(0, 11);
-        let out = d;
-        if (d.length > 3) out = d.slice(0,3) + "." + d.slice(3);
-        if (d.length > 6) out = out.slice(0,7) + "." + out.slice(7);
-        if (d.length > 9) out = out.slice(0,11) + "-" + out.slice(11);
-        return out;
-      }
-      function maskCNPJ(digits){
-        const d = digits.slice(0, 14);
-        let out = d;
-        if (d.length > 2) out = d.slice(0,2) + "." + d.slice(2);
-        if (d.length > 5) out = out.slice(0,6) + "." + out.slice(6);
-        if (d.length > 8) out = out.slice(0,10) + "/" + out.slice(10);
-        if (d.length > 12) out = out.slice(0,15) + "-" + out.slice(15);
-        return out;
-      }
-
-      let currentView = "vStart";
-      let docType = "CPF";
-      let currentDoc = "";
-      let sessionId = Date.now().toString();
-      let foundRecord = null;
-
-      function applyMask(){
-        const input = $("docInput");
-        const digits = onlyDigits(input.value);
-        if (docType === "CPF"){
-          input.value = maskCPF(digits);
-          input.maxLength = 14;
-        } else {
-          input.value = maskCNPJ(digits);
-          input.maxLength = 18;
-        }
-      }
-      function detectTypeFromDigits(d){
-        if (d.length >= 12) return "CNPJ";
-        return "CPF";
-      }
-
-      function setActiveView(viewId){
-        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-        $(viewId).classList.add("active");
-        $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
-        currentView = viewId;
-      }
-
-      function openOverlay(id){
-        const el = $(id);
-        el.classList.remove("hidden");
-        el.classList.add("flex");
-        el.setAttribute("aria-hidden", "false");
-      }
-      function closeOverlay(id){
-        const el = $(id);
-        el.classList.add("hidden");
-        el.classList.remove("flex");
-        el.setAttribute("aria-hidden", "true");
-      }
-
-      async function callBackend(step, payload) {
-        const body = { step, sessionId, ...payload };
-        const res = await fetch(CRM_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        if (!res.ok) throw new Error("Falha ao consultar back");
-        return await res.json();
-      }
-
-      function setDocType(type){
-        docType = type;
-
-        // Estado visual (Tailwind)
-        const cpf = $("segCPF");
-        const cnpj = $("segCNPJ");
-
-        if (type === "CPF"){
-          cpf.classList.add("bg-white","text-accent","shadow-sm");
-          cpf.classList.remove("text-slate-500");
-          cnpj.classList.remove("bg-white","text-accent","shadow-sm");
-          cnpj.classList.add("text-slate-500");
-        } else {
-          cnpj.classList.add("bg-white","text-accent","shadow-sm");
-          cnpj.classList.remove("text-slate-500");
-          cpf.classList.remove("bg-white","text-accent","shadow-sm");
-          cpf.classList.add("text-slate-500");
+        function norm(str) {
+            return String(str || "")
+                .toUpperCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, " ")
+                .trim();
         }
 
-        $("docInput").placeholder = (type==="CPF") ? "000.000.000-00" : "00.000.000/0000-00";
-        applyMask();
-      }
-
-      function goStart(){
-        currentDoc = "";
-        foundRecord = null;
-        $("docInput").value = "";
-        setDocType("CPF");
-        setActiveView("vStart");
-      }
-
-      // ====== Nomes para confirmação ======
-      function buildNameOptions(realName, typeUpper){
-        const name = String(realName || "").trim();
-        const clean = name.replace(/\s+/g," ").trim();
-        const parts = clean.split(" ").filter(Boolean);
-
-        if (!clean || parts.length < 2){
-          const base = (typeUpper === "CNPJ") ? "Razão Social" : "Nome Completo";
-          return [
-            clean || base,
-            typeUpper==="CNPJ" ? "Empresa Exemplo LTDA" : "Maria Helena Santos",
-            typeUpper==="CNPJ" ? "Comercial Brasil SA" : "João Pedro Almeida"
-          ];
+        function formatBRL(v) {
+            const n = Number(v || 0);
+            return n.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
         }
 
-        const first = parts[0];
-        const second = parts[1];
-        const prefix = `${first} ${second}`;
+        function formatDateBR(dateStr) {
+            if (!dateStr) return "--/--/----";
+            const dt = new Date(`${dateStr}T00:00:00`);
+            if (Number.isNaN(dt.getTime())) return "--/--/----";
+            return dt.toLocaleDateString("pt-BR");
+        }
 
-        const pfSuf = ["DA SILVA","DE SOUZA","ALMEIDA","PEREIRA","ROCHA","FERREIRA"];
-        const pjSuf = ["SERVIÇOS LTDA","COMÉRCIO LTDA","LOGÍSTICA LTDA","INDÚSTRIA SA","SOLUÇÕES LTDA","DISTRIBUIDORA LTDA"];
+        function maskCPF(digits) {
+            const d = digits.slice(0, 11);
+            let out = d;
+            if (d.length > 3) out = d.slice(0, 3) + "." + d.slice(3);
+            if (d.length > 6) out = out.slice(0, 7) + "." + out.slice(7);
+            if (d.length > 9) out = out.slice(0, 11) + "-" + out.slice(11);
+            return out;
+        }
 
-        const realUpper = clean.toUpperCase();
+        function maskCNPJ(digits) {
+            const d = digits.slice(0, 14);
+            let out = d;
+            if (d.length > 2) out = d.slice(0, 2) + "." + d.slice(2);
+            if (d.length > 5) out = out.slice(0, 6) + "." + out.slice(6);
+            if (d.length > 8) out = out.slice(0, 10) + "/" + out.slice(10);
+            if (d.length > 12) out = out.slice(0, 15) + "-" + out.slice(15);
+            return out;
+        }
 
-        const s1 = (typeUpper==="CNPJ" ? pjSuf[0] : pfSuf[0]);
-        const s2 = (typeUpper==="CNPJ" ? pjSuf[1] : pfSuf[1]);
+        function detectTypeFromDigits(d) {
+            return d.length >= 12 ? "CNPJ" : "CPF";
+        }
 
-        let v1 = `${prefix} ${s1}`.toUpperCase();
-        let v2 = `${prefix} ${s2}`.toUpperCase();
-        let real = realUpper;
+        function applyMask() {
+            const input = $("docInput");
+            const digits = onlyDigits(input.value);
 
-        if (v1 === real) v1 = `${prefix} ${(typeUpper==="CNPJ" ? pjSuf[2] : pfSuf[2])}`.toUpperCase();
-        if (v2 === real || v2 === v1) v2 = `${prefix} ${(typeUpper==="CNPJ" ? pjSuf[3] : pfSuf[3])}`.toUpperCase();
+            if (docType === "CPF") {
+                input.value = maskCPF(digits);
+                input.maxLength = 14;
+            } else {
+                input.value = maskCNPJ(digits);
+                input.maxLength = 18;
+            }
+        }
 
-        return [v1, real, v2];
-      }
+        function setDocType(type) {
+            docType = type;
 
-      function renderNameOptions(typeUpper, realName){
-        const wrap = $("nameOptions");
-        wrap.innerHTML = "";
+            const cpf = $("segCPF");
+            const cnpj = $("segCNPJ");
 
-        $("confirmSubtitle").textContent =
-          (typeUpper === "CNPJ")
-            ? "Selecione a razão social / nome social correto vinculado ao documento:"
-            : "Selecione o nome completo correto vinculado ao documento:";
+            if (type === "CPF") {
+                cpf.classList.add("bg-white", "text-accent", "shadow-sm");
+                cpf.classList.remove("text-slate-500");
+                cnpj.classList.remove("bg-white", "text-accent", "shadow-sm");
+                cnpj.classList.add("text-slate-500");
+            } else {
+                cnpj.classList.add("bg-white", "text-accent", "shadow-sm");
+                cnpj.classList.remove("text-slate-500");
+                cpf.classList.remove("bg-white", "text-accent", "shadow-sm");
+                cpf.classList.add("text-slate-500");
+            }
 
-        const opts = buildNameOptions(realName, typeUpper);
+            $("docInput").placeholder = type === "CPF" ? "000.000.000-00" : "00.000.000/0000-00";
+            applyMask();
+        }
 
-        opts.forEach(opt => {
-          const b = document.createElement("button");
-          b.type = "button";
-          b.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-[11px] font-sans";
-          b.textContent = opt;
+        function setActiveView(viewId) {
+            document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+            $(viewId).classList.add("active");
+            $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
+            currentView = viewId;
+        }
 
-          b.addEventListener("click", async () => {
-            const realUpper = String(realName || "").trim().toUpperCase();
-            const chosen = String(opt || "").trim().toUpperCase();
+        function openOverlay(id) {
+            const el = $(id);
+            el.classList.remove("hidden");
+            el.classList.add("flex");
+            el.setAttribute("aria-hidden", "false");
+        }
 
-            if (realUpper && chosen === realUpper){
-              try{
-                setActiveView("vLoading");
+        function closeOverlay(id) {
+            const el = $(id);
+            el.classList.add("hidden");
+            el.classList.remove("flex");
+            el.setAttribute("aria-hidden", "true");
+        }
 
-                const data = await callBackend("confirmar_identidade", {
-                  documento: currentDoc,
-                  optionId: "identidade_sim"
+        function openChat(url) {
+            window.open(url || CHAT_LINK_AMIL_DEFAULT, "_blank", "noopener,noreferrer");
+        }
+
+        function showStartError(message) {
+            $("startError").textContent = message;
+            $("startError").classList.remove("hidden");
+        }
+
+        function hideStartError() {
+            $("startError").textContent = "";
+            $("startError").classList.add("hidden");
+        }
+
+        function showNegotiationError(message) {
+            $("negotiationError").textContent = message;
+            $("negotiationError").classList.remove("hidden");
+        }
+
+        function hideNegotiationError() {
+            $("negotiationError").textContent = "";
+            $("negotiationError").classList.add("hidden");
+        }
+
+        function showIraError(message) {
+            $("iraError").textContent = message;
+            $("iraError").classList.remove("hidden");
+        }
+
+        function hideIraError() {
+            $("iraError").textContent = "";
+            $("iraError").classList.add("hidden");
+        }
+
+        function clearPortalForms() {
+            $("docInput").value = "";
+            $("nameInput").value = "";
+            $("phoneInput").value = "";
+            $("emailInput").value = "";
+            $("paymentDateInput").value = "";
+            $("iraDate1").value = "";
+            $("iraTime1").value = "";
+            $("iraDate2").value = "";
+            $("iraTime2").value = "";
+            $("iraStreet").value = "";
+            $("iraNumber").value = "";
+            $("iraDistrict").value = "";
+            $("iraZip").value = "";
+            $("iraCity").value = "";
+            $("iraReference").value = "";
+            $("iraResponsible").value = "";
+            $("iraEmail").value = "";
+            $("iraWhatsapp").value = "";
+            hideStartError();
+            hideNegotiationError();
+            hideIraError();
+        }
+
+        function goStart() {
+            currentDoc = "";
+            foundRecord = null;
+            selectedCard = null;
+            sessionId = Date.now().toString();
+            clearPortalForms();
+            setDocType("CPF");
+            setActiveView("vStart");
+        }
+
+        async function callBackend(step, payload) {
+            const body = { step, sessionId, ...payload };
+
+            const res = await fetch(CRM_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok) {
+                throw new Error(`Falha backend: ${res.status}`);
+            }
+
+            return await res.json();
+        }
+
+        function getCredorPresentation(credorRaw, unidade) {
+            const c = norm(credorRaw);
+
+            const isAmilHosp =
+                c.includes("AMIL HOSPITAIS") ||
+                c.includes("REDE AMERICAS IMPAR") ||
+                c.includes("REDE AMERICAS");
+
+            if (isAmilHosp) {
+                const nomeUnidade = (unidade && String(unidade).trim()) ? String(unidade).trim() : "Atendimento Hospitalar";
+                const logo = c.includes("REDE AMERICAS") ? LOGO_REDE : LOGO_AMIL;
+                const chat = c.includes("REDE AMERICAS") ? CHAT_LINK_REDE_AMERICAS : CHAT_LINK_AMIL_DEFAULT;
+                return { nome: nomeUnidade, logo, chat, credorTag: c };
+            }
+
+            if (c.includes("AMIL OPERADORAS")) {
+                return { nome: "Amil", logo: LOGO_AMIL, chat: CHAT_LINK_AMIL_DEFAULT, credorTag: c };
+            }
+
+            if (c.includes("SASCAR_IRA")) {
+                return { nome: "Michelin | Equipamentos", logo: LOGO_MICHELIN, chat: CHAT_LINK_IRA, credorTag: c };
+            }
+
+            if (c.includes("SASCAR FIXA VARIAVEL")) {
+                return { nome: "Michelin Connect Fleet", logo: LOGO_MICHELIN, chat: CHAT_LINK_SASCAR, credorTag: c };
+            }
+
+            if (c.includes("SANTA HELENA")) {
+                return { nome: "Santa Helena Saúde", logo: LOGO_SHAM, chat: CHAT_LINK_AMIL_DEFAULT, credorTag: c };
+            }
+
+            return { nome: credorRaw || "Projeto", logo: "", chat: CHAT_LINK_AMIL_DEFAULT, credorTag: c };
+        }
+
+        function buildFallbackNameOptions(realName, typeUpper) {
+            const clean = String(realName || "").trim();
+            const parts = clean.split(/\s+/).filter(Boolean);
+
+            if (!clean || parts.length < 2) {
+                if (typeUpper === "CNPJ") {
+                    return [clean || "RAZAO SOCIAL", "EMPRESA MODELO LTDA", "COMERCIAL BRASIL SA"];
+                }
+                return [clean || "NOME COMPLETO", "MARIA HELENA SOUZA", "JOAO PEDRO ALMEIDA"];
+            }
+
+            const first = parts[0].toUpperCase();
+            const second = parts[1].toUpperCase();
+            const prefix = `${first} ${second}`;
+
+            if (typeUpper === "CNPJ") {
+                return [
+                    `${prefix} SERVICOS LTDA`,
+                    clean.toUpperCase(),
+                    `${prefix} LOGISTICA SA`
+                ];
+            }
+
+            return [
+                `${prefix} DA SILVA`,
+                clean.toUpperCase(),
+                `${prefix} PEREIRA`
+            ];
+        }
+
+        function renderIdentityOptions(options, fullName, typeUpper) {
+            const wrap = $("nameOptions");
+            wrap.innerHTML = "";
+
+            const finalOptions = (Array.isArray(options) && options.length)
+                ? options
+                : buildFallbackNameOptions(fullName, typeUpper);
+
+            $("confirmSubtitle").textContent =
+                typeUpper === "CNPJ"
+                    ? "Selecione a razão social correta vinculada ao documento:"
+                    : "Selecione o nome correto vinculado ao documento:";
+
+            finalOptions.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-[11px] font-sans";
+                btn.textContent = opt;
+
+                btn.addEventListener("click", async () => {
+                    setActiveView("vLoading");
+
+                    try {
+                        const data = await callBackend("confirmar_identidade", {
+                            documento: currentDoc,
+                            opcaoSelecionada: opt,
+                            nomeInformado: $("nameInput").value.trim(),
+                            telefoneInformado: onlyDigits($("phoneInput").value),
+                            emailInformado: $("emailInput").value.trim()
+                        });
+
+                        foundRecord = { ...(foundRecord || {}), ...(data || {}) };
+
+                        if (data?.proximoStep === "identidade_incorreta") {
+                            $("errorMsg").textContent = data?.mensagem || "O nome selecionado não corresponde ao cadastro localizado.";
+                            return setActiveView("vError");
+                        }
+
+                        if (data?.proximoStep === "sem_pendencia") {
+                            return setActiveView("vNoDebt");
+                        }
+
+                        if (data?.proximoStep === "mostrar_acordo_ativo") {
+                            $("activeAgreementValue").textContent = data?.acordoAtivo?.valorFormatado || formatBRL(data?.acordoAtivo?.valor || 0);
+                            $("activeAgreementDue").textContent = data?.acordoAtivo?.vencimentoFormatado || formatDateBR(data?.acordoAtivo?.vencimento);
+                            lastHumanChat = data?.chatUrl || lastHumanChat || CHAT_LINK_AMIL_DEFAULT;
+                            return setActiveView("vActiveAgreement");
+                        }
+
+                        if (data?.proximoStep === "mostrar_cards") {
+                            renderCards(data?.cards || []);
+                            return setActiveView("vNext");
+                        }
+
+                        $("errorMsg").textContent = "Não foi possível validar sua identidade no momento.";
+                        setActiveView("vError");
+                    } catch (e) {
+                        $("errorMsg").textContent = "Nosso sistema está temporariamente indisponível. Tente novamente em alguns minutos ou fale com nosso atendimento.";
+                        setActiveView("vError");
+                    }
                 });
 
-                foundRecord = { ...(foundRecord||{}), ...(data||{}) };
-                await loadResumoDividas();
-              }catch(e){
-                $("errorMsg").textContent = "Não foi possível confirmar os dados no momento. Tente novamente.";
-                setActiveView("vError");
-              }
-            } else {
-              alert("Nome incorreto para este documento por motivos de segurança.");
-              goStart();
-            }
-          });
-
-          wrap.appendChild(b);
-        });
-      }
-
-      // ====== Resumo / Cards ======
-      function sumParcelas(parcelas){
-        const arr = Array.isArray(parcelas) ? parcelas : [];
-        let t = 0;
-        for (const p of arr){
-          const v = Number(p?.Valor ?? p?.ValorOriginal ?? p?._ValorEmAberto ?? p?.valor ?? 0) || 0;
-          t += v;
-        }
-        return t;
-      }
-
-      function renderCards(cases){
-        const grid = $("cardsGrid");
-        grid.innerHTML = "";
-
-        const list = Array.isArray(cases) ? cases : [];
-
-        if (!list.length) {
-          $("noRecordMsg").textContent = "Não identificamos pendências vinculadas a este documento.";
-          setActiveView("vNoRecord");
-          return;
+                wrap.appendChild(btn);
+            });
         }
 
-        list.forEach((c, idx) => {
-          const credorRaw = c?.credor || c?.Credor || "";
-          const unidade = c?.unidade || c?.Unidade || "";
-          const pres = getCredorPresentation(credorRaw, unidade);
+        function buildActionType(card) {
+            const credor = norm(card?.credor || "");
 
-          const contrato = c?.numeroContrato || c?.NumeroContrato || c?.Contrato || "-";
-          const total = sumParcelas(c?.parcelas || c?.Parcelas || []);
+            if (card?.tipoAcao) return card.tipoAcao;
 
-          const card = document.createElement("div");
-          card.className = "p-6 border-2 border-slate-100 rounded-2xl hover:border-accent transition bg-white";
+            if (credor.includes("SASCAR_IRA")) return "AGENDAR";
+            if (credor.includes("AMIL OPERADORAS")) return "NEGOCIAR";
+            if (credor.includes("SANTA HELENA")) return "NEGOCIAR";
 
-          card.innerHTML = `
-            <div class="flex items-center gap-4">
-              <img src="${pres.logo || ""}" class="w-12 h-12 rounded-xl bg-white border border-slate-100 object-contain" alt="logo"
-                   onerror="this.style.display='none'">
-              <div>
-                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 font-sans">Credor</p>
-                <p class="text-navy font-extrabold text-base font-sans leading-tight">${pres.nome}</p>
-                <p class="text-slate-500 text-xs font-semibold font-sans">Contrato: ${String(contrato)}</p>
-              </div>
-            </div>
+            return "HUMANO";
+        }
 
-            <div class="mt-5 flex items-center justify-between">
-              <span class="text-slate-500 text-sm font-semibold font-sans">Valor</span>
-              <span class="text-navy text-lg font-black font-sans">${formatBRL(total)}</span>
-            </div>
+        function canNegotiate(card) {
+            if (typeof card?.podeNegociar === "boolean") return card.podeNegociar;
 
-            <button class="w-full mt-4 bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans"
-                    type="button" data-idx="${idx}">
-              Negociar este contrato
-            </button>
-          `;
+            const total = Number(card?.valorTotal || 0);
+            const credor = norm(card?.credor || "");
 
-          card.querySelector("button[data-idx]").addEventListener("click", async () => {
-            try{
-              setActiveView("vLoading");
-              const resp = await callBackend("negociar_auto", {
-                documento: currentDoc,
-                credor: credorRaw,
-                numeroContrato: c?.numeroContrato || c?.NumeroContrato || null,
-                idContrato: c?.idContrato || c?.IDContrato || null
-              });
+            const isAllowedCredor =
+                credor.includes("AMIL OPERADORAS") ||
+                credor.includes("SANTA HELENA");
 
-              if (resp?.url){
-                window.open(resp.url, "_blank", "noopener,noreferrer");
-                setActiveView("vNext");
+            return isAllowedCredor && total >= 100 && total <= 5000;
+        }
+
+        function normalizeCards(cards) {
+            return (Array.isArray(cards) ? cards : []).map(c => {
+                const pres = getCredorPresentation(c?.credor || c?.Credor || "", c?.unidade || c?.Unidade || "");
+                const detalhes = Array.isArray(c?.detalhes)
+                    ? c.detalhes
+                    : (Array.isArray(c?.parcelas) ? c.parcelas : []);
+
+                return {
+                    credor: c?.credor || c?.Credor || "",
+                    credorNome: c?.credorNome || pres.nome,
+                    logo: c?.logo || pres.logo,
+                    chatUrl: c?.chatUrl || pres.chat,
+                    numeroContrato: c?.numeroContrato || c?.NumeroContrato || "-",
+                    idContrato: c?.idContrato || c?.IDContrato || "",
+                    valorTotal: Number(c?.valorTotal || 0),
+                    valorTotalFormatado: c?.valorTotalFormatado || formatBRL(c?.valorTotal || 0),
+                    propostaQuitacao: Number(c?.propostaQuitacao || (Number(c?.valorTotal || 0) * 0.85)),
+                    propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(c?.propostaQuitacao || (Number(c?.valorTotal || 0) * 0.85)),
+                    tipoAcao: buildActionType(c),
+                    podeNegociar: canNegotiate(c),
+                    detalhes: detalhes.map(d => ({
+                        vencimento: d?.vencimento || d?.Vencimento || "",
+                        vencimentoFormatado: d?.vencimentoFormatado || d?.VencimentoFormatado || formatDateBR(d?.vencimento || d?.Vencimento),
+                        valor: Number(d?.valor || d?.Valor || d?.ValorOriginal || d?._ValorEmAberto || 0),
+                        valorFormatado: d?.valorFormatado || d?.ValorFormatado || formatBRL(d?.valor || d?.Valor || d?.ValorOriginal || d?._ValorEmAberto || 0),
+                        numeroDocumento: d?.numeroDocumento || d?.NumeroDocumento || d?.Placa || "-"
+                    }))
+                };
+            });
+        }
+
+        function openNegotiation(card) {
+            selectedCard = card;
+            lastHumanChat = card?.chatUrl || lastHumanChat || CHAT_LINK_AMIL_DEFAULT;
+            hideNegotiationError();
+
+            $("negotiationCreditor").textContent = card?.credorNome || card?.credor || "-";
+            $("negotiationContract").textContent = card?.numeroContrato || "-";
+            $("negotiationProposal").textContent = card?.propostaQuitacaoFormatada || "R$ 0,00";
+            $("paymentDateInput").value = "";
+
+            setActiveView("vNegotiate");
+        }
+
+        function openIraSchedule(card) {
+            selectedCard = card;
+            lastHumanChat = card?.chatUrl || lastHumanChat || CHAT_LINK_IRA;
+            hideIraError();
+
+            $("iraEmail").value = $("emailInput").value.trim();
+            $("iraWhatsapp").value = onlyDigits($("phoneInput").value);
+
+            setActiveView("vIraSchedule");
+        }
+
+        function renderCards(cards) {
+            const grid = $("cardsGrid");
+            grid.innerHTML = "";
+
+            const normalized = normalizeCards(cards);
+
+            if (!normalized.length) {
+                setActiveView("vNoDebt");
                 return;
-              }
-
-              $("errorMsg").textContent = resp?.mensagem || "Autoatendimento indisponível no momento.";
-              setActiveView("vError");
-            }catch(e){
-              $("errorMsg").textContent = "Falha ao conectar no autoatendimento. Tente novamente.";
-              setActiveView("vError");
             }
-          });
 
-          grid.appendChild(card);
+            normalized.forEach((card, index) => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "p-6 border-2 border-slate-100 rounded-2xl hover:border-accent transition bg-white";
+
+                const detailsId = `card-details-${index}`;
+
+                wrapper.innerHTML = `
+                    <div class="flex items-center gap-4 mb-4">
+                        ${card.logo ? `<img src="${card.logo}" class="w-12 h-12 rounded-xl bg-white border border-slate-100 object-contain" alt="logo">` : ""}
+                        <div>
+                            <p class="text-navy font-extrabold text-base font-sans leading-tight">${card.credorNome || card.credor}</p>
+                            <p class="text-slate-500 text-xs font-semibold font-sans">Contrato: ${card.numeroContrato || "-"}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500 text-sm font-sans">Valor total</span>
+                            <strong class="text-navy font-sans">${card.valorTotalFormatado}</strong>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500 text-sm font-sans">Proposta de quitação</span>
+                            <strong class="text-accent font-sans">${card.propostaQuitacaoFormatada}</strong>
+                        </div>
+                    </div>
+
+                    <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
+                        Ver detalhamento
+                    </button>
+
+                    <div id="${detailsId}" class="hidden mb-4 overflow-hidden">
+                        <div class="rounded-2xl border border-slate-100 overflow-hidden">
+                            <table class="w-full text-sm font-sans">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th class="p-3 text-left">Vencimento</th>
+                                        <th class="p-3 text-left">Valor</th>
+                                        <th class="p-3 text-left">Documento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${card.detalhes.map(row => `
+                                        <tr class="border-t border-slate-100">
+                                            <td class="p-3">${row.vencimentoFormatado || "-"}</td>
+                                            <td class="p-3">${row.valorFormatado || "-"}</td>
+                                            <td class="p-3">${row.numeroDocumento || "-"}</td>
+                                        </tr>
+                                    `).join("")}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-3 card-actions"></div>
+                `;
+
+                wrapper.querySelector(".btn-toggle-details").addEventListener("click", () => {
+                    const el = document.getElementById(detailsId);
+                    el.classList.toggle("hidden");
+                });
+
+                const actions = wrapper.querySelector(".card-actions");
+
+                if (card.tipoAcao === "NEGOCIAR" && card.podeNegociar) {
+                    const btnNeg = document.createElement("button");
+                    btnNeg.type = "button";
+                    btnNeg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
+                    btnNeg.textContent = "Negociar";
+                    btnNeg.addEventListener("click", () => openNegotiation(card));
+                    actions.appendChild(btnNeg);
+                }
+
+                if (card.tipoAcao === "AGENDAR") {
+                    const btnAg = document.createElement("button");
+                    btnAg.type = "button";
+                    btnAg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
+                    btnAg.textContent = "Solicitar agendamento";
+                    btnAg.addEventListener("click", () => openIraSchedule(card));
+                    actions.appendChild(btnAg);
+                }
+
+                const btnHum = document.createElement("button");
+                btnHum.type = "button";
+                btnHum.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans";
+                btnHum.textContent = "Falar com atendente";
+                btnHum.addEventListener("click", () => openChat(card.chatUrl));
+                actions.appendChild(btnHum);
+
+                grid.appendChild(wrapper);
+            });
+        }
+
+        function validatePaymentDate(dateStr) {
+            if (!dateStr) return { ok: false, message: "Selecione uma data de pagamento." };
+
+            const selected = new Date(`${dateStr}T00:00:00`);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (Number.isNaN(selected.getTime())) {
+                return { ok: false, message: "Data inválida." };
+            }
+
+            const diffDays = Math.ceil((selected - today) / (1000 * 60 * 60 * 24));
+            const weekDay = selected.getDay();
+
+            if (diffDays < 0 || diffDays > 5) {
+                return { ok: false, message: "A data deve estar dentro de até 5 dias." };
+            }
+
+            if (weekDay === 0 || weekDay === 6) {
+                return { ok: false, message: "A data não pode cair em final de semana." };
+            }
+
+            return { ok: true, message: "" };
+        }
+
+        function validateIraForm() {
+            const ag = {
+                data1: $("iraDate1").value,
+                hora1: $("iraTime1").value,
+                data2: $("iraDate2").value,
+                hora2: $("iraTime2").value,
+                logradouro: $("iraStreet").value.trim(),
+                numero: $("iraNumber").value.trim(),
+                bairro: $("iraDistrict").value.trim(),
+                cep: onlyDigits($("iraZip").value),
+                cidade: $("iraCity").value.trim(),
+                referencia: $("iraReference").value.trim(),
+                responsavel: $("iraResponsible").value.trim(),
+                email: $("iraEmail").value.trim(),
+                whatsapp: onlyDigits($("iraWhatsapp").value)
+            };
+
+            const requiredFilled = Object.values(ag).every(v => String(v || "").trim());
+
+            if (!requiredFilled) {
+                return { ok: false, message: "Preencha todos os campos do agendamento.", data: ag };
+            }
+
+            if (!isValidEmail(ag.email)) {
+                return { ok: false, message: "Informe um e-mail válido.", data: ag };
+            }
+
+            if (!isValidPhone(ag.whatsapp)) {
+                return { ok: false, message: "Informe um WhatsApp válido com 11 a 13 dígitos.", data: ag };
+            }
+
+            const hourOk = (h) => /^\d{2}:\d{2}$/.test(h);
+            if (!hourOk(ag.hora1) || !hourOk(ag.hora2)) {
+                return { ok: false, message: "Informe horários válidos.", data: ag };
+            }
+
+            const withinBusinessHours = (h) => {
+                const [hh, mm] = h.split(":").map(Number);
+                const total = hh * 60 + mm;
+                return total >= 480 && total <= 1080;
+            };
+
+            if (!withinBusinessHours(ag.hora1) || !withinBusinessHours(ag.hora2)) {
+                return { ok: false, message: "Os horários devem estar entre 08h e 18h.", data: ag };
+            }
+
+            const isNotSunday = (d) => {
+                const dt = new Date(`${d}T00:00:00`);
+                return dt.getDay() !== 0;
+            };
+
+            if (!isNotSunday(ag.data1) || !isNotSunday(ag.data2)) {
+                return { ok: false, message: "Domingo não é permitido para agendamento.", data: ag };
+            }
+
+            return { ok: true, message: "", data: ag };
+        }
+
+        // Eventos básicos
+        $("segCPF").addEventListener("click", () => setDocType("CPF"));
+        $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
+
+        $("docInput").addEventListener("input", () => {
+            const digits = onlyDigits($("docInput").value);
+            const inferred = detectTypeFromDigits(digits);
+            if (inferred !== docType) setDocType(inferred);
+            applyMask();
         });
-      }
 
-      async function loadResumoDividas(){
-        try{
-          let data = foundRecord;
+        $("phoneInput").addEventListener("input", () => {
+            $("phoneInput").value = onlyDigits($("phoneInput").value).slice(0, 13);
+        });
 
-          if (!data || !Array.isArray(data.cases) || data.cases.length === 0){
-            data = await callBackend("pos_identidade", { documento: currentDoc });
-            foundRecord = { ...(foundRecord||{}), ...(data||{}) };
-          }
+        $("iraWhatsapp").addEventListener("input", () => {
+            $("iraWhatsapp").value = onlyDigits($("iraWhatsapp").value).slice(0, 13);
+        });
 
-          const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
+        $("iraZip").addEventListener("input", () => {
+            $("iraZip").value = onlyDigits($("iraZip").value).slice(0, 8);
+        });
 
-          if (!cases.length){
-            $("noRecordMsg").textContent = "Não identificamos pendências vinculadas a este documento.";
-            setActiveView("vNoRecord");
-            return;
-          }
+        $("btnVoltar").addEventListener("click", goStart);
+        $("btnNovaConsultaNoRecord").addEventListener("click", goStart);
+        $("btnNovaConsultaNoDebt").addEventListener("click", goStart);
+        $("btnNovaConsultaErr").addEventListener("click", goStart);
+        $("btnSuccessNewSearch").addEventListener("click", goStart);
+        $("btnIraSuccessNewSearch").addEventListener("click", goStart);
 
-          renderCards(cases);
-          setActiveView("vNext");
-        }catch(e){
-          $("errorMsg").textContent = "Não foi possível carregar o resumo no momento. Tente novamente.";
-          setActiveView("vError");
-        }
-      }
+        $("btnBlockedHumano").addEventListener("click", () => openChat(lastHumanChat));
+        $("btnAgreementHumano").addEventListener("click", () => openChat(lastHumanChat));
+        $("btnNegotiationHumano").addEventListener("click", () => openChat(lastHumanChat));
 
-      // =========================
-      // EVENTOS
-      // =========================
-      $("segCPF").addEventListener("click", () => setDocType("CPF"));
-      $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
+        $("openTerms").addEventListener("click", (e) => {
+            e.preventDefault();
+            openOverlay("termsOverlay");
+        });
+        $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
+        $("termsOverlay").addEventListener("click", (e) => {
+            if (e.target.id === "termsOverlay") closeOverlay("termsOverlay");
+        });
 
-      $("docInput").addEventListener("input", () => {
-        const digits = onlyDigits($("docInput").value);
-        const inferred = detectTypeFromDigits(digits);
-        if (inferred !== docType) setDocType(inferred);
-        applyMask();
-      });
+        // Consulta inicial
+        $("btnConsultar").addEventListener("click", async () => {
+            hideStartError();
 
-      $("btnVoltar").addEventListener("click", goStart);
-      $("btnNovaConsultaNoRecord").addEventListener("click", goStart);
-      $("btnNovaConsultaErr").addEventListener("click", goStart);
+            const documento = onlyDigits($("docInput").value);
+            const nome = $("nameInput").value.trim();
+            const telefone = onlyDigits($("phoneInput").value);
+            const email = $("emailInput").value.trim();
 
-      $("openTerms").addEventListener("click", (e) => { e.preventDefault(); openOverlay("termsOverlay"); });
-      $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
-      $("termsOverlay").addEventListener("click", (e) => { if (e.target.id === "termsOverlay") closeOverlay("termsOverlay"); });
+            currentDoc = documento;
+            sessionId = Date.now().toString();
 
-      $("btnConsultar").addEventListener("click", async () => {
-        const digits = onlyDigits($("docInput").value);
-        currentDoc = digits;
+            if (!isCPF(documento) && !isCNPJ(documento)) {
+                return showStartError("Informe um CPF com 11 dígitos ou um CNPJ com 14 dígitos.");
+            }
 
-        if (!isCPF(digits) && !isCNPJ(digits)){
-          $("errorMsg").textContent = "Documento inválido. Verifique e tente novamente.";
-          setActiveView("vError");
-          return;
-        }
+            if (!nome) {
+                return showStartError("Informe o nome completo ou a razão social.");
+            }
 
-        setActiveView("vLoading");
+            if (!isValidPhone(telefone)) {
+                return showStartError("Informe um telefone válido com 11 a 13 dígitos.");
+            }
 
-        try {
-          const data = await callBackend("consulta_divida", { documento: digits });
+            if (!isValidEmail(email)) {
+                return showStartError("Informe um e-mail válido.");
+            }
 
-          if (!data || data.clienteLocalizado === false || (data.temDivida === false && data.proximoStep === "consulta_divida")){
-            $("noRecordMsg").textContent = (data?.mensagens?.[0]?.texto)
-              ? data.mensagens[0].texto
-              : "Não localizamos contrato vinculado a este documento. Verifique se o documento informado está correto.";
-            setActiveView("vNoRecord");
-            return;
-          }
+            setActiveView("vLoading");
 
-          foundRecord = data;
+            try {
+                const data = await callBackend("consulta_inicial", {
+                    documento,
+                    nomeInformado: nome,
+                    telefoneInformado: telefone,
+                    emailInformado: email
+                });
 
-          const typeUpper = (data.type || (isCNPJ(digits) ? "CNPJ" : "CPF")).toUpperCase();
-          const realName = (data.fullName || data.displayName || "").trim();
+                foundRecord = data || {};
 
-          if (!realName){
-            $("noRecordMsg").textContent = "Não localizamos cadastro vinculado a este documento. Verifique os dados e tente novamente.";
-            setActiveView("vNoRecord");
-            return;
-          }
+                if (data?.proximoStep === "nao_localizado" || data?.clienteLocalizado === false) {
+                    $("noRecordMsg").textContent = data?.mensagem || "Documento não localizado em nossa base.";
+                    return setActiveView("vNoRecord");
+                }
 
-          renderNameOptions(typeUpper, realName);
-          setActiveView("vConfirmName");
+                if (data?.proximoStep === "bloqueado" || data?.bloqueado === true) {
+                    lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                    return setActiveView("vBlocked");
+                }
 
-        } catch (err) {
-          $("errorMsg").textContent = "Não foi possível concluir a consulta no momento. Tente novamente.";
-          setActiveView("vError");
-        }
-      });
+                if (data?.proximoStep === "validar_identidade") {
+                    const typeUpper = String(data?.type || (isCNPJ(documento) ? "CNPJ" : "CPF")).toUpperCase();
+                    renderIdentityOptions(data?.options || [], data?.fullName || nome, typeUpper);
+                    return setActiveView("vConfirmName");
+                }
 
-      $("btnAuto").addEventListener("click", async () => {
-        const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
-        if (!cases.length){
-          $("errorMsg").textContent = "Não há pendências para seguir.";
-          return setActiveView("vError");
-        }
+                $("errorMsg").textContent = data?.mensagem || "Não foi possível concluir a consulta no momento.";
+                setActiveView("vError");
+            } catch (e) {
+                $("errorMsg").textContent = "Nosso sistema está temporariamente indisponível. Tente novamente em alguns minutos ou fale com nosso atendimento.";
+                setActiveView("vError");
+            }
+        });
 
-        const chosen = cases[0];
-        const credorRaw = chosen?.credor || chosen?.Credor || "";
+        // Confirmar negociação
+        $("btnConfirmNegotiation").addEventListener("click", async () => {
+            hideNegotiationError();
 
-        try{
-          setActiveView("vLoading");
+            if (!selectedCard) {
+                return showNegotiationError("Selecione um contrato para negociar.");
+            }
 
-          const resp = await callBackend("negociar_auto", {
-            documento: currentDoc,
-            credor: credorRaw,
-            numeroContrato: chosen?.numeroContrato || chosen?.NumeroContrato || null,
-            idContrato: chosen?.idContrato || chosen?.IDContrato || null
-          });
+            const paymentDate = $("paymentDateInput").value;
+            const dateValidation = validatePaymentDate(paymentDate);
 
-          if (resp?.url){
-            window.open(resp.url, "_blank", "noopener,noreferrer");
-            setActiveView("vNext");
-            return;
-          }
+            if (!dateValidation.ok) {
+                return showNegotiationError(dateValidation.message);
+            }
 
-          $("errorMsg").textContent = resp?.mensagem || "Autoatendimento indisponível no momento.";
-          setActiveView("vError");
-        }catch(e){
-          $("errorMsg").textContent = "Falha ao conectar no autoatendimento. Tente novamente.";
-          setActiveView("vError");
-        }
-      });
+            setActiveView("vLoading");
 
-      $("btnHumano").addEventListener("click", () => {
-        const cases = Array.isArray(foundRecord?.cases) ? foundRecord.cases : [];
-        if (!cases.length){
-          $("errorMsg").textContent = "Não foi possível identificar o projeto para atendimento.";
-          return setActiveView("vError");
-        }
+            try {
+                const data = await callBackend("confirmar_negociacao", {
+                    documento: currentDoc,
+                    credor: selectedCard.credor,
+                    idContrato: selectedCard.idContrato,
+                    numeroContrato: selectedCard.numeroContrato,
+                    valorTotal: selectedCard.valorTotal,
+                    propostaQuitacao: selectedCard.propostaQuitacao,
+                    dataPagamento: paymentDate,
+                    nomeInformado: $("nameInput").value.trim(),
+                    telefoneInformado: onlyDigits($("phoneInput").value),
+                    emailInformado: $("emailInput").value.trim()
+                });
 
-        const c = cases[0];
-        const credorRaw = c?.credor || c?.Credor || "";
-        const unidade = c?.unidade || c?.Unidade || "";
-        const pres = getCredorPresentation(credorRaw, unidade);
+                if (data?.status === "ok" || data?.proximoStep === "sucesso_negociacao") {
+                    return setActiveView("vNegotiationSuccess");
+                }
 
-        openChat(pres.chat);
-      });
+                $("errorMsg").textContent = data?.mensagem || "Não foi possível concluir a negociação no momento. Tente novamente ou fale com nosso atendimento.";
+                setActiveView("vError");
+            } catch (e) {
+                $("errorMsg").textContent = "Não foi possível concluir a negociação no momento. Tente novamente ou fale com nosso atendimento.";
+                setActiveView("vError");
+            }
+        });
 
-      // init
-      (function init(){
-        setDocType("CPF");
-      })();
+        // Confirmar agendamento IRA
+        $("btnSubmitIra").addEventListener("click", async () => {
+            hideIraError();
+
+            if (!selectedCard) {
+                return showIraError("Selecione um contrato para solicitar agendamento.");
+            }
+
+            const validation = validateIraForm();
+            if (!validation.ok) {
+                return showIraError(validation.message);
+            }
+
+            setActiveView("vLoading");
+
+            try {
+                const data = await callBackend("confirmar_agendamento_ira", {
+                    documento: currentDoc,
+                    credor: selectedCard.credor,
+                    idContrato: selectedCard.idContrato,
+                    numeroContrato: selectedCard.numeroContrato,
+                    agendamento: validation.data,
+                    nomeInformado: $("nameInput").value.trim(),
+                    telefoneInformado: onlyDigits($("phoneInput").value),
+                    emailInformado: $("emailInput").value.trim()
+                });
+
+                if (data?.status === "ok" || data?.proximoStep === "sucesso_agendamento") {
+                    return setActiveView("vIraSuccess");
+                }
+
+                $("errorMsg").textContent = data?.mensagem || "Não foi possível enviar a solicitação no momento. Tente novamente ou fale com nosso atendimento.";
+                setActiveView("vError");
+            } catch (e) {
+                $("errorMsg").textContent = "Não foi possível enviar a solicitação no momento. Tente novamente ou fale com nosso atendimento.";
+                setActiveView("vError");
+            }
+        });
+
+        // init
+        (function init() {
+            setDocType("CPF");
+        })();
     </script>
-
 </body>
 </html>
