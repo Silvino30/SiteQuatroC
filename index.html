@@ -33,33 +33,61 @@
     <style>
         .view { display: none; }
         .view.active { display: block; animation: fadeInPortal 0.35s ease; }
+
         @keyframes fadeInPortal {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .nav-blur { background: rgba(255, 255, 255, 0.9); backdrop-filter: saturate(180%) blur(20px); }
+        .nav-blur {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: saturate(180%) blur(20px);
+        }
+
         .hero-pattern {
             background-color: #ffffff;
             background-image: radial-gradient(#00264d 0.5px, transparent 0.5px);
             background-size: 24px 24px;
             opacity: 0.05;
         }
-        .soft-shadow { box-shadow: 0 10px 30px -10px rgba(0, 38, 77, 0.1); }
-        .cycle-line { background: repeating-linear-gradient(90deg, #FF6600 0, #FF6600 5px, transparent 5px, transparent 10px); }
+
+        .cycle-line {
+            background: repeating-linear-gradient(
+                90deg,
+                #FF6600 0,
+                #FF6600 5px,
+                transparent 5px,
+                transparent 10px
+            );
+        }
 
         @keyframes bounce-slow {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
-        .animate-bounce-slow { animation: bounce-slow 3s infinite ease-in-out; }
+
+        .animate-bounce-slow {
+            animation: bounce-slow 3s infinite ease-in-out;
+        }
 
         @keyframes pulse-whatsapp {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
         }
-        .whatsapp-pulse { animation: pulse-whatsapp 2s infinite; }
+
+        .whatsapp-pulse {
+            animation: pulse-whatsapp 2s infinite;
+        }
 
         input[type="date"]::-webkit-calendar-picker-indicator,
         input[type="time"]::-webkit-calendar-picker-indicator {
@@ -101,21 +129,33 @@
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div>
-                    <span class="inline-block px-4 py-1 rounded-full bg-slate-100 text-navy text-[10px] font-bold uppercase tracking-widest mb-6">Excelência em Recuperação</span>
+                    <span class="inline-block px-4 py-1 rounded-full bg-slate-100 text-navy text-[10px] font-bold uppercase tracking-widest mb-6">
+                        Excelência em Recuperação
+                    </span>
                     <h1 class="font-serif text-5xl lg:text-7xl text-navy leading-[1.1] mb-8">
-                        Inteligência na gestão de seus <span class="text-accent underline decoration-slate-200 underline-offset-8">recebíveis</span>.
+                        Inteligência na gestão de seus
+                        <span class="text-accent underline decoration-slate-200 underline-offset-8">recebíveis</span>.
                     </h1>
                     <p class="text-lg text-slate-500 mb-10 leading-relaxed max-w-lg">
-                        Atuamos como parceiros estratégicos do seu financeiro, otimizando todo o ciclo de crédito — do faturamento à liquidação extrajudicial.
+                        Atuamos como parceiros estratégicos do seu financeiro, otimizando todo o ciclo de crédito —
+                        do faturamento à liquidação extrajudicial.
                     </p>
                     <div class="flex flex-wrap gap-4">
-                        <a href="#contato" class="bg-navy text-white px-10 py-4 rounded-full font-bold shadow-xl hover:bg-navy-light transition-all text-center">Auditar Carteira</a>
-                        <a href="#autoatendimento" class="bg-white border-2 border-slate-100 text-navy px-10 py-4 rounded-full font-bold hover:border-accent transition-all text-center text-sm">Portal do Devedor</a>
+                        <a href="#contato" class="bg-navy text-white px-10 py-4 rounded-full font-bold shadow-xl hover:bg-navy-light transition-all text-center">
+                            Auditar Carteira
+                        </a>
+                        <a href="#autoatendimento" class="bg-white border-2 border-slate-100 text-navy px-10 py-4 rounded-full font-bold hover:border-accent transition-all text-center text-sm">
+                            Portal do Devedor
+                        </a>
                     </div>
                 </div>
                 <div class="relative">
                     <div class="bg-neutralBg rounded-[3rem] p-4 shadow-sm relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200" alt="Finance Professional" class="rounded-[2.5rem] grayscale hover:grayscale-0 transition duration-700">
+                        <img
+                            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200"
+                            alt="Finance Professional"
+                            class="rounded-[2.5rem] grayscale hover:grayscale-0 transition duration-700"
+                        >
                         <div class="absolute bottom-10 left-10 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 animate-bounce-slow">
                             <p class="text-4xl font-black text-navy leading-none mb-1">35%</p>
                             <p class="text-[9px] uppercase font-bold text-slate-400 tracking-widest">Aumento na Liquidez</p>
@@ -131,8 +171,12 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
                 <div class="max-w-xl">
-                    <h2 class="font-serif text-4xl text-navy mb-4 leading-tight tracking-tight">Um ciclo completo voltado para o seu fluxo de caixa.</h2>
-                    <p class="text-slate-500 font-medium italic">Monitorizamos cada fase da dívida com precisão e diplomacia.</p>
+                    <h2 class="font-serif text-4xl text-navy mb-4 leading-tight tracking-tight">
+                        Um ciclo completo voltado para o seu fluxo de caixa.
+                    </h2>
+                    <p class="text-slate-500 font-medium italic">
+                        Monitorizamos cada fase da dívida com precisão e diplomacia.
+                    </p>
                 </div>
                 <div class="w-24 h-px bg-slate-200 hidden lg:block"></div>
             </div>
@@ -145,7 +189,9 @@
                         <i class="fas fa-shield-halved text-2xl"></i>
                     </div>
                     <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">01. Prevenção</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed">Gestão de régua preventiva para evitar o atraso antes que ele ocorra.</p>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        Gestão de régua preventiva para evitar o atraso antes que ele ocorra.
+                    </p>
                 </div>
 
                 <div class="relative z-10 group">
@@ -153,7 +199,9 @@
                         <i class="fas fa-paper-plane text-2xl"></i>
                     </div>
                     <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">02. Administrativo</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed">Contactos iniciais focados em manutenção de rotina e lembretes amigáveis.</p>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        Contactos iniciais focados em manutenção de rotina e lembretes amigáveis.
+                    </p>
                 </div>
 
                 <div class="relative z-10 group">
@@ -161,7 +209,9 @@
                         <i class="fas fa-chess-knight text-2xl"></i>
                     </div>
                     <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">03. Estratégico</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed font-bold">Intervenção técnica para títulos que requerem mediação especializada.</p>
+                    <p class="text-slate-500 text-xs leading-relaxed font-bold">
+                        Intervenção técnica para títulos que requerem mediação especializada.
+                    </p>
                 </div>
 
                 <div class="relative z-10 group">
@@ -169,7 +219,9 @@
                         <i class="fas fa-handshake-angle text-2xl"></i>
                     </div>
                     <h4 class="font-bold text-navy text-xs uppercase tracking-widest mb-4">04. Extrajudicial</h4>
-                    <p class="text-slate-500 text-xs leading-relaxed">Esforço intensivo de negociação e quitação definitiva de débitos.</p>
+                    <p class="text-slate-500 text-xs leading-relaxed">
+                        Esforço intensivo de negociação e quitação definitiva de débitos.
+                    </p>
                 </div>
             </div>
         </div>
@@ -182,8 +234,12 @@
 
                 <div class="lg:row-span-2 bg-navy text-white p-12 rounded-[3rem] flex flex-col justify-between">
                     <div>
-                        <h2 class="font-serif text-4xl mb-6 leading-tight italic">Nossa atuação é a extensão do seu faturamento.</h2>
-                        <p class="text-slate-400 font-light mb-8">Personalizamos a nossa abordagem conforme a cultura da sua empresa.</p>
+                        <h2 class="font-serif text-4xl mb-6 leading-tight italic">
+                            Nossa atuação é a extensão do seu faturamento.
+                        </h2>
+                        <p class="text-slate-400 font-light mb-8">
+                            Personalizamos a nossa abordagem conforme a cultura da sua empresa.
+                        </p>
                     </div>
                     <div class="space-y-4">
                         <div class="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/10">
@@ -200,25 +256,33 @@
                 <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
                     <i class="fas fa-list-check text-2xl text-accent mb-6"></i>
                     <h4 class="font-bold text-navy text-lg mb-2">Gestão de Régua</h4>
-                    <p class="text-slate-500 text-sm leading-relaxed">Automação e execução de toda a comunicação financeira pré e pós vencimento.</p>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Automação e execução de toda a comunicação financeira pré e pós vencimento.
+                    </p>
                 </div>
 
                 <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
                     <i class="fas fa-fingerprint text-2xl text-navy mb-6"></i>
                     <h4 class="font-bold text-navy text-lg mb-2">Enriquecimento</h4>
-                    <p class="text-slate-500 text-sm leading-relaxed">Localização precisa através de tecnologia avançada de cruzamento de dados.</p>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Localização precisa através de tecnologia avançada de cruzamento de dados.
+                    </p>
                 </div>
 
                 <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
                     <i class="fas fa-balance-scale text-2xl text-navy mb-6"></i>
                     <h4 class="font-bold text-navy text-lg mb-2">Conciliação</h4>
-                    <p class="text-slate-600 text-sm leading-relaxed font-semibold italic">Transformamos dívidas antigas em novos fluxos de pagamentos ativos.</p>
+                    <p class="text-slate-600 text-sm leading-relaxed font-semibold italic">
+                        Transformamos dívidas antigas em novos fluxos de pagamentos ativos.
+                    </p>
                 </div>
 
                 <div class="bg-neutralBg p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-md transition">
                     <i class="fas fa-chart-bar text-2xl text-accent mb-6"></i>
                     <h4 class="font-bold text-navy text-lg mb-2">BI & Insights</h4>
-                    <p class="text-slate-500 text-sm leading-relaxed">Relatórios estratégicos com indicadores reais de saúde financeira.</p>
+                    <p class="text-slate-500 text-sm leading-relaxed">
+                        Relatórios estratégicos com indicadores reais de saúde financeira.
+                    </p>
                 </div>
 
             </div>
@@ -234,12 +298,19 @@
                 <div class="text-white">
                     <h2 class="font-serif text-4xl lg:text-5xl mb-8 italic">Portal de Negociação Automática.</h2>
                     <p class="text-slate-400 text-lg font-light leading-relaxed mb-10">
-                        Oferecemos ao seu cliente uma plataforma discreta e segura para resolver pendências de forma instantânea. Menos atrito, mais liquidez.
+                        Oferecemos ao seu cliente uma plataforma discreta e segura para resolver pendências de forma instantânea.
+                        Menos atrito, mais liquidez.
                     </p>
                     <ul class="space-y-4 mb-10">
-                        <li class="flex items-center gap-4 text-sm font-medium"><i class="fas fa-check-double text-accent"></i> Acordos Personalizados</li>
-                        <li class="flex items-center gap-4 text-sm font-medium"><i class="fas fa-clock text-accent"></i> Disponível 24/7</li>
-                        <li class="flex items-center gap-4 text-sm font-medium"><i class="fas fa-user-shield text-accent"></i> Sigilo e Segurança Total</li>
+                        <li class="flex items-center gap-4 text-sm font-medium">
+                            <i class="fas fa-check-double text-accent"></i> Acordos Personalizados
+                        </li>
+                        <li class="flex items-center gap-4 text-sm font-medium">
+                            <i class="fas fa-clock text-accent"></i> Disponível 24/7
+                        </li>
+                        <li class="flex items-center gap-4 text-sm font-medium">
+                            <i class="fas fa-user-shield text-accent"></i> Sigilo e Segurança Total
+                        </li>
                     </ul>
                 </div>
 
@@ -247,8 +318,12 @@
                     <div class="bg-white rounded-[2.8rem] p-8 md:p-10 border border-slate-100">
                         <div class="flex items-center justify-between mb-6">
                             <div>
-                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 font-sans">Ambiente seguro</p>
-                                <h3 class="text-navy font-bold text-2xl font-sans tracking-tight">Portal de Negociação</h3>
+                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 font-sans">
+                                    Ambiente seguro
+                                </p>
+                                <h3 class="text-navy font-bold text-2xl font-sans tracking-tight">
+                                    Portal de Negociação
+                                </h3>
                             </div>
                             <button id="btnVoltar" type="button"
                                 class="text-slate-500 hover:text-accent transition font-bold text-xs uppercase tracking-widest font-sans"
@@ -257,7 +332,7 @@
                             </button>
                         </div>
 
-                        <!-- VIEWS -->
+                        <!-- View inicial -->
                         <div class="view active" id="vStart">
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
                                 Informe seus dados para localizarmos seu cadastro e suas pendências com segurança.
@@ -300,13 +375,38 @@
                             </p>
                         </div>
 
+                        <!-- Loading -->
                         <div class="view" id="vLoading">
                             <div class="text-center py-10">
                                 <div class="mx-auto mb-5 w-12 h-12 rounded-full border-4 border-slate-200 border-t-accent animate-spin"></div>
-                                <p class="text-slate-500 font-medium font-sans">Buscando informações nos nossos credores...</p>
+                                <p class="text-slate-500 font-medium font-sans">Processando sua solicitação...</p>
                             </div>
                         </div>
 
+                        <!-- Validar código -->
+                        <div class="view" id="vValidateCode">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Validação de contato</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans" id="validateCodeText">
+                                Enviamos um código de validação para o e-mail informado. Digite abaixo para prosseguir.
+                            </p>
+
+                            <input id="validationCodeInput" type="text" maxlength="6" inputmode="numeric" autocomplete="off" placeholder="Digite o código"
+                                class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent text-center font-bold tracking-[0.4em] transition font-sans">
+
+                            <p id="validationCodeError" class="mt-4 text-sm text-red-500 font-semibold hidden font-sans"></p>
+
+                            <button id="btnValidateCode" type="button"
+                                class="w-full mt-4 bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Validar código
+                            </button>
+
+                            <button id="btnResendCode" type="button"
+                                class="w-full mt-3 bg-white border-2 border-slate-100 text-navy font-bold py-5 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans">
+                                Reenviar código
+                            </button>
+                        </div>
+
+                        <!-- Confirmar identidade -->
                         <div class="view" id="vConfirmName">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Confirme sua identidade</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-4 font-sans" id="confirmSubtitle">
@@ -324,6 +424,7 @@
                             </p>
                         </div>
 
+                        <!-- Bloqueio -->
                         <div class="view" id="vBlocked">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Acesso temporariamente bloqueado</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
@@ -336,14 +437,16 @@
                             </button>
                         </div>
 
+                        <!-- Cards -->
                         <div class="view" id="vNext">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Pendências localizadas</h4>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans" id="cardsIntro">
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
                                 Identificamos as seguintes pendências para análise:
                             </p>
                             <div class="grid gap-4 mb-6" id="cardsGrid"></div>
                         </div>
 
+                        <!-- Não localizado -->
                         <div class="view" id="vNoRecord">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Documento não localizado</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans" id="noRecordMsg">
@@ -355,6 +458,7 @@
                             </button>
                         </div>
 
+                        <!-- Sem pendência -->
                         <div class="view" id="vNoDebt">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Nenhuma pendência localizada</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
@@ -366,6 +470,7 @@
                             </button>
                         </div>
 
+                        <!-- Acordo ativo -->
                         <div class="view" id="vActiveAgreement">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Acordo ativo identificado</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
@@ -389,9 +494,10 @@
                             </button>
                         </div>
 
+                        <!-- Negociação -->
                         <div class="view" id="vNegotiate">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Negociação automática</h4>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans" id="negotiationSubtitle">
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
                                 Selecione a data desejada para pagamento.
                             </p>
 
@@ -426,6 +532,7 @@
                             </button>
                         </div>
 
+                        <!-- Sucesso negociação -->
                         <div class="view" id="vNegotiationSuccess">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Negociação concluída</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
@@ -437,6 +544,7 @@
                             </button>
                         </div>
 
+                        <!-- IRA -->
                         <div class="view" id="vIraSchedule">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Solicitar agendamento</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
@@ -473,6 +581,7 @@
                             </button>
                         </div>
 
+                        <!-- Sucesso IRA -->
                         <div class="view" id="vIraSuccess">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Solicitação enviada</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans">
@@ -484,6 +593,7 @@
                             </button>
                         </div>
 
+                        <!-- Erro -->
                         <div class="view" id="vError">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Não foi possível concluir</h4>
                             <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans" id="errorMsg">
@@ -494,71 +604,78 @@
                                 Nova pesquisa
                             </button>
                         </div>
-
-                        <div class="mt-8 text-center">
-                            <a href="#" id="openTerms" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-accent transition font-sans">
-                                Termos e Privacidade
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TERMS OVERLAY -->
-                <div id="termsOverlay" class="fixed inset-0 hidden items-center justify-center z-[100] p-6" aria-hidden="true">
-                    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
-                    <div class="relative bg-white rounded-3xl w-full max-w-lg p-8 border border-slate-100 shadow-2xl">
-                        <h3 class="text-navy font-bold text-xl font-sans mb-3">Termos e Política</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed font-sans mb-6">
-                            A QuatroC adota medidas técnicas e organizacionais para proteger os dados utilizados neste portal,
-                            com foco em confidencialidade, integridade e disponibilidade das informações.
-                        </p>
-                        <button id="closeTerms" type="button"
-                            class="w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
-                            Entendi
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contato -->
+    <!-- Consultoria -->
     <section id="contato" class="py-24 bg-white px-6">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="font-serif text-4xl text-navy mb-4 italic">Solicitar Diagnóstico Especializado</h2>
-                <p class="text-slate-500 font-medium leading-relaxed max-w-lg mx-auto">Preencha os dados abaixo. Um consultor sénior entrará em contacto para realizar a auditoria da sua carteira.</p>
+                <p class="text-slate-500 font-medium leading-relaxed max-w-lg mx-auto">
+                    Preencha os dados abaixo. Um consultor sénior entrará em contacto para realizar a auditoria da sua carteira.
+                </p>
             </div>
 
             <form id="diagnostico-form" class="bg-neutralBg p-10 md:p-16 rounded-[4rem] shadow-sm border border-slate-100">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Nome do Contato</label>
-                        <input type="text" name="nome_contato" id="nome_contato" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="Ex: João Silva">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">
+                            Nome do Contato
+                        </label>
+                        <input type="text" name="nome_contato" id="nome_contato" required
+                            class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans"
+                            placeholder="Ex: João Silva">
                     </div>
+
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Empresa</label>
-                        <input type="text" name="nome_empresa" id="nome_empresa" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="Razão Social ou Fantasia">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">
+                            Empresa
+                        </label>
+                        <input type="text" name="nome_empresa" id="nome_empresa" required
+                            class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans"
+                            placeholder="Razão Social ou Fantasia">
                     </div>
+
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">E-mail Corporativo</label>
-                        <input type="email" name="email_corporativo" id="email_corporativo" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="exemplo@empresa.com">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">
+                            E-mail Corporativo
+                        </label>
+                        <input type="email" name="email_corporativo" id="email_corporativo" required
+                            class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans"
+                            placeholder="exemplo@empresa.com">
                     </div>
+
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Telefone / WhatsApp</label>
-                        <input type="tel" name="telefone" id="telefone" required class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans" placeholder="(00) 00000-0000">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">
+                            Telefone / WhatsApp
+                        </label>
+                        <input type="tel" name="telefone" id="telefone" required
+                            class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm font-sans"
+                            placeholder="(00) 00000-0000">
                     </div>
+
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Preferência de Retorno</label>
-                        <select name="preferencia_contato" id="preferencia_contato" class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm appearance-none font-semibold text-navy font-sans">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">
+                            Preferência de Retorno
+                        </label>
+                        <select name="preferencia_contato" id="preferencia_contato"
+                            class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm appearance-none font-semibold text-navy font-sans">
                             <option value="WhatsApp">WhatsApp</option>
                             <option value="Telefone">Ligação Telefónica</option>
                             <option value="E-mail">E-mail</option>
                         </select>
                     </div>
+
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">Volume em Aberto</label>
-                        <select name="volume_inadimplencia" id="volume_inadimplencia" class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm appearance-none font-semibold text-navy font-sans">
+                        <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest font-sans">
+                            Volume em Aberto
+                        </label>
+                        <select name="volume_inadimplencia" id="volume_inadimplencia"
+                            class="w-full p-4 bg-white rounded-2xl outline-none focus:ring-2 focus:ring-accent transition shadow-sm appearance-none font-semibold text-navy font-sans">
                             <option value="Até R$ 100k">Até R$ 100k</option>
                             <option value="R$ 100k - R$ 500k">De R$ 100k a R$ 500k</option>
                             <option value="Acima de R$ 500k">Acima de R$ 500k</option>
@@ -567,7 +684,10 @@
                 </div>
 
                 <div class="mt-12 text-center">
-                    <button type="submit" class="w-full md:w-auto md:px-24 bg-navy text-white font-bold py-6 rounded-3xl hover:bg-navy-light transition shadow-2xl uppercase tracking-[0.2em] text-xs font-sans">Solicitar Auditoria Gratuita</button>
+                    <button type="submit"
+                        class="w-full md:w-auto md:px-24 bg-navy text-white font-bold py-6 rounded-3xl hover:bg-navy-light transition shadow-2xl uppercase tracking-[0.2em] text-xs font-sans">
+                        Solicitar Auditoria Gratuita
+                    </button>
                     <p id="form-status" class="mt-6 text-[10px] font-bold uppercase tracking-widest hidden font-sans"></p>
                 </div>
             </form>
@@ -590,6 +710,7 @@
                     Gestão estratégica de ciclo de crédito e recuperação especializada de ativos B2B e corporativos.
                 </p>
             </div>
+
             <div class="grid grid-cols-2 gap-10 font-sans">
                 <div>
                     <h5 class="text-navy font-bold text-[10px] uppercase tracking-widest mb-6">Links</h5>
@@ -607,23 +728,34 @@
                     </ul>
                 </div>
             </div>
+
             <div>
                 <h5 class="text-navy font-bold text-[10px] uppercase tracking-widest mb-6 font-sans text-left">Contacto</h5>
-                <p class="text-slate-500 text-xs font-bold mb-4 flex items-center gap-2 font-sans text-left"><i class="fas fa-envelope text-accent"></i> comercial@quatroc.pt</p>
+                <p class="text-slate-500 text-xs font-bold mb-4 flex items-center gap-2 font-sans text-left">
+                    <i class="fas fa-envelope text-accent"></i> comercial@quatroc.pt
+                </p>
                 <div class="flex gap-4 mt-8">
-                    <a href="#" class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-navy hover:bg-accent hover:text-white transition-all shadow-sm"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-navy hover:bg-accent hover:text-white transition-all shadow-sm"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-navy hover:bg-accent hover:text-white transition-all shadow-sm">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-navy hover:bg-accent hover:text-white transition-all shadow-sm">
+                        <i class="fab fa-instagram"></i>
+                    </a>
                 </div>
             </div>
         </div>
+
         <div class="max-w-7xl mx-auto px-6 border-t border-slate-50 mt-20 pt-10 text-center font-sans">
-            <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.5em]">&copy; 2026 Quatro C Inteligência Financeira. Todos os direitos reservados.</p>
+            <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.5em]">
+                &copy; 2026 Quatro C Inteligência Financeira. Todos os direitos reservados.
+            </p>
         </div>
     </footer>
 
     <!-- WhatsApp -->
     <div class="fixed bottom-10 right-10 z-50">
-        <a href="#" target="_blank" class="flex items-center bg-white p-2 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-50 hover:scale-105 transition-all duration-300 group">
+        <a id="floatingWhatsapp" href="https://wa.me/5511962254398" target="_blank"
+            class="flex items-center bg-white p-2 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-50 hover:scale-105 transition-all duration-300 group">
             <div class="relative">
                 <div class="absolute inset-0 bg-[#25D366] rounded-full whatsapp-pulse opacity-25"></div>
                 <div class="relative bg-[#25D366] text-white w-14 h-14 flex items-center justify-center rounded-full shadow-lg">
@@ -632,8 +764,12 @@
             </div>
             <div class="overflow-hidden max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-500 ease-in-out">
                 <div class="pl-4 pr-6">
-                    <p class="text-[10px] font-black uppercase text-navy tracking-widest whitespace-nowrap font-sans">Suporte Especializado</p>
-                    <p class="text-[9px] text-slate-400 whitespace-nowrap font-sans">Resposta em poucos minutos</p>
+                    <p class="text-[10px] font-black uppercase text-navy tracking-widest whitespace-nowrap font-sans">
+                        Suporte Especializado
+                    </p>
+                    <p class="text-[9px] text-slate-400 whitespace-nowrap font-sans">
+                        Resposta em poucos minutos
+                    </p>
                 </div>
             </div>
         </a>
@@ -641,898 +777,928 @@
 
     <script>
         const BITRIX_ENDPOINT = "https://grupoasserth.bitrix24.com.br/rest/1/15a2h0vrp7wfb31l/crm.lead.add.json";
+    </script>
 
-        document.getElementById('diagnostico-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button');
-            const status = document.getElementById('form-status');
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("diagnostico-form");
+            if (form) {
+                form.addEventListener("submit", async function (e) {
+                    e.preventDefault();
 
-            const nomeContato = document.getElementById('nome_contato').value;
-            const nomeEmpresa = document.getElementById('nome_empresa').value;
-            const emailCorp = document.getElementById('email_corporativo').value;
-            const telefone = document.getElementById('telefone').value;
-            const preferencia = document.getElementById('preferencia_contato').value;
-            const volume = document.getElementById('volume_inadimplencia').value;
+                    const btn = this.querySelector("button");
+                    const status = document.getElementById("form-status");
 
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2 text-[10px]"></i> PROCESSANDO SOLICITAÇÃO...';
-            btn.disabled = true;
+                    const nomeContato = document.getElementById("nome_contato")?.value || "";
+                    const nomeEmpresa = document.getElementById("nome_empresa")?.value || "";
+                    const emailCorp = document.getElementById("email_corporativo")?.value || "";
+                    const telefone = document.getElementById("telefone")?.value || "";
+                    const preferencia = document.getElementById("preferencia_contato")?.value || "";
+                    const volume = document.getElementById("volume_inadimplencia")?.value || "";
 
-            const payload = {
-                fields: {
-                    "TITLE": `Lead Portal Quatro C: ${nomeEmpresa}`,
-                    "NAME": nomeContato,
-                    "COMPANY_TITLE": nomeEmpresa,
-                    "EMAIL": [{ "VALUE": emailCorp, "VALUE_TYPE": "WORK" }],
-                    "PHONE": [{ "VALUE": telefone, "VALUE_TYPE": "WORK" }],
-                    "COMMENTS": `Preferência de Contato: ${preferencia} | Volume de Inadimplência: ${volume}`,
-                    "SOURCE_ID": "WEB",
-                    "UTM_SOURCE": "portal_corporativo"
-                },
-                params: { "REGISTER_SONET_EVENT": "Y" }
-            };
+                    if (btn) {
+                        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2 text-[10px]"></i> PROCESSANDO SOLICITAÇÃO...';
+                        btn.disabled = true;
+                    }
 
-            try {
-                const response = await fetch(BITRIX_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    const payload = {
+                        fields: {
+                            "TITLE": `Lead Portal Quatro C: ${nomeEmpresa}`,
+                            "NAME": nomeContato,
+                            "COMPANY_TITLE": nomeEmpresa,
+                            "EMAIL": [{ "VALUE": emailCorp, "VALUE_TYPE": "WORK" }],
+                            "PHONE": [{ "VALUE": telefone, "VALUE_TYPE": "WORK" }],
+                            "COMMENTS": `Preferência de Contato: ${preferencia} | Volume de Inadimplência: ${volume}`,
+                            "SOURCE_ID": "WEB",
+                            "UTM_SOURCE": "portal_corporativo"
+                        },
+                        params: { "REGISTER_SONET_EVENT": "Y" }
+                    };
+
+                    try {
+                        const response = await fetch(BITRIX_ENDPOINT, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            if (status) {
+                                status.innerHTML = '<i class="fas fa-check-circle mr-2 text-green-500"></i> Diagnóstico solicitado! A nossa equipa entrará em contacto em breve.';
+                                status.classList.remove("hidden", "text-red-500");
+                                status.classList.add("text-green-600");
+                            }
+                            this.reset();
+                        } else {
+                            throw new Error("Erro Bitrix");
+                        }
+                    } catch (error) {
+                        if (status) {
+                            status.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Houve um erro no envio. Por favor, tente o WhatsApp para um retorno imediato.';
+                            status.classList.remove("hidden", "text-green-600");
+                            status.classList.add("text-red-500");
+                        }
+                        console.error("Erro formulário Bitrix:", error);
+                    } finally {
+                        if (btn) {
+                            btn.innerHTML = "Solicitar Auditoria Gratuita";
+                            btn.disabled = false;
+                        }
+                    }
                 });
+            }
 
-                if (response.ok) {
-                    status.innerHTML = '<i class="fas fa-check-circle mr-2 text-green-500"></i> Diagnóstico solicitado! A nossa equipa entrará em contacto em breve.';
-                    status.classList.remove('hidden', 'text-red-500');
-                    status.classList.add('text-green-600');
-                    this.reset();
+            const nav = document.getElementById("main-nav");
+            window.addEventListener("scroll", () => {
+                if (!nav) return;
+                if (window.scrollY > 50) {
+                    nav.classList.add("py-2", "shadow-sm");
+                    nav.classList.remove("py-4");
                 } else {
-                    throw new Error("Erro Bitrix");
+                    nav.classList.remove("py-2", "shadow-sm");
+                    nav.classList.add("py-4");
                 }
-            } catch (error) {
-                status.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Houve um erro no envio. Por favor, tente o WhatsApp para um retorno imediato.';
-                status.classList.remove('hidden', 'text-green-600');
-                status.classList.add('text-red-500');
-                console.error("Erro formulário Bitrix:", error);
-            } finally {
-                btn.innerHTML = 'Solicitar Auditoria Gratuita';
-                btn.disabled = false;
-            }
-        });
-
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('main-nav');
-            if (window.scrollY > 50) {
-                nav.classList.add('py-2', 'shadow-sm');
-                nav.classList.remove('py-4');
-            } else {
-                nav.classList.remove('py-2', 'shadow-sm');
-                nav.classList.add('py-4');
-            }
+            });
         });
     </script>
 
     <script>
-        // ===========================================
-        // PORTAL DE AUTOATENDIMENTO
-        // ===========================================
+        document.addEventListener("DOMContentLoaded", () => {
+            const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
-        const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
+            const CHAT_LINK_SASCAR        = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
+            const CHAT_LINK_IRA           = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
+            const CHAT_LINK_AMIL_DEFAULT  = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
+            const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
 
-        const CHAT_LINK_SASCAR        = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
-        const CHAT_LINK_IRA           = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y";
-        const CHAT_LINK_AMIL_DEFAULT  = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y";
-        const CHAT_LINK_REDE_AMERICAS = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y";
+            const LOGO_AMIL     = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
+            const LOGO_MICHELIN = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
+            const LOGO_SHAM     = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
+            const LOGO_REDE     = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
 
-        const LOGO_AMIL     = "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg";
-        const LOGO_MICHELIN = "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png";
-        const LOGO_SHAM     = "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif";
-        const LOGO_REDE     = "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif";
+            const $ = (id) => document.getElementById(id);
 
-        const $ = (id) => document.getElementById(id);
+            let currentView = "vStart";
+            let docType = "CPF";
+            let currentDoc = "";
+            let sessionId = Date.now().toString();
+            let foundRecord = null;
+            let selectedCard = null;
+            let lastHumanChat = CHAT_LINK_AMIL_DEFAULT;
 
-        let currentView = "vStart";
-        let docType = "CPF";
-        let currentDoc = "";
-        let sessionId = Date.now().toString();
-        let foundRecord = null;
-        let selectedCard = null;
-        let lastHumanChat = CHAT_LINK_AMIL_DEFAULT;
-
-        function onlyDigits(str) {
-            return String(str || "").replace(/\D/g, "");
-        }
-
-        function isCPF(d) {
-            return d.length === 11;
-        }
-
-        function isCNPJ(d) {
-            return d.length === 14;
-        }
-
-        function isValidEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
-        }
-
-        function isValidPhone(phone) {
-            const digits = onlyDigits(phone);
-            return digits.length >= 11 && digits.length <= 13;
-        }
-
-        function norm(str) {
-            return String(str || "")
-                .toUpperCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace(/\s+/g, " ")
-                .trim();
-        }
-
-        function formatBRL(v) {
-            const n = Number(v || 0);
-            return n.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            });
-        }
-
-        function formatDateBR(dateStr) {
-            if (!dateStr) return "--/--/----";
-            const dt = new Date(`${dateStr}T00:00:00`);
-            if (Number.isNaN(dt.getTime())) return "--/--/----";
-            return dt.toLocaleDateString("pt-BR");
-        }
-
-        function maskCPF(digits) {
-            const d = digits.slice(0, 11);
-            let out = d;
-            if (d.length > 3) out = d.slice(0, 3) + "." + d.slice(3);
-            if (d.length > 6) out = out.slice(0, 7) + "." + out.slice(7);
-            if (d.length > 9) out = out.slice(0, 11) + "-" + out.slice(11);
-            return out;
-        }
-
-        function maskCNPJ(digits) {
-            const d = digits.slice(0, 14);
-            let out = d;
-            if (d.length > 2) out = d.slice(0, 2) + "." + d.slice(2);
-            if (d.length > 5) out = out.slice(0, 6) + "." + out.slice(6);
-            if (d.length > 8) out = out.slice(0, 10) + "/" + out.slice(10);
-            if (d.length > 12) out = out.slice(0, 15) + "-" + out.slice(15);
-            return out;
-        }
-
-        function detectTypeFromDigits(d) {
-            return d.length >= 12 ? "CNPJ" : "CPF";
-        }
-
-        function applyMask() {
-            const input = $("docInput");
-            const digits = onlyDigits(input.value);
-
-            if (docType === "CPF") {
-                input.value = maskCPF(digits);
-                input.maxLength = 14;
-            } else {
-                input.value = maskCNPJ(digits);
-                input.maxLength = 18;
-            }
-        }
-
-        function setDocType(type) {
-            docType = type;
-
-            const cpf = $("segCPF");
-            const cnpj = $("segCNPJ");
-
-            if (type === "CPF") {
-                cpf.classList.add("bg-white", "text-accent", "shadow-sm");
-                cpf.classList.remove("text-slate-500");
-                cnpj.classList.remove("bg-white", "text-accent", "shadow-sm");
-                cnpj.classList.add("text-slate-500");
-            } else {
-                cnpj.classList.add("bg-white", "text-accent", "shadow-sm");
-                cnpj.classList.remove("text-slate-500");
-                cpf.classList.remove("bg-white", "text-accent", "shadow-sm");
-                cpf.classList.add("text-slate-500");
+            function onlyDigits(str) {
+                return String(str || "").replace(/\D/g, "");
             }
 
-            $("docInput").placeholder = type === "CPF" ? "000.000.000-00" : "00.000.000/0000-00";
-            applyMask();
-        }
-
-        function setActiveView(viewId) {
-            document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-            $(viewId).classList.add("active");
-            $("btnVoltar").style.visibility = (viewId === "vStart") ? "hidden" : "visible";
-            currentView = viewId;
-        }
-
-        function openOverlay(id) {
-            const el = $(id);
-            el.classList.remove("hidden");
-            el.classList.add("flex");
-            el.setAttribute("aria-hidden", "false");
-        }
-
-        function closeOverlay(id) {
-            const el = $(id);
-            el.classList.add("hidden");
-            el.classList.remove("flex");
-            el.setAttribute("aria-hidden", "true");
-        }
-
-        function openChat(url) {
-            window.open(url || CHAT_LINK_AMIL_DEFAULT, "_blank", "noopener,noreferrer");
-        }
-
-        function showStartError(message) {
-            $("startError").textContent = message;
-            $("startError").classList.remove("hidden");
-        }
-
-        function hideStartError() {
-            $("startError").textContent = "";
-            $("startError").classList.add("hidden");
-        }
-
-        function showNegotiationError(message) {
-            $("negotiationError").textContent = message;
-            $("negotiationError").classList.remove("hidden");
-        }
-
-        function hideNegotiationError() {
-            $("negotiationError").textContent = "";
-            $("negotiationError").classList.add("hidden");
-        }
-
-        function showIraError(message) {
-            $("iraError").textContent = message;
-            $("iraError").classList.remove("hidden");
-        }
-
-        function hideIraError() {
-            $("iraError").textContent = "";
-            $("iraError").classList.add("hidden");
-        }
-
-        function clearPortalForms() {
-            $("docInput").value = "";
-            $("nameInput").value = "";
-            $("phoneInput").value = "";
-            $("emailInput").value = "";
-            $("paymentDateInput").value = "";
-            $("iraDate1").value = "";
-            $("iraTime1").value = "";
-            $("iraDate2").value = "";
-            $("iraTime2").value = "";
-            $("iraStreet").value = "";
-            $("iraNumber").value = "";
-            $("iraDistrict").value = "";
-            $("iraZip").value = "";
-            $("iraCity").value = "";
-            $("iraReference").value = "";
-            $("iraResponsible").value = "";
-            $("iraEmail").value = "";
-            $("iraWhatsapp").value = "";
-            hideStartError();
-            hideNegotiationError();
-            hideIraError();
-        }
-
-        function goStart() {
-            currentDoc = "";
-            foundRecord = null;
-            selectedCard = null;
-            sessionId = Date.now().toString();
-            clearPortalForms();
-            setDocType("CPF");
-            setActiveView("vStart");
-        }
-
-        async function callBackend(step, payload) {
-            const body = { step, sessionId, ...payload };
-
-            const res = await fetch(CRM_ENDPOINT, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-
-            if (!res.ok) {
-                throw new Error(`Falha backend: ${res.status}`);
+            function isCPF(d) {
+                return d.length === 11;
             }
 
-            return await res.json();
-        }
-
-        function getCredorPresentation(credorRaw, unidade) {
-            const c = norm(credorRaw);
-
-            const isAmilHosp =
-                c.includes("AMIL HOSPITAIS") ||
-                c.includes("REDE AMERICAS IMPAR") ||
-                c.includes("REDE AMERICAS");
-
-            if (isAmilHosp) {
-                const nomeUnidade = (unidade && String(unidade).trim()) ? String(unidade).trim() : "Atendimento Hospitalar";
-                const logo = c.includes("REDE AMERICAS") ? LOGO_REDE : LOGO_AMIL;
-                const chat = c.includes("REDE AMERICAS") ? CHAT_LINK_REDE_AMERICAS : CHAT_LINK_AMIL_DEFAULT;
-                return { nome: nomeUnidade, logo, chat, credorTag: c };
+            function isCNPJ(d) {
+                return d.length === 14;
             }
 
-            if (c.includes("AMIL OPERADORAS")) {
-                return { nome: "Amil", logo: LOGO_AMIL, chat: CHAT_LINK_AMIL_DEFAULT, credorTag: c };
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
             }
 
-            if (c.includes("SASCAR_IRA")) {
-                return { nome: "Michelin | Equipamentos", logo: LOGO_MICHELIN, chat: CHAT_LINK_IRA, credorTag: c };
+            function isValidPhone(phone) {
+                const digits = onlyDigits(phone);
+                return digits.length >= 11 && digits.length <= 13;
             }
 
-            if (c.includes("SASCAR FIXA VARIAVEL")) {
-                return { nome: "Michelin Connect Fleet", logo: LOGO_MICHELIN, chat: CHAT_LINK_SASCAR, credorTag: c };
+            function norm(str) {
+                return String(str || "")
+                    .toUpperCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, " ")
+                    .trim();
             }
 
-            if (c.includes("SANTA HELENA")) {
-                return { nome: "Santa Helena Saúde", logo: LOGO_SHAM, chat: CHAT_LINK_AMIL_DEFAULT, credorTag: c };
+            function formatBRL(v) {
+                return Number(v || 0).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL"
+                });
             }
 
-            return { nome: credorRaw || "Projeto", logo: "", chat: CHAT_LINK_AMIL_DEFAULT, credorTag: c };
-        }
+            function maskCPF(digits) {
+                const d = digits.slice(0, 11);
+                let out = d;
+                if (d.length > 3) out = d.slice(0, 3) + "." + d.slice(3);
+                if (d.length > 6) out = out.slice(0, 7) + "." + out.slice(7);
+                if (d.length > 9) out = out.slice(0, 11) + "-" + out.slice(11);
+                return out;
+            }
 
-        function buildFallbackNameOptions(realName, typeUpper) {
-            const clean = String(realName || "").trim();
-            const parts = clean.split(/\s+/).filter(Boolean);
+            function maskCNPJ(digits) {
+                const d = digits.slice(0, 14);
+                let out = d;
+                if (d.length > 2) out = d.slice(0, 2) + "." + d.slice(2);
+                if (d.length > 5) out = out.slice(0, 6) + "." + out.slice(6);
+                if (d.length > 8) out = out.slice(0, 10) + "/" + out.slice(10);
+                if (d.length > 12) out = out.slice(0, 15) + "-" + out.slice(15);
+                return out;
+            }
 
-            if (!clean || parts.length < 2) {
-                if (typeUpper === "CNPJ") {
-                    return [clean || "RAZAO SOCIAL", "EMPRESA MODELO LTDA", "COMERCIAL BRASIL SA"];
+            function detectTypeFromDigits(d) {
+                return d.length >= 12 ? "CNPJ" : "CPF";
+            }
+
+            function applyMask() {
+                const input = $("docInput");
+                if (!input) return;
+
+                const digits = onlyDigits(input.value);
+                if (docType === "CPF") {
+                    input.value = maskCPF(digits);
+                    input.maxLength = 14;
+                } else {
+                    input.value = maskCNPJ(digits);
+                    input.maxLength = 18;
                 }
-                return [clean || "NOME COMPLETO", "MARIA HELENA SOUZA", "JOAO PEDRO ALMEIDA"];
             }
 
-            const first = parts[0].toUpperCase();
-            const second = parts[1].toUpperCase();
-            const prefix = `${first} ${second}`;
+            function setDocType(type) {
+                docType = type;
+                const cpf = $("segCPF");
+                const cnpj = $("segCNPJ");
 
-            if (typeUpper === "CNPJ") {
-                return [
-                    `${prefix} SERVICOS LTDA`,
-                    clean.toUpperCase(),
-                    `${prefix} LOGISTICA SA`
-                ];
-            }
-
-            return [
-                `${prefix} DA SILVA`,
-                clean.toUpperCase(),
-                `${prefix} PEREIRA`
-            ];
-        }
-
-        function renderIdentityOptions(options, fullName, typeUpper) {
-            const wrap = $("nameOptions");
-            wrap.innerHTML = "";
-
-            const finalOptions = (Array.isArray(options) && options.length)
-                ? options
-                : buildFallbackNameOptions(fullName, typeUpper);
-
-            $("confirmSubtitle").textContent =
-                typeUpper === "CNPJ"
-                    ? "Selecione a razão social correta vinculada ao documento:"
-                    : "Selecione o nome correto vinculado ao documento:";
-
-            finalOptions.forEach(opt => {
-                const btn = document.createElement("button");
-                btn.type = "button";
-                btn.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-[11px] font-sans";
-                btn.textContent = opt;
-
-                btn.addEventListener("click", async () => {
-                    setActiveView("vLoading");
-
-                    try {
-                        const data = await callBackend("confirmar_identidade", {
-                            documento: currentDoc,
-                            opcaoSelecionada: opt,
-                            nomeInformado: $("nameInput").value.trim(),
-                            telefoneInformado: onlyDigits($("phoneInput").value),
-                            emailInformado: $("emailInput").value.trim()
-                        });
-
-                        foundRecord = { ...(foundRecord || {}), ...(data || {}) };
-
-                        if (data?.proximoStep === "identidade_incorreta") {
-                            $("errorMsg").textContent = data?.mensagem || "O nome selecionado não corresponde ao cadastro localizado.";
-                            return setActiveView("vError");
-                        }
-
-                        if (data?.proximoStep === "sem_pendencia") {
-                            return setActiveView("vNoDebt");
-                        }
-
-                        if (data?.proximoStep === "mostrar_acordo_ativo") {
-                            $("activeAgreementValue").textContent = data?.acordoAtivo?.valorFormatado || formatBRL(data?.acordoAtivo?.valor || 0);
-                            $("activeAgreementDue").textContent = data?.acordoAtivo?.vencimentoFormatado || formatDateBR(data?.acordoAtivo?.vencimento);
-                            lastHumanChat = data?.chatUrl || lastHumanChat || CHAT_LINK_AMIL_DEFAULT;
-                            return setActiveView("vActiveAgreement");
-                        }
-
-                        if (data?.proximoStep === "mostrar_cards") {
-                            renderCards(data?.cards || []);
-                            return setActiveView("vNext");
-                        }
-
-                        $("errorMsg").textContent = "Não foi possível validar sua identidade no momento.";
-                        setActiveView("vError");
-                    } catch (e) {
-                        $("errorMsg").textContent = "Nosso sistema está temporariamente indisponível. Tente novamente em alguns minutos ou fale com nosso atendimento.";
-                        setActiveView("vError");
+                if (cpf && cnpj) {
+                    if (type === "CPF") {
+                        cpf.classList.add("bg-white", "text-accent", "shadow-sm");
+                        cpf.classList.remove("text-slate-500");
+                        cnpj.classList.remove("bg-white", "text-accent", "shadow-sm");
+                        cnpj.classList.add("text-slate-500");
+                    } else {
+                        cnpj.classList.add("bg-white", "text-accent", "shadow-sm");
+                        cnpj.classList.remove("text-slate-500");
+                        cpf.classList.remove("bg-white", "text-accent", "shadow-sm");
+                        cpf.classList.add("text-slate-500");
                     }
-                });
+                }
 
-                wrap.appendChild(btn);
-            });
-        }
+                const docInput = $("docInput");
+                if (docInput) {
+                    docInput.placeholder = type === "CPF" ? "000.000.000-00" : "00.000.000/0000-00";
+                }
 
-        function buildActionType(card) {
-            const credor = norm(card?.credor || "");
-
-            if (card?.tipoAcao) return card.tipoAcao;
-
-            if (credor.includes("SASCAR_IRA")) return "AGENDAR";
-            if (credor.includes("AMIL OPERADORAS")) return "NEGOCIAR";
-            if (credor.includes("SANTA HELENA")) return "NEGOCIAR";
-
-            return "HUMANO";
-        }
-
-        function canNegotiate(card) {
-            if (typeof card?.podeNegociar === "boolean") return card.podeNegociar;
-
-            const total = Number(card?.valorTotal || 0);
-            const credor = norm(card?.credor || "");
-
-            const isAllowedCredor =
-                credor.includes("AMIL OPERADORAS") ||
-                credor.includes("SANTA HELENA");
-
-            return isAllowedCredor && total >= 100 && total <= 5000;
-        }
-
-        function normalizeCards(cards) {
-            return (Array.isArray(cards) ? cards : []).map(c => {
-                const pres = getCredorPresentation(c?.credor || c?.Credor || "", c?.unidade || c?.Unidade || "");
-                const detalhes = Array.isArray(c?.detalhes)
-                    ? c.detalhes
-                    : (Array.isArray(c?.parcelas) ? c.parcelas : []);
-
-                return {
-                    credor: c?.credor || c?.Credor || "",
-                    credorNome: c?.credorNome || pres.nome,
-                    logo: c?.logo || pres.logo,
-                    chatUrl: c?.chatUrl || pres.chat,
-                    numeroContrato: c?.numeroContrato || c?.NumeroContrato || "-",
-                    idContrato: c?.idContrato || c?.IDContrato || "",
-                    valorTotal: Number(c?.valorTotal || 0),
-                    valorTotalFormatado: c?.valorTotalFormatado || formatBRL(c?.valorTotal || 0),
-                    propostaQuitacao: Number(c?.propostaQuitacao || (Number(c?.valorTotal || 0) * 0.85)),
-                    propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(c?.propostaQuitacao || (Number(c?.valorTotal || 0) * 0.85)),
-                    tipoAcao: buildActionType(c),
-                    podeNegociar: canNegotiate(c),
-                    detalhes: detalhes.map(d => ({
-                        vencimento: d?.vencimento || d?.Vencimento || "",
-                        vencimentoFormatado: d?.vencimentoFormatado || d?.VencimentoFormatado || formatDateBR(d?.vencimento || d?.Vencimento),
-                        valor: Number(d?.valor || d?.Valor || d?.ValorOriginal || d?._ValorEmAberto || 0),
-                        valorFormatado: d?.valorFormatado || d?.ValorFormatado || formatBRL(d?.valor || d?.Valor || d?.ValorOriginal || d?._ValorEmAberto || 0),
-                        numeroDocumento: d?.numeroDocumento || d?.NumeroDocumento || d?.Placa || "-"
-                    }))
-                };
-            });
-        }
-
-        function openNegotiation(card) {
-            selectedCard = card;
-            lastHumanChat = card?.chatUrl || lastHumanChat || CHAT_LINK_AMIL_DEFAULT;
-            hideNegotiationError();
-
-            $("negotiationCreditor").textContent = card?.credorNome || card?.credor || "-";
-            $("negotiationContract").textContent = card?.numeroContrato || "-";
-            $("negotiationProposal").textContent = card?.propostaQuitacaoFormatada || "R$ 0,00";
-            $("paymentDateInput").value = "";
-
-            setActiveView("vNegotiate");
-        }
-
-        function openIraSchedule(card) {
-            selectedCard = card;
-            lastHumanChat = card?.chatUrl || lastHumanChat || CHAT_LINK_IRA;
-            hideIraError();
-
-            $("iraEmail").value = $("emailInput").value.trim();
-            $("iraWhatsapp").value = onlyDigits($("phoneInput").value);
-
-            setActiveView("vIraSchedule");
-        }
-
-        function renderCards(cards) {
-            const grid = $("cardsGrid");
-            grid.innerHTML = "";
-
-            const normalized = normalizeCards(cards);
-
-            if (!normalized.length) {
-                setActiveView("vNoDebt");
-                return;
+                applyMask();
             }
 
-            normalized.forEach((card, index) => {
-                const wrapper = document.createElement("div");
-                wrapper.className = "p-6 border-2 border-slate-100 rounded-2xl hover:border-accent transition bg-white";
+            function setActiveView(viewId) {
+                document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+                const target = $(viewId);
+                if (target) target.classList.add("active");
 
-                const detailsId = `card-details-${index}`;
+                const btnVoltar = $("btnVoltar");
+                if (btnVoltar) {
+                    btnVoltar.style.visibility = viewId === "vStart" ? "hidden" : "visible";
+                }
 
-                wrapper.innerHTML = `
-                    <div class="flex items-center gap-4 mb-4">
-                        ${card.logo ? `<img src="${card.logo}" class="w-12 h-12 rounded-xl bg-white border border-slate-100 object-contain" alt="logo">` : ""}
-                        <div>
-                            <p class="text-navy font-extrabold text-base font-sans leading-tight">${card.credorNome || card.credor}</p>
-                            <p class="text-slate-500 text-xs font-semibold font-sans">Contrato: ${card.numeroContrato || "-"}</p>
+                currentView = viewId;
+            }
+
+            function showText(id, message) {
+                const el = $(id);
+                if (!el) return;
+                el.textContent = message;
+                el.classList.remove("hidden");
+            }
+
+            function hideText(id) {
+                const el = $(id);
+                if (!el) return;
+                el.textContent = "";
+                el.classList.add("hidden");
+            }
+
+            function clearPortalForms() {
+                [
+                    "docInput", "nameInput", "phoneInput", "emailInput", "validationCodeInput",
+                    "paymentDateInput", "iraDate1", "iraTime1", "iraDate2", "iraTime2",
+                    "iraStreet", "iraNumber", "iraDistrict", "iraZip", "iraCity",
+                    "iraReference", "iraResponsible", "iraEmail", "iraWhatsapp"
+                ].forEach(id => {
+                    const el = $(id);
+                    if (el) el.value = "";
+                });
+
+                hideText("startError");
+                hideText("validationCodeError");
+                hideText("negotiationError");
+                hideText("iraError");
+            }
+
+            function goStart() {
+                currentDoc = "";
+                foundRecord = null;
+                selectedCard = null;
+                sessionId = Date.now().toString();
+                clearPortalForms();
+                setDocType("CPF");
+                setActiveView("vStart");
+            }
+
+            async function callBackend(step, payload) {
+                const body = { step, sessionId, ...payload };
+
+                const res = await fetch(CRM_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Falha backend: ${res.status}`);
+                }
+
+                return await res.json();
+            }
+
+            function openChat(url) {
+                window.open(url || CHAT_LINK_AMIL_DEFAULT, "_blank", "noopener,noreferrer");
+            }
+
+            function getCredorPresentation(credorRaw, unidade) {
+                const c = norm(credorRaw);
+
+                if (c.includes("AMIL OPERADORAS")) {
+                    return { nome: "Amil", logo: LOGO_AMIL, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "NEGOCIAR" };
+                }
+
+                if (c.includes("SANTA HELENA")) {
+                    return { nome: "Santa Helena Saúde", logo: LOGO_SHAM, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "NEGOCIAR" };
+                }
+
+                if (c.includes("SASCAR_IRA")) {
+                    return { nome: "Michelin | Equipamentos", logo: LOGO_MICHELIN, chat: CHAT_LINK_IRA, tipoAcao: "AGENDAR" };
+                }
+
+                if (c.includes("SASCAR FIXA VARIAVEL")) {
+                    return { nome: "Michelin Connect Fleet", logo: LOGO_MICHELIN, chat: CHAT_LINK_SASCAR, tipoAcao: "HUMANO" };
+                }
+
+                if (c.includes("REDE AMERICAS")) {
+                    return { nome: unidade || "Rede Américas", logo: LOGO_REDE, chat: CHAT_LINK_REDE_AMERICAS, tipoAcao: "HUMANO" };
+                }
+
+                if (c.includes("AMIL HOSPITAIS")) {
+                    return { nome: unidade || "Amil Hospitais", logo: LOGO_AMIL, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
+                }
+
+                return { nome: credorRaw || "Projeto", logo: "", chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
+            }
+
+            function buildFallbackNameOptions(realName, typeUpper) {
+                const clean = String(realName || "").trim();
+                const parts = clean.split(/\s+/).filter(Boolean);
+
+                if (!clean || parts.length < 2) {
+                    return typeUpper === "CNPJ"
+                        ? ["EMPRESA MODELO LTDA", clean || "RAZAO SOCIAL", "COMERCIAL BRASIL SA"]
+                        : ["MARIA HELENA SOUZA", clean || "NOME COMPLETO", "JOAO PEDRO ALMEIDA"];
+                }
+
+                const first = parts[0].toUpperCase();
+                const second = parts[1].toUpperCase();
+                const prefix = `${first} ${second}`;
+
+                return typeUpper === "CNPJ"
+                    ? [`${prefix} SERVICOS LTDA`, clean.toUpperCase(), `${prefix} LOGISTICA SA`]
+                    : [`${prefix} DA SILVA`, clean.toUpperCase(), `${prefix} PEREIRA`];
+            }
+
+            function renderIdentityOptions(options, fullName, typeUpper) {
+                const wrap = $("nameOptions");
+                if (!wrap) return;
+                wrap.innerHTML = "";
+
+                const finalOptions = (Array.isArray(options) && options.length)
+                    ? options
+                    : buildFallbackNameOptions(fullName, typeUpper);
+
+                const subtitle = $("confirmSubtitle");
+                if (subtitle) {
+                    subtitle.textContent =
+                        typeUpper === "CNPJ"
+                            ? "Selecione a razão social correta vinculada ao documento:"
+                            : "Selecione o nome correto vinculado ao documento:";
+                }
+
+                finalOptions.forEach(opt => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-[11px] font-sans";
+                    btn.textContent = opt;
+
+                    btn.addEventListener("click", async () => {
+                        setActiveView("vLoading");
+
+                        try {
+                            const data = await callBackend("confirmar_identidade", {
+                                documento: currentDoc,
+                                opcaoSelecionada: opt
+                            });
+
+                            foundRecord = { ...(foundRecord || {}), ...(data || {}) };
+
+                            if (data?.proximoStep === "identidade_incorreta") {
+                                const errorMsg = $("errorMsg");
+                                if (errorMsg) {
+                                    errorMsg.textContent = data?.mensagem || "O nome selecionado não corresponde ao cadastro localizado.";
+                                }
+                                return setActiveView("vError");
+                            }
+
+                            if (data?.proximoStep === "sem_pendencia") {
+                                return setActiveView("vNoDebt");
+                            }
+
+                            if (data?.proximoStep === "mostrar_acordo_ativo") {
+                                const v = $("activeAgreementValue");
+                                const d = $("activeAgreementDue");
+                                if (v) v.textContent = data?.acordoAtivo?.valorFormatado || "R$ 0,00";
+                                if (d) d.textContent = data?.acordoAtivo?.vencimentoFormatado || "--/--/----";
+                                lastHumanChat = data?.chatUrl || lastHumanChat;
+                                return setActiveView("vActiveAgreement");
+                            }
+
+                            if (data?.proximoStep === "mostrar_cards") {
+                                renderCards(data?.cards || []);
+                                return setActiveView("vNext");
+                            }
+
+                            const errorMsg = $("errorMsg");
+                            if (errorMsg) {
+                                errorMsg.textContent = "Não foi possível validar sua identidade no momento.";
+                            }
+                            setActiveView("vError");
+                        } catch (e) {
+                            const errorMsg = $("errorMsg");
+                            if (errorMsg) {
+                                errorMsg.textContent = "Nosso sistema está temporariamente indisponível. Tente novamente em alguns minutos ou fale com nosso atendimento.";
+                            }
+                            setActiveView("vError");
+                        }
+                    });
+
+                    wrap.appendChild(btn);
+                });
+            }
+
+            function normalizeCards(cards) {
+                return (Array.isArray(cards) ? cards : []).map(c => {
+                    const pres = getCredorPresentation(c?.credor || "", c?.unidade || "");
+                    return {
+                        credor: c?.credor || "",
+                        credorNome: c?.credorNome || pres.nome,
+                        logo: c?.logo || pres.logo,
+                        chatUrl: c?.chatUrl || pres.chat,
+                        numeroContrato: c?.numeroContrato || "-",
+                        idContrato: c?.idContrato || "",
+                        valorTotal: Number(c?.valorTotal || 0),
+                        valorTotalFormatado: c?.valorTotalFormatado || formatBRL(c?.valorTotal || 0),
+                        propostaQuitacao: Number(c?.propostaQuitacao || 0),
+                        propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(c?.propostaQuitacao || 0),
+                        tipoAcao: c?.tipoAcao || pres.tipoAcao,
+                        podeNegociar: typeof c?.podeNegociar === "boolean" ? c.podeNegociar : false,
+                        detalhes: Array.isArray(c?.detalhes) ? c.detalhes : []
+                    };
+                });
+            }
+
+            function openNegotiation(card) {
+                selectedCard = card;
+                lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                hideText("negotiationError");
+
+                const a = $("negotiationCreditor");
+                const b = $("negotiationContract");
+                const c = $("negotiationProposal");
+                const d = $("paymentDateInput");
+
+                if (a) a.textContent = card?.credorNome || "-";
+                if (b) b.textContent = card?.numeroContrato || "-";
+                if (c) c.textContent = card?.propostaQuitacaoFormatada || "R$ 0,00";
+                if (d) d.value = "";
+
+                setActiveView("vNegotiate");
+            }
+
+            function openIraSchedule(card) {
+                selectedCard = card;
+                lastHumanChat = card?.chatUrl || CHAT_LINK_IRA;
+                hideText("iraError");
+
+                const iraEmail = $("iraEmail");
+                const iraWhatsapp = $("iraWhatsapp");
+                const emailInput = $("emailInput");
+                const phoneInput = $("phoneInput");
+
+                if (iraEmail && emailInput) iraEmail.value = emailInput.value.trim();
+                if (iraWhatsapp && phoneInput) iraWhatsapp.value = onlyDigits(phoneInput.value);
+
+                setActiveView("vIraSchedule");
+            }
+
+            function renderCards(cards) {
+                const grid = $("cardsGrid");
+                if (!grid) return;
+
+                grid.innerHTML = "";
+                const normalized = normalizeCards(cards);
+
+                normalized.forEach((card, index) => {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "p-6 border-2 border-slate-100 rounded-2xl hover:border-accent transition bg-white";
+
+                    const detailsId = `card-details-${index}`;
+
+                    wrapper.innerHTML = `
+                        <div class="flex items-center gap-4 mb-4">
+                            ${card.logo ? `<img src="${card.logo}" class="w-12 h-12 rounded-xl bg-white border border-slate-100 object-contain" alt="logo">` : ""}
+                            <div>
+                                <p class="text-navy font-extrabold text-base font-sans leading-tight">${card.credorNome}</p>
+                                <p class="text-slate-500 text-xs font-semibold font-sans">Contrato: ${card.numeroContrato || "-"}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="space-y-2 mb-4">
-                        <div class="flex justify-between">
-                            <span class="text-slate-500 text-sm font-sans">Valor total</span>
-                            <strong class="text-navy font-sans">${card.valorTotalFormatado}</strong>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500 text-sm font-sans">Valor total</span>
+                                <strong class="text-navy font-sans">${card.valorTotalFormatado}</strong>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500 text-sm font-sans">Proposta de quitação</span>
+                                <strong class="text-accent font-sans">${card.propostaQuitacaoFormatada}</strong>
+                            </div>
                         </div>
-                        <div class="flex justify-between">
-                            <span class="text-slate-500 text-sm font-sans">Proposta de quitação</span>
-                            <strong class="text-accent font-sans">${card.propostaQuitacaoFormatada}</strong>
-                        </div>
-                    </div>
 
-                    <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
-                        Ver detalhamento
-                    </button>
+                        <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
+                            Ver detalhamento
+                        </button>
 
-                    <div id="${detailsId}" class="hidden mb-4 overflow-hidden">
-                        <div class="rounded-2xl border border-slate-100 overflow-hidden">
-                            <table class="w-full text-sm font-sans">
-                                <thead class="bg-slate-50">
-                                    <tr>
-                                        <th class="p-3 text-left">Vencimento</th>
-                                        <th class="p-3 text-left">Valor</th>
-                                        <th class="p-3 text-left">Documento</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${card.detalhes.map(row => `
-                                        <tr class="border-t border-slate-100">
-                                            <td class="p-3">${row.vencimentoFormatado || "-"}</td>
-                                            <td class="p-3">${row.valorFormatado || "-"}</td>
-                                            <td class="p-3">${row.numeroDocumento || "-"}</td>
+                        <div id="${detailsId}" class="hidden mb-4 overflow-hidden">
+                            <div class="rounded-2xl border border-slate-100 overflow-hidden">
+                                <table class="w-full text-sm font-sans">
+                                    <thead class="bg-slate-50">
+                                        <tr>
+                                            <th class="p-3 text-left">Vencimento</th>
+                                            <th class="p-3 text-left">Valor</th>
+                                            <th class="p-3 text-left">Documento</th>
                                         </tr>
-                                    `).join("")}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        ${(card.detalhes || []).map(row => `
+                                            <tr class="border-t border-slate-100">
+                                                <td class="p-3">${row.vencimentoFormatado || "-"}</td>
+                                                <td class="p-3">${row.valorFormatado || "-"}</td>
+                                                <td class="p-3">${row.numeroDocumento || "-"}</td>
+                                            </tr>
+                                        `).join("")}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="grid gap-3 card-actions"></div>
-                `;
+                        <div class="grid gap-3 card-actions"></div>
+                    `;
 
-                wrapper.querySelector(".btn-toggle-details").addEventListener("click", () => {
-                    const el = document.getElementById(detailsId);
-                    el.classList.toggle("hidden");
+                    const toggle = wrapper.querySelector(".btn-toggle-details");
+                    if (toggle) {
+                        toggle.addEventListener("click", () => {
+                            const d = document.getElementById(detailsId);
+                            if (d) d.classList.toggle("hidden");
+                        });
+                    }
+
+                    const actions = wrapper.querySelector(".card-actions");
+
+                    if (card.tipoAcao === "NEGOCIAR" && card.podeNegociar) {
+                        const btnNeg = document.createElement("button");
+                        btnNeg.type = "button";
+                        btnNeg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
+                        btnNeg.textContent = "Negociar";
+                        btnNeg.addEventListener("click", () => openNegotiation(card));
+                        actions.appendChild(btnNeg);
+                    }
+
+                    if (card.tipoAcao === "AGENDAR") {
+                        const btnAg = document.createElement("button");
+                        btnAg.type = "button";
+                        btnAg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
+                        btnAg.textContent = "Solicitar agendamento";
+                        btnAg.addEventListener("click", () => openIraSchedule(card));
+                        actions.appendChild(btnAg);
+                    }
+
+                    const btnHum = document.createElement("button");
+                    btnHum.type = "button";
+                    btnHum.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans";
+                    btnHum.textContent = "Falar com atendente";
+                    btnHum.addEventListener("click", () => openChat(card.chatUrl));
+                    actions.appendChild(btnHum);
+
+                    grid.appendChild(wrapper);
                 });
+            }
 
-                const actions = wrapper.querySelector(".card-actions");
+            function validatePaymentDate(dateStr) {
+                if (!dateStr) return { ok: false, message: "Selecione uma data de pagamento." };
 
-                if (card.tipoAcao === "NEGOCIAR" && card.podeNegociar) {
-                    const btnNeg = document.createElement("button");
-                    btnNeg.type = "button";
-                    btnNeg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
-                    btnNeg.textContent = "Negociar";
-                    btnNeg.addEventListener("click", () => openNegotiation(card));
-                    actions.appendChild(btnNeg);
+                const selected = new Date(`${dateStr}T00:00:00`);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (Number.isNaN(selected.getTime())) {
+                    return { ok: false, message: "Data inválida." };
                 }
 
-                if (card.tipoAcao === "AGENDAR") {
-                    const btnAg = document.createElement("button");
-                    btnAg.type = "button";
-                    btnAg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
-                    btnAg.textContent = "Solicitar agendamento";
-                    btnAg.addEventListener("click", () => openIraSchedule(card));
-                    actions.appendChild(btnAg);
+                const diffDays = Math.ceil((selected - today) / (1000 * 60 * 60 * 24));
+                const weekDay = selected.getDay();
+
+                if (diffDays < 0 || diffDays > 5) {
+                    return { ok: false, message: "A data deve estar dentro de até 5 dias." };
                 }
 
-                const btnHum = document.createElement("button");
-                btnHum.type = "button";
-                btnHum.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans";
-                btnHum.textContent = "Falar com atendente";
-                btnHum.addEventListener("click", () => openChat(card.chatUrl));
-                actions.appendChild(btnHum);
+                if (weekDay === 0 || weekDay === 6) {
+                    return { ok: false, message: "A data não pode cair em final de semana." };
+                }
 
-                grid.appendChild(wrapper);
+                return { ok: true, message: "" };
+            }
+
+            function validateIraForm() {
+                const ag = {
+                    data1: $("iraDate1")?.value || "",
+                    hora1: $("iraTime1")?.value || "",
+                    data2: $("iraDate2")?.value || "",
+                    hora2: $("iraTime2")?.value || "",
+                    logradouro: $("iraStreet")?.value.trim() || "",
+                    numero: $("iraNumber")?.value.trim() || "",
+                    bairro: $("iraDistrict")?.value.trim() || "",
+                    cep: onlyDigits($("iraZip")?.value || ""),
+                    cidade: $("iraCity")?.value.trim() || "",
+                    referencia: $("iraReference")?.value.trim() || "",
+                    responsavel: $("iraResponsible")?.value.trim() || "",
+                    email: $("iraEmail")?.value.trim() || "",
+                    whatsapp: onlyDigits($("iraWhatsapp")?.value || "")
+                };
+
+                const requiredFilled = Object.values(ag).every(v => String(v || "").trim());
+                if (!requiredFilled) {
+                    return { ok: false, message: "Preencha todos os campos do agendamento.", data: ag };
+                }
+
+                if (!isValidEmail(ag.email)) {
+                    return { ok: false, message: "Informe um e-mail válido.", data: ag };
+                }
+
+                if (!isValidPhone(ag.whatsapp)) {
+                    return { ok: false, message: "Informe um WhatsApp válido com 11 a 13 dígitos.", data: ag };
+                }
+
+                return { ok: true, message: "", data: ag };
+            }
+
+            function on(id, eventName, handler) {
+                const el = $(id);
+                if (el) el.addEventListener(eventName, handler);
+            }
+
+            on("segCPF", "click", () => setDocType("CPF"));
+            on("segCNPJ", "click", () => setDocType("CNPJ"));
+
+            on("docInput", "input", () => {
+                const input = $("docInput");
+                if (!input) return;
+                const digits = onlyDigits(input.value);
+                const inferred = detectTypeFromDigits(digits);
+                if (inferred !== docType) setDocType(inferred);
+                applyMask();
             });
-        }
 
-        function validatePaymentDate(dateStr) {
-            if (!dateStr) return { ok: false, message: "Selecione uma data de pagamento." };
+            on("phoneInput", "input", () => {
+                const input = $("phoneInput");
+                if (input) input.value = onlyDigits(input.value).slice(0, 13);
+            });
 
-            const selected = new Date(`${dateStr}T00:00:00`);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            on("validationCodeInput", "input", () => {
+                const input = $("validationCodeInput");
+                if (input) input.value = onlyDigits(input.value).slice(0, 6);
+            });
 
-            if (Number.isNaN(selected.getTime())) {
-                return { ok: false, message: "Data inválida." };
-            }
+            on("iraWhatsapp", "input", () => {
+                const input = $("iraWhatsapp");
+                if (input) input.value = onlyDigits(input.value).slice(0, 13);
+            });
 
-            const diffDays = Math.ceil((selected - today) / (1000 * 60 * 60 * 24));
-            const weekDay = selected.getDay();
+            on("iraZip", "input", () => {
+                const input = $("iraZip");
+                if (input) input.value = onlyDigits(input.value).slice(0, 8);
+            });
 
-            if (diffDays < 0 || diffDays > 5) {
-                return { ok: false, message: "A data deve estar dentro de até 5 dias." };
-            }
+            on("btnVoltar", "click", goStart);
+            on("btnNovaConsultaNoRecord", "click", goStart);
+            on("btnNovaConsultaNoDebt", "click", goStart);
+            on("btnNovaConsultaErr", "click", goStart);
+            on("btnSuccessNewSearch", "click", goStart);
+            on("btnIraSuccessNewSearch", "click", goStart);
 
-            if (weekDay === 0 || weekDay === 6) {
-                return { ok: false, message: "A data não pode cair em final de semana." };
-            }
+            on("btnBlockedHumano", "click", () => openChat(lastHumanChat));
+            on("btnAgreementHumano", "click", () => openChat(lastHumanChat));
+            on("btnNegotiationHumano", "click", () => openChat(lastHumanChat));
 
-            return { ok: true, message: "" };
-        }
+            on("btnConsultar", "click", async () => {
+                hideText("startError");
 
-        function validateIraForm() {
-            const ag = {
-                data1: $("iraDate1").value,
-                hora1: $("iraTime1").value,
-                data2: $("iraDate2").value,
-                hora2: $("iraTime2").value,
-                logradouro: $("iraStreet").value.trim(),
-                numero: $("iraNumber").value.trim(),
-                bairro: $("iraDistrict").value.trim(),
-                cep: onlyDigits($("iraZip").value),
-                cidade: $("iraCity").value.trim(),
-                referencia: $("iraReference").value.trim(),
-                responsavel: $("iraResponsible").value.trim(),
-                email: $("iraEmail").value.trim(),
-                whatsapp: onlyDigits($("iraWhatsapp").value)
-            };
+                const documento = onlyDigits($("docInput")?.value || "");
+                const nome = $("nameInput")?.value.trim() || "";
+                const telefone = onlyDigits($("phoneInput")?.value || "");
+                const email = $("emailInput")?.value.trim() || "";
 
-            const requiredFilled = Object.values(ag).every(v => String(v || "").trim());
+                currentDoc = documento;
+                sessionId = Date.now().toString();
 
-            if (!requiredFilled) {
-                return { ok: false, message: "Preencha todos os campos do agendamento.", data: ag };
-            }
-
-            if (!isValidEmail(ag.email)) {
-                return { ok: false, message: "Informe um e-mail válido.", data: ag };
-            }
-
-            if (!isValidPhone(ag.whatsapp)) {
-                return { ok: false, message: "Informe um WhatsApp válido com 11 a 13 dígitos.", data: ag };
-            }
-
-            const hourOk = (h) => /^\d{2}:\d{2}$/.test(h);
-            if (!hourOk(ag.hora1) || !hourOk(ag.hora2)) {
-                return { ok: false, message: "Informe horários válidos.", data: ag };
-            }
-
-            const withinBusinessHours = (h) => {
-                const [hh, mm] = h.split(":").map(Number);
-                const total = hh * 60 + mm;
-                return total >= 480 && total <= 1080;
-            };
-
-            if (!withinBusinessHours(ag.hora1) || !withinBusinessHours(ag.hora2)) {
-                return { ok: false, message: "Os horários devem estar entre 08h e 18h.", data: ag };
-            }
-
-            const isNotSunday = (d) => {
-                const dt = new Date(`${d}T00:00:00`);
-                return dt.getDay() !== 0;
-            };
-
-            if (!isNotSunday(ag.data1) || !isNotSunday(ag.data2)) {
-                return { ok: false, message: "Domingo não é permitido para agendamento.", data: ag };
-            }
-
-            return { ok: true, message: "", data: ag };
-        }
-
-        // Eventos básicos
-        $("segCPF").addEventListener("click", () => setDocType("CPF"));
-        $("segCNPJ").addEventListener("click", () => setDocType("CNPJ"));
-
-        $("docInput").addEventListener("input", () => {
-            const digits = onlyDigits($("docInput").value);
-            const inferred = detectTypeFromDigits(digits);
-            if (inferred !== docType) setDocType(inferred);
-            applyMask();
-        });
-
-        $("phoneInput").addEventListener("input", () => {
-            $("phoneInput").value = onlyDigits($("phoneInput").value).slice(0, 13);
-        });
-
-        $("iraWhatsapp").addEventListener("input", () => {
-            $("iraWhatsapp").value = onlyDigits($("iraWhatsapp").value).slice(0, 13);
-        });
-
-        $("iraZip").addEventListener("input", () => {
-            $("iraZip").value = onlyDigits($("iraZip").value).slice(0, 8);
-        });
-
-        $("btnVoltar").addEventListener("click", goStart);
-        $("btnNovaConsultaNoRecord").addEventListener("click", goStart);
-        $("btnNovaConsultaNoDebt").addEventListener("click", goStart);
-        $("btnNovaConsultaErr").addEventListener("click", goStart);
-        $("btnSuccessNewSearch").addEventListener("click", goStart);
-        $("btnIraSuccessNewSearch").addEventListener("click", goStart);
-
-        $("btnBlockedHumano").addEventListener("click", () => openChat(lastHumanChat));
-        $("btnAgreementHumano").addEventListener("click", () => openChat(lastHumanChat));
-        $("btnNegotiationHumano").addEventListener("click", () => openChat(lastHumanChat));
-
-        $("openTerms").addEventListener("click", (e) => {
-            e.preventDefault();
-            openOverlay("termsOverlay");
-        });
-        $("closeTerms").addEventListener("click", () => closeOverlay("termsOverlay"));
-        $("termsOverlay").addEventListener("click", (e) => {
-            if (e.target.id === "termsOverlay") closeOverlay("termsOverlay");
-        });
-
-        // Consulta inicial
-        $("btnConsultar").addEventListener("click", async () => {
-            hideStartError();
-
-            const documento = onlyDigits($("docInput").value);
-            const nome = $("nameInput").value.trim();
-            const telefone = onlyDigits($("phoneInput").value);
-            const email = $("emailInput").value.trim();
-
-            currentDoc = documento;
-            sessionId = Date.now().toString();
-
-            if (!isCPF(documento) && !isCNPJ(documento)) {
-                return showStartError("Informe um CPF com 11 dígitos ou um CNPJ com 14 dígitos.");
-            }
-
-            if (!nome) {
-                return showStartError("Informe o nome completo ou a razão social.");
-            }
-
-            if (!isValidPhone(telefone)) {
-                return showStartError("Informe um telefone válido com 11 a 13 dígitos.");
-            }
-
-            if (!isValidEmail(email)) {
-                return showStartError("Informe um e-mail válido.");
-            }
-
-            setActiveView("vLoading");
-
-            try {
-                const data = await callBackend("consulta_inicial", {
-                    documento,
-                    nomeInformado: nome,
-                    telefoneInformado: telefone,
-                    emailInformado: email
-                });
-
-                foundRecord = data || {};
-
-                if (data?.proximoStep === "nao_localizado" || data?.clienteLocalizado === false) {
-                    $("noRecordMsg").textContent = data?.mensagem || "Documento não localizado em nossa base.";
-                    return setActiveView("vNoRecord");
+                if (!isCPF(documento) && !isCNPJ(documento)) {
+                    return showText("startError", "Informe um CPF com 11 dígitos ou um CNPJ com 14 dígitos.");
                 }
 
-                if (data?.proximoStep === "bloqueado" || data?.bloqueado === true) {
-                    lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
-                    return setActiveView("vBlocked");
+                if (!nome) {
+                    return showText("startError", "Informe o nome completo ou a razão social.");
                 }
 
-                if (data?.proximoStep === "validar_identidade") {
-                    const typeUpper = String(data?.type || (isCNPJ(documento) ? "CNPJ" : "CPF")).toUpperCase();
-                    renderIdentityOptions(data?.options || [], data?.fullName || nome, typeUpper);
-                    return setActiveView("vConfirmName");
+                if (!isValidPhone(telefone)) {
+                    return showText("startError", "Informe um telefone válido com 11 a 13 dígitos.");
                 }
 
-                $("errorMsg").textContent = data?.mensagem || "Não foi possível concluir a consulta no momento.";
-                setActiveView("vError");
-            } catch (e) {
-                $("errorMsg").textContent = "Nosso sistema está temporariamente indisponível. Tente novamente em alguns minutos ou fale com nosso atendimento.";
-                setActiveView("vError");
-            }
-        });
-
-        // Confirmar negociação
-        $("btnConfirmNegotiation").addEventListener("click", async () => {
-            hideNegotiationError();
-
-            if (!selectedCard) {
-                return showNegotiationError("Selecione um contrato para negociar.");
-            }
-
-            const paymentDate = $("paymentDateInput").value;
-            const dateValidation = validatePaymentDate(paymentDate);
-
-            if (!dateValidation.ok) {
-                return showNegotiationError(dateValidation.message);
-            }
-
-            setActiveView("vLoading");
-
-            try {
-                const data = await callBackend("confirmar_negociacao", {
-                    documento: currentDoc,
-                    credor: selectedCard.credor,
-                    idContrato: selectedCard.idContrato,
-                    numeroContrato: selectedCard.numeroContrato,
-                    valorTotal: selectedCard.valorTotal,
-                    propostaQuitacao: selectedCard.propostaQuitacao,
-                    dataPagamento: paymentDate,
-                    nomeInformado: $("nameInput").value.trim(),
-                    telefoneInformado: onlyDigits($("phoneInput").value),
-                    emailInformado: $("emailInput").value.trim()
-                });
-
-                if (data?.status === "ok" || data?.proximoStep === "sucesso_negociacao") {
-                    return setActiveView("vNegotiationSuccess");
+                if (!isValidEmail(email)) {
+                    return showText("startError", "Informe um e-mail válido.");
                 }
 
-                $("errorMsg").textContent = data?.mensagem || "Não foi possível concluir a negociação no momento. Tente novamente ou fale com nosso atendimento.";
-                setActiveView("vError");
-            } catch (e) {
-                $("errorMsg").textContent = "Não foi possível concluir a negociação no momento. Tente novamente ou fale com nosso atendimento.";
-                setActiveView("vError");
-            }
-        });
+                setActiveView("vLoading");
 
-        // Confirmar agendamento IRA
-        $("btnSubmitIra").addEventListener("click", async () => {
-            hideIraError();
+                try {
+                    const data = await callBackend("consulta_inicial", {
+                        documento,
+                        nomeInformado: nome,
+                        telefoneInformado: telefone,
+                        emailInformado: email
+                    });
 
-            if (!selectedCard) {
-                return showIraError("Selecione um contrato para solicitar agendamento.");
-            }
+                    foundRecord = data || {};
 
-            const validation = validateIraForm();
-            if (!validation.ok) {
-                return showIraError(validation.message);
-            }
+                    if (data?.proximoStep === "nao_localizado") {
+                        const msg = $("noRecordMsg");
+                        if (msg) msg.textContent = data?.mensagem || "Documento não localizado em nossa base.";
+                        return setActiveView("vNoRecord");
+                    }
 
-            setActiveView("vLoading");
+                    if (data?.proximoStep === "bloqueado") {
+                        lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                        return setActiveView("vBlocked");
+                    }
 
-            try {
-                const data = await callBackend("confirmar_agendamento_ira", {
-                    documento: currentDoc,
-                    credor: selectedCard.credor,
-                    idContrato: selectedCard.idContrato,
-                    numeroContrato: selectedCard.numeroContrato,
-                    agendamento: validation.data,
-                    nomeInformado: $("nameInput").value.trim(),
-                    telefoneInformado: onlyDigits($("phoneInput").value),
-                    emailInformado: $("emailInput").value.trim()
-                });
+                    if (data?.proximoStep === "validar_codigo_contato") {
+                        const txt = $("validateCodeText");
+                        if (txt) {
+                            txt.textContent = data?.mensagem || `Enviamos um código de validação para ${email}. Digite abaixo para prosseguir.`;
+                        }
+                        hideText("validationCodeError");
+                        const codeInput = $("validationCodeInput");
+                        if (codeInput) codeInput.value = "";
+                        return setActiveView("vValidateCode");
+                    }
 
-                if (data?.status === "ok" || data?.proximoStep === "sucesso_agendamento") {
-                    return setActiveView("vIraSuccess");
+                    if (data?.proximoStep === "validar_identidade") {
+                        renderIdentityOptions(data?.options || [], data?.fullName || nome, data?.type || "CPF");
+                        return setActiveView("vConfirmName");
+                    }
+
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = data?.mensagem || "Não foi possível concluir a consulta no momento.";
+                    }
+                    setActiveView("vError");
+                } catch (e) {
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = "Nosso sistema está temporariamente indisponível. Tente novamente em alguns minutos ou fale com nosso atendimento.";
+                    }
+                    setActiveView("vError");
+                }
+            });
+
+            on("btnValidateCode", "click", async () => {
+                hideText("validationCodeError");
+
+                const codigo = onlyDigits($("validationCodeInput")?.value || "");
+                if (codigo.length !== 6) {
+                    return showText("validationCodeError", "Informe o código de 6 dígitos.");
                 }
 
-                $("errorMsg").textContent = data?.mensagem || "Não foi possível enviar a solicitação no momento. Tente novamente ou fale com nosso atendimento.";
-                setActiveView("vError");
-            } catch (e) {
-                $("errorMsg").textContent = "Não foi possível enviar a solicitação no momento. Tente novamente ou fale com nosso atendimento.";
-                setActiveView("vError");
-            }
-        });
+                setActiveView("vLoading");
 
-        // init
-        (function init() {
+                try {
+                    const data = await callBackend("validar_codigo_contato", {
+                        documento: currentDoc,
+                        codigoValidacao: codigo,
+                        nomeInformado: $("nameInput")?.value.trim() || "",
+                        telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                        emailInformado: $("emailInput")?.value.trim() || ""
+                    });
+
+                    foundRecord = { ...(foundRecord || {}), ...(data || {}) };
+
+                    if (data?.proximoStep === "codigo_invalido") {
+                        showText("validationCodeError", data?.mensagem || "Código inválido.");
+                        return setActiveView("vValidateCode");
+                    }
+
+                    if (data?.proximoStep === "bloqueado") {
+                        lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                        return setActiveView("vBlocked");
+                    }
+
+                    if (data?.proximoStep === "validar_identidade") {
+                        renderIdentityOptions(
+                            data?.options || [],
+                            data?.fullName || ($("nameInput")?.value.trim() || ""),
+                            data?.type || "CPF"
+                        );
+                        return setActiveView("vConfirmName");
+                    }
+
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível validar o código no momento.";
+                    setActiveView("vError");
+                } catch (e) {
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) errorMsg.textContent = "Não foi possível validar o código no momento. Tente novamente.";
+                    setActiveView("vError");
+                }
+            });
+
+            on("btnResendCode", "click", async () => {
+                hideText("validationCodeError");
+                setActiveView("vLoading");
+
+                try {
+                    const data = await callBackend("reenviar_codigo_contato", {
+                        documento: currentDoc,
+                        nomeInformado: $("nameInput")?.value.trim() || "",
+                        telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                        emailInformado: $("emailInput")?.value.trim() || ""
+                    });
+
+                    if (data?.proximoStep === "validar_codigo_contato") {
+                        const txt = $("validateCodeText");
+                        if (txt) {
+                            txt.textContent = data?.mensagem || `Enviamos um novo código para ${$("emailInput")?.value.trim() || ""}.`;
+                        }
+                        return setActiveView("vValidateCode");
+                    }
+
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível reenviar o código no momento.";
+                    setActiveView("vError");
+                } catch (e) {
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) errorMsg.textContent = "Não foi possível reenviar o código no momento.";
+                    setActiveView("vError");
+                }
+            });
+
+            on("btnConfirmNegotiation", "click", async () => {
+                hideText("negotiationError");
+
+                if (!selectedCard) {
+                    return showText("negotiationError", "Selecione um contrato para negociar.");
+                }
+
+                const paymentDate = $("paymentDateInput")?.value || "";
+                const val = validatePaymentDate(paymentDate);
+
+                if (!val.ok) {
+                    return showText("negotiationError", val.message);
+                }
+
+                setActiveView("vLoading");
+
+                try {
+                    const data = await callBackend("confirmar_negociacao", {
+                        documento: currentDoc,
+                        credor: selectedCard.credor,
+                        idContrato: selectedCard.idContrato,
+                        numeroContrato: selectedCard.numeroContrato,
+                        valorTotal: selectedCard.valorTotal,
+                        propostaQuitacao: selectedCard.propostaQuitacao,
+                        dataPagamento: paymentDate
+                    });
+
+                    if (data?.proximoStep === "sucesso_negociacao" || data?.status === "ok") {
+                        return setActiveView("vNegotiationSuccess");
+                    }
+
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = data?.mensagem || "Não foi possível concluir a negociação no momento.";
+                    }
+                    setActiveView("vError");
+                } catch (e) {
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = "Não foi possível concluir a negociação no momento.";
+                    }
+                    setActiveView("vError");
+                }
+            });
+
+            on("btnSubmitIra", "click", async () => {
+                hideText("iraError");
+
+                if (!selectedCard) {
+                    return showText("iraError", "Selecione um contrato para solicitar agendamento.");
+                }
+
+                const validation = validateIraForm();
+                if (!validation.ok) {
+                    return showText("iraError", validation.message);
+                }
+
+                setActiveView("vLoading");
+
+                try {
+                    const data = await callBackend("confirmar_agendamento_ira", {
+                        documento: currentDoc,
+                        credor: selectedCard.credor,
+                        idContrato: selectedCard.idContrato,
+                        numeroContrato: selectedCard.numeroContrato,
+                        agendamento: validation.data
+                    });
+
+                    if (data?.proximoStep === "sucesso_agendamento" || data?.status === "ok") {
+                        return setActiveView("vIraSuccess");
+                    }
+
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = data?.mensagem || "Não foi possível enviar a solicitação no momento.";
+                    }
+                    setActiveView("vError");
+                } catch (e) {
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = "Não foi possível enviar a solicitação no momento.";
+                    }
+                    setActiveView("vError");
+                }
+            });
+
             setDocType("CPF");
-        })();
+        });
     </script>
 </body>
 </html>
