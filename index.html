@@ -516,8 +516,8 @@
                                 </div>
                             </div>
 
-                            <input id="paymentDateInput" type="date"
-                                class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans">
+                            <select id="paymentDateInput"
+                                class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans"></select>
 
                             <p id="negotiationError" class="mt-4 text-sm text-red-500 font-semibold hidden font-sans"></p>
 
@@ -1069,7 +1069,7 @@
                 }
 
                 if (c.includes("SANTA HELENA")) {
-                    return { nome: "Santa Helena Saúde", logo: LOGO_SHAM, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "NEGOCIAR" };
+                    return { nome: "Santa Helena Saúde", logo: LOGO_SHAM, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
                 }
 
                 if (c.includes("SASCAR_IRA")) {
@@ -1188,16 +1188,55 @@
                 });
             }
 
+            function parseMoneyLike(v) {
+                if (v === null || v === undefined || v === "") return 0;
+                if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+
+                const s = String(v).trim();
+                if (!s) return 0;
+
+                if (s.includes("R$") || s.includes(",")) {
+                    const normalized = s
+                        .replace(/\s/g, "")
+                        .replace(/R\$/g, "")
+                        .replace(/\./g, "")
+                        .replace(",", ".")
+                        .replace(/[^\d.-]/g, "");
+                    const n = Number(normalized);
+                    return Number.isFinite(n) ? n : 0;
+                }
+
+                const onlyDigits = s.replace(/[^\d-]/g, "");
+                if (/^-?\d+$/.test(onlyDigits)) {
+                    const intVal = Number(onlyDigits);
+                    if (!Number.isFinite(intVal)) return 0;
+                    // heurística: valores de acordo/centavos podem vir como inteiro sem separador
+                    if (Math.abs(intVal) >= 10000 && !s.includes(".")) {
+                        return intVal / 100;
+                    }
+                    return intVal;
+                }
+
+                const fallback = Number(s.replace(/[^\d.-]/g, ""));
+                return Number.isFinite(fallback) ? fallback : 0;
+            }
+
             function normalizeCards(cards) {
                 return (Array.isArray(cards) ? cards : []).map(c => {
                     const pres = getCredorPresentation(c?.credor || "", c?.unidade || "");
-                    const detalhes = (Array.isArray(c?.detalhes) ? c.detalhes : []).map(row => ({
-                        vencimento: row?.vencimento || "",
-                        vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
-                        valor: Number(row?.valor || 0),
-                        valorFormatado: row?.valorFormatado || formatBRL(row?.valor || 0),
-                        numeroDocumento: row?.numeroDocumento || "-"
-                    }));
+                    const detalhes = (Array.isArray(c?.detalhes) ? c.detalhes : []).map(row => {
+                        const valorDetalhe = parseMoneyLike(row?.valorFormatado || row?.valor || 0);
+                        return {
+                            vencimento: row?.vencimento || "",
+                            vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
+                            valor: valorDetalhe,
+                            valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
+                            numeroDocumento: row?.numeroDocumento || "-"
+                        };
+                    });
+
+                    const valorTotal = parseMoneyLike(c?.valorTotalFormatado || c?.valorTotal || 0);
+                    const propostaQuitacao = parseMoneyLike(c?.propostaQuitacaoFormatada || c?.propostaQuitacao || 0);
 
                     return {
                         tipo: String(c?.tipo || "pendencia").toLowerCase(),
@@ -1207,15 +1246,62 @@
                         chatUrl: c?.chatUrl || pres.chat,
                         numeroContrato: c?.numeroContrato || "-",
                         idContrato: c?.idContrato || "",
-                        valorTotal: Number(c?.valorTotal || 0),
-                        valorTotalFormatado: c?.valorTotalFormatado || formatBRL(c?.valorTotal || 0),
-                        propostaQuitacao: Number(c?.propostaQuitacao || 0),
-                        propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(c?.propostaQuitacao || 0),
+                        valorTotal,
+                        valorTotalFormatado: c?.valorTotalFormatado || formatBRL(valorTotal),
+                        propostaQuitacao,
+                        propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(propostaQuitacao),
                         tipoAcao: c?.tipoAcao || pres.tipoAcao,
                         podeNegociar: typeof c?.podeNegociar === "boolean" ? c.podeNegociar : false,
                         detalhes
                     };
                 });
+            }
+
+            function isAmilOperadoras(credorRaw) {
+                return norm(credorRaw).includes("AMIL OPERADORAS");
+            }
+
+            function getBusinessDates(count = 5) {
+                const dates = [];
+                const cursor = new Date();
+                cursor.setHours(0, 0, 0, 0);
+
+                while (dates.length < count) {
+                    const day = cursor.getDay();
+                    if (day !== 0 && day !== 6) {
+                        dates.push(new Date(cursor));
+                    }
+                    cursor.setDate(cursor.getDate() + 1);
+                }
+
+                return dates;
+            }
+
+            function resolveCardActions(card) {
+                const isAgreement = String(card?.tipo || "").toLowerCase() === "acordo";
+                const credor = card?.credor || "";
+                const pres = getCredorPresentation(credor, card?.unidade || "");
+                const valorTotal = Number(card?.valorTotal || 0);
+                const withinSelfServiceLimit = valorTotal <= 10000;
+
+                if (isAgreement) {
+                    return {
+                        canNegotiate: false,
+                        canSchedule: false,
+                        canHuman: true,
+                        chatUrl: card?.chatUrl || pres.chat
+                    };
+                }
+
+                const canNegotiate = isAmilOperadoras(credor) && withinSelfServiceLimit;
+                const canSchedule = !canNegotiate && pres.tipoAcao === "AGENDAR";
+
+                return {
+                    canNegotiate,
+                    canSchedule,
+                    canHuman: true,
+                    chatUrl: card?.chatUrl || pres.chat
+                };
             }
 
             function renderCards(cards) {
@@ -1251,10 +1337,14 @@
 
                     const detailsId = `card-details-${index}`;
                     const labelValor = isAgreement ? "Valor do acordo" : "Valor total";
-                    const labelProposta = isAgreement ? "Situação" : "Proposta de quitação";
-                    const proposalValue = isAgreement ? "Acordo ativo identificado" : card.propostaQuitacaoFormatada;
-                    const proposalClass = isAgreement ? "text-navy" : "text-accent";
                     const detailsButtonText = isAgreement ? "Ver detalhamento do acordo" : "Ver detalhamento";
+                    const actions = resolveCardActions(card);
+                    const showProposal = !isAgreement && actions.canNegotiate;
+                    const proposalRowHtml = showProposal ? `
+                            <div class="flex justify-between gap-4">
+                                <span class="text-slate-500 text-sm font-sans">Proposta de quitação</span>
+                                <strong class="text-accent font-sans text-right">${card.propostaQuitacaoFormatada}</strong>
+                            </div>` : '';
 
                     wrapper.innerHTML = `
                         <div class="flex items-center justify-between gap-4 mb-4">
@@ -1273,10 +1363,7 @@
                                 <span class="text-slate-500 text-sm font-sans">${labelValor}</span>
                                 <strong class="text-navy font-sans text-right">${card.valorTotalFormatado}</strong>
                             </div>
-                            <div class="flex justify-between gap-4">
-                                <span class="text-slate-500 text-sm font-sans">${labelProposta}</span>
-                                <strong class="${proposalClass} font-sans text-right">${proposalValue}</strong>
-                            </div>
+                            ${proposalRowHtml}
                         </div>
 
                         <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
@@ -1317,32 +1404,34 @@
                         });
                     }
 
-                    const actions = wrapper.querySelector(".card-actions");
+                    const actionsWrap = wrapper.querySelector(".card-actions");
 
-                    if (!isAgreement && card.tipoAcao === "NEGOCIAR" && card.podeNegociar) {
+                    if (actions.canNegotiate) {
                         const btnNeg = document.createElement("button");
                         btnNeg.type = "button";
                         btnNeg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
                         btnNeg.textContent = "Negociar";
                         btnNeg.addEventListener("click", () => openNegotiation(card));
-                        actions.appendChild(btnNeg);
+                        actionsWrap.appendChild(btnNeg);
                     }
 
-                    if (!isAgreement && card.tipoAcao === "AGENDAR") {
+                    if (actions.canSchedule) {
                         const btnAg = document.createElement("button");
                         btnAg.type = "button";
                         btnAg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
                         btnAg.textContent = "Solicitar agendamento";
                         btnAg.addEventListener("click", () => openIraSchedule(card));
-                        actions.appendChild(btnAg);
+                        actionsWrap.appendChild(btnAg);
                     }
 
-                    const btnHum = document.createElement("button");
-                    btnHum.type = "button";
-                    btnHum.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans";
-                    btnHum.textContent = "Falar com atendente";
-                    btnHum.addEventListener("click", () => openChat(card.chatUrl));
-                    actions.appendChild(btnHum);
+                    if (actions.canHuman) {
+                        const btnHum = document.createElement("button");
+                        btnHum.type = "button";
+                        btnHum.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans";
+                        btnHum.textContent = "Falar com atendente";
+                        btnHum.addEventListener("click", () => openChat(actions.chatUrl));
+                        actionsWrap.appendChild(btnHum);
+                    }
 
                     grid.appendChild(wrapper);
                 });
@@ -1370,12 +1459,12 @@
                 const d = $("paymentDateInput");
                 if (!d) return;
 
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const maxDate = addBusinessDays(today, 5);
-
-                d.min = formatDateInput(today);
-                d.max = formatDateInput(maxDate);
+                const businessDates = getBusinessDates(5);
+                d.innerHTML = '<option value="">Selecione a data desejada</option>' + businessDates.map(dt => {
+                    const value = formatDateInput(dt);
+                    const label = dt.toLocaleDateString("pt-BR");
+                    return `<option value="${value}">${label}</option>`;
+                }).join("");
                 d.value = "";
             }
 
@@ -1421,22 +1510,11 @@
             function validatePaymentDate(dateStr) {
                 if (!dateStr) return { ok: false, message: "Selecione uma data de pagamento." };
 
-                const selected = new Date(`${dateStr}T00:00:00`);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+                const selected = String(dateStr || "");
+                const allowedDates = getBusinessDates(5).map(formatDateInput);
 
-                if (Number.isNaN(selected.getTime())) {
-                    return { ok: false, message: "Data inválida." };
-                }
-
-                const weekDay = selected.getDay();
-                if (weekDay === 0 || weekDay === 6) {
-                    return { ok: false, message: "A data não pode cair em final de semana." };
-                }
-
-                const maxBusinessDate = addBusinessDays(today, 5);
-                if (selected < today || selected > maxBusinessDate) {
-                    return { ok: false, message: "A data deve estar dentro de até 5 dias úteis." };
+                if (!allowedDates.includes(selected)) {
+                    return { ok: false, message: "A data deve estar dentro das 5 próximas datas úteis disponíveis." };
                 }
 
                 return { ok: true, message: "" };
