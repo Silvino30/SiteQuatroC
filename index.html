@@ -1348,6 +1348,37 @@
                 });
             }
 
+            function formatDateInput(date) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, "0");
+                const d = String(date.getDate()).padStart(2, "0");
+                return `${y}-${m}-${d}`;
+            }
+
+            function addBusinessDays(baseDate, businessDays) {
+                const date = new Date(baseDate);
+                let added = 0;
+                while (added < businessDays) {
+                    date.setDate(date.getDate() + 1);
+                    const day = date.getDay();
+                    if (day !== 0 && day !== 6) added++;
+                }
+                return date;
+            }
+
+            function setupNegotiationCalendar() {
+                const d = $("paymentDateInput");
+                if (!d) return;
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const maxDate = addBusinessDays(today, 5);
+
+                d.min = formatDateInput(today);
+                d.max = formatDateInput(maxDate);
+                d.value = "";
+            }
+
             function openNegotiation(card) {
                 selectedCard = card;
                 lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
@@ -1363,6 +1394,7 @@
                 if (c) c.textContent = card?.propostaQuitacaoFormatada || "R$ 0,00";
                 if (d) d.value = "";
 
+                setupNegotiationCalendar();
                 setActiveView("vNegotiate");
             }
 
@@ -1382,106 +1414,8 @@
                 setActiveView("vIraSchedule");
             }
 
-            function renderCards(cards) {
-                const grid = $("cardsGrid");
-                if (!grid) return;
-
-                grid.innerHTML = "";
-                const normalized = normalizeCards(cards);
-
-                normalized.forEach((card, index) => {
-                    const wrapper = document.createElement("div");
-                    wrapper.className = "p-6 border-2 border-slate-100 rounded-2xl hover:border-accent transition bg-white";
-
-                    const detailsId = `card-details-${index}`;
-
-                    wrapper.innerHTML = `
-                        <div class="flex items-center gap-4 mb-4">
-                            ${card.logo ? `<img src="${card.logo}" class="w-12 h-12 rounded-xl bg-white border border-slate-100 object-contain" alt="logo">` : ""}
-                            <div>
-                                <p class="text-navy font-extrabold text-base font-sans leading-tight">${card.credorNome}</p>
-                                <p class="text-slate-500 text-xs font-semibold font-sans">Contrato: ${card.numeroContrato || "-"}</p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2 mb-4">
-                            <div class="flex justify-between">
-                                <span class="text-slate-500 text-sm font-sans">Valor total</span>
-                                <strong class="text-navy font-sans">${card.valorTotalFormatado}</strong>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500 text-sm font-sans">Proposta de quitação</span>
-                                <strong class="text-accent font-sans">${card.propostaQuitacaoFormatada}</strong>
-                            </div>
-                        </div>
-
-                        <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
-                            Ver detalhamento
-                        </button>
-
-                        <div id="${detailsId}" class="hidden mb-4 overflow-hidden">
-                            <div class="rounded-2xl border border-slate-100 overflow-hidden">
-                                <table class="w-full text-sm font-sans">
-                                    <thead class="bg-slate-50">
-                                        <tr>
-                                            <th class="p-3 text-left">Vencimento</th>
-                                            <th class="p-3 text-left">Valor</th>
-                                            <th class="p-3 text-left">Documento</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${(card.detalhes || []).map(row => `
-                                            <tr class="border-t border-slate-100">
-                                                <td class="p-3">${row.vencimentoFormatado || "-"}</td>
-                                                <td class="p-3">${row.valorFormatado || "-"}</td>
-                                                <td class="p-3">${row.numeroDocumento || "-"}</td>
-                                            </tr>
-                                        `).join("")}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="grid gap-3 card-actions"></div>
-                    `;
-
-                    const toggle = wrapper.querySelector(".btn-toggle-details");
-                    if (toggle) {
-                        toggle.addEventListener("click", () => {
-                            const d = document.getElementById(detailsId);
-                            if (d) d.classList.toggle("hidden");
-                        });
-                    }
-
-                    const actions = wrapper.querySelector(".card-actions");
-
-                    if (card.tipoAcao === "NEGOCIAR" && card.podeNegociar) {
-                        const btnNeg = document.createElement("button");
-                        btnNeg.type = "button";
-                        btnNeg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
-                        btnNeg.textContent = "Negociar";
-                        btnNeg.addEventListener("click", () => openNegotiation(card));
-                        actions.appendChild(btnNeg);
-                    }
-
-                    if (card.tipoAcao === "AGENDAR") {
-                        const btnAg = document.createElement("button");
-                        btnAg.type = "button";
-                        btnAg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
-                        btnAg.textContent = "Solicitar agendamento";
-                        btnAg.addEventListener("click", () => openIraSchedule(card));
-                        actions.appendChild(btnAg);
-                    }
-
-                    const btnHum = document.createElement("button");
-                    btnHum.type = "button";
-                    btnHum.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans";
-                    btnHum.textContent = "Falar com atendente";
-                    btnHum.addEventListener("click", () => openChat(card.chatUrl));
-                    actions.appendChild(btnHum);
-
-                    grid.appendChild(wrapper);
-                });
+            function renderCards_legacy_do_not_use(cards) {
+                return renderCards(cards);
             }
 
             function validatePaymentDate(dateStr) {
@@ -1495,15 +1429,14 @@
                     return { ok: false, message: "Data inválida." };
                 }
 
-                const diffDays = Math.ceil((selected - today) / (1000 * 60 * 60 * 24));
                 const weekDay = selected.getDay();
-
-                if (diffDays < 0 || diffDays > 5) {
-                    return { ok: false, message: "A data deve estar dentro de até 5 dias." };
-                }
-
                 if (weekDay === 0 || weekDay === 6) {
                     return { ok: false, message: "A data não pode cair em final de semana." };
+                }
+
+                const maxBusinessDate = addBusinessDays(today, 5);
+                if (selected < today || selected > maxBusinessDate) {
+                    return { ok: false, message: "A data deve estar dentro de até 5 dias úteis." };
                 }
 
                 return { ok: true, message: "" };
