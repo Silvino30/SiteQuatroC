@@ -439,8 +439,8 @@
 
                         <!-- Cards -->
                         <div class="view" id="vNext">
-                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Pendências localizadas</h4>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
+                            <h4 id="cardsTitle" class="text-navy font-bold text-xl font-sans mb-2">Pendências localizadas</h4>
+                            <p id="cardsSubtitle" class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
                                 Identificamos as seguintes pendências para análise:
                             </p>
                             <div class="grid gap-4 mb-6" id="cardsGrid"></div>
@@ -1191,7 +1191,16 @@
             function normalizeCards(cards) {
                 return (Array.isArray(cards) ? cards : []).map(c => {
                     const pres = getCredorPresentation(c?.credor || "", c?.unidade || "");
+                    const detalhes = (Array.isArray(c?.detalhes) ? c.detalhes : []).map(row => ({
+                        vencimento: row?.vencimento || "",
+                        vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
+                        valor: Number(row?.valor || 0),
+                        valorFormatado: row?.valorFormatado || formatBRL(row?.valor || 0),
+                        numeroDocumento: row?.numeroDocumento || "-"
+                    }));
+
                     return {
+                        tipo: String(c?.tipo || "pendencia").toLowerCase(),
                         credor: c?.credor || "",
                         credorNome: c?.credorNome || pres.nome,
                         logo: c?.logo || pres.logo,
@@ -1204,8 +1213,138 @@
                         propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(c?.propostaQuitacao || 0),
                         tipoAcao: c?.tipoAcao || pres.tipoAcao,
                         podeNegociar: typeof c?.podeNegociar === "boolean" ? c.podeNegociar : false,
-                        detalhes: Array.isArray(c?.detalhes) ? c.detalhes : []
+                        detalhes
                     };
+                });
+            }
+
+            function renderCards(cards) {
+                const grid = $("cardsGrid");
+                if (!grid) return;
+
+                const title = $("cardsTitle");
+                const subtitle = $("cardsSubtitle");
+
+                grid.innerHTML = "";
+                const normalized = normalizeCards(cards);
+
+                const hasAgreement = normalized.some(card => card.tipo === "acordo");
+                const hasDebt = normalized.some(card => card.tipo !== "acordo");
+
+                if (title && subtitle) {
+                    if (hasAgreement && hasDebt) {
+                        title.textContent = "Situações localizadas";
+                        subtitle.textContent = "Identificamos acordos ativos e pendências para análise:";
+                    } else if (hasAgreement) {
+                        title.textContent = "Acordos ativos localizados";
+                        subtitle.textContent = "Identificamos os seguintes acordos ativos vinculados ao cadastro:";
+                    } else {
+                        title.textContent = "Pendências localizadas";
+                        subtitle.textContent = "Identificamos as seguintes pendências para análise:";
+                    }
+                }
+
+                normalized.forEach((card, index) => {
+                    const isAgreement = card.tipo === "acordo";
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "p-6 border-2 border-slate-100 rounded-2xl hover:border-accent transition bg-white";
+
+                    const detailsId = `card-details-${index}`;
+                    const labelValor = isAgreement ? "Valor do acordo" : "Valor total";
+                    const labelProposta = isAgreement ? "Situação" : "Proposta de quitação";
+                    const proposalValue = isAgreement ? "Acordo ativo identificado" : card.propostaQuitacaoFormatada;
+                    const proposalClass = isAgreement ? "text-navy" : "text-accent";
+                    const detailsButtonText = isAgreement ? "Ver detalhamento do acordo" : "Ver detalhamento";
+
+                    wrapper.innerHTML = `
+                        <div class="flex items-center justify-between gap-4 mb-4">
+                            <div class="flex items-center gap-4">
+                                ${card.logo ? `<img src="${card.logo}" class="w-12 h-12 rounded-xl bg-white border border-slate-100 object-contain" alt="logo">` : ""}
+                                <div>
+                                    <p class="text-navy font-extrabold text-base font-sans leading-tight">${card.credorNome}</p>
+                                    <p class="text-slate-500 text-xs font-semibold font-sans">Contrato: ${card.numeroContrato || "-"}</p>
+                                </div>
+                            </div>
+                            ${isAgreement ? `<span class="inline-flex items-center px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-bold uppercase tracking-widest text-navy font-sans">Acordo ativo</span>` : ""}
+                        </div>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between gap-4">
+                                <span class="text-slate-500 text-sm font-sans">${labelValor}</span>
+                                <strong class="text-navy font-sans text-right">${card.valorTotalFormatado}</strong>
+                            </div>
+                            <div class="flex justify-between gap-4">
+                                <span class="text-slate-500 text-sm font-sans">${labelProposta}</span>
+                                <strong class="${proposalClass} font-sans text-right">${proposalValue}</strong>
+                            </div>
+                        </div>
+
+                        <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
+                            ${detailsButtonText}
+                        </button>
+
+                        <div id="${detailsId}" class="hidden mb-4 overflow-hidden">
+                            <div class="rounded-2xl border border-slate-100 overflow-hidden">
+                                <table class="w-full text-sm font-sans">
+                                    <thead class="bg-slate-50">
+                                        <tr>
+                                            <th class="p-3 text-left">Vencimento</th>
+                                            <th class="p-3 text-left">Valor</th>
+                                            <th class="p-3 text-left">Documento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${(card.detalhes || []).map(row => `
+                                            <tr class="border-t border-slate-100">
+                                                <td class="p-3">${row.vencimentoFormatado || "-"}</td>
+                                                <td class="p-3">${row.valorFormatado || "-"}</td>
+                                                <td class="p-3">${row.numeroDocumento || "-"}</td>
+                                            </tr>
+                                        `).join("")}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="grid gap-3 card-actions"></div>
+                    `;
+
+                    const toggle = wrapper.querySelector(".btn-toggle-details");
+                    if (toggle) {
+                        toggle.addEventListener("click", () => {
+                            const d = document.getElementById(detailsId);
+                            if (d) d.classList.toggle("hidden");
+                        });
+                    }
+
+                    const actions = wrapper.querySelector(".card-actions");
+
+                    if (!isAgreement && card.tipoAcao === "NEGOCIAR" && card.podeNegociar) {
+                        const btnNeg = document.createElement("button");
+                        btnNeg.type = "button";
+                        btnNeg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
+                        btnNeg.textContent = "Negociar";
+                        btnNeg.addEventListener("click", () => openNegotiation(card));
+                        actions.appendChild(btnNeg);
+                    }
+
+                    if (!isAgreement && card.tipoAcao === "AGENDAR") {
+                        const btnAg = document.createElement("button");
+                        btnAg.type = "button";
+                        btnAg.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
+                        btnAg.textContent = "Solicitar agendamento";
+                        btnAg.addEventListener("click", () => openIraSchedule(card));
+                        actions.appendChild(btnAg);
+                    }
+
+                    const btnHum = document.createElement("button");
+                    btnHum.type = "button";
+                    btnHum.className = "w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans";
+                    btnHum.textContent = "Falar com atendente";
+                    btnHum.addEventListener("click", () => openChat(card.chatUrl));
+                    actions.appendChild(btnHum);
+
+                    grid.appendChild(wrapper);
                 });
             }
 
