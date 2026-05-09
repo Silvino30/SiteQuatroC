@@ -1224,14 +1224,23 @@
             function normalizeCards(cards) {
                 return (Array.isArray(cards) ? cards : []).map(c => {
                     const pres = getCredorPresentation(c?.credor || "", c?.unidade || "");
+                    const tipo = String(c?.tipo || "pendencia").toLowerCase();
+
                     const detalhes = (Array.isArray(c?.detalhes) ? c.detalhes : []).map(row => {
+                        if (tipo === "ira") {
+                            return {
+                                placa: row?.placa || row?.Placa || row?.numeroDocumento || row?.NumeroDocumento || "-",
+                                os: row?.os || row?.OS || row?.IraOS || "-",
+                                dataOS: row?.dataOS || row?.DataOS || row?.vencimentoFormatado || row?.vencimento || "-"
+                            };
+                        }
+
                         const valorDetalhe = parseMoneyLike(row?.valorFormatado || row?.valor || 0);
                         return {
                             vencimento: row?.vencimento || "",
                             vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
                             valor: valorDetalhe,
-                            valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
-                            numeroDocumento: row?.numeroDocumento || "-"
+                            valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe)
                         };
                     });
 
@@ -1239,7 +1248,7 @@
                     const propostaQuitacao = parseMoneyLike(c?.propostaQuitacaoFormatada || c?.propostaQuitacao || 0);
 
                     return {
-                        tipo: String(c?.tipo || "pendencia").toLowerCase(),
+                        tipo,
                         credor: c?.credor || "",
                         credorNome: c?.credorNome || pres.nome,
                         logo: c?.logo || pres.logo,
@@ -1348,6 +1357,42 @@
                                 <strong class="text-accent font-sans text-right">${card.propostaQuitacaoFormatada}</strong>
                             </div>` : '';
 
+                    const detailsTableHtml = card.tipo === "ira" ? `
+                                <table class="w-full text-sm font-sans">
+                                    <thead class="bg-slate-50">
+                                        <tr>
+                                            <th class="p-3 text-left">Placa</th>
+                                            <th class="p-3 text-left">OS</th>
+                                            <th class="p-3 text-left">Data OS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${(card.detalhes || []).map(row => `
+                                            <tr class="border-t border-slate-100">
+                                                <td class="p-3">${row.placa || "-"}</td>
+                                                <td class="p-3">${row.os || "-"}</td>
+                                                <td class="p-3">${row.dataOS || "-"}</td>
+                                            </tr>
+                                        `).join("")}
+                                    </tbody>
+                                </table>` : `
+                                <table class="w-full text-sm font-sans">
+                                    <thead class="bg-slate-50">
+                                        <tr>
+                                            <th class="p-3 text-left">Vencimento</th>
+                                            <th class="p-3 text-left">Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${(card.detalhes || []).map(row => `
+                                            <tr class="border-t border-slate-100">
+                                                <td class="p-3">${row.vencimentoFormatado || "-"}</td>
+                                                <td class="p-3">${row.valorFormatado || "-"}</td>
+                                            </tr>
+                                        `).join("")}
+                                    </tbody>
+                                </table>`;
+
                     wrapper.innerHTML = `
                         <div class="flex items-center justify-between gap-4 mb-4">
                             <div class="flex items-center gap-4">
@@ -1374,24 +1419,7 @@
 
                         <div id="${detailsId}" class="hidden mb-4 overflow-hidden">
                             <div class="rounded-2xl border border-slate-100 overflow-hidden">
-                                <table class="w-full text-sm font-sans">
-                                    <thead class="bg-slate-50">
-                                        <tr>
-                                            <th class="p-3 text-left">Vencimento</th>
-                                            <th class="p-3 text-left">Valor</th>
-                                            <th class="p-3 text-left">Documento</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${(card.detalhes || []).map(row => `
-                                            <tr class="border-t border-slate-100">
-                                                <td class="p-3">${row.vencimentoFormatado || "-"}</td>
-                                                <td class="p-3">${row.valorFormatado || "-"}</td>
-                                                <td class="p-3">${row.numeroDocumento || "-"}</td>
-                                            </tr>
-                                        `).join("")}
-                                    </tbody>
-                                </table>
+${detailsTableHtml}
                             </div>
                         </div>
 
