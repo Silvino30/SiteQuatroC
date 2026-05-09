@@ -510,10 +510,32 @@
                                     <span class="text-slate-500 text-sm font-sans">Contrato</span>
                                     <strong class="text-navy font-sans" id="negotiationContract">-</strong>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="text-slate-500 text-sm font-sans">Proposta de quitação</span>
+                                <div class="flex justify-between mb-3">
+                                    <span class="text-slate-500 text-sm font-sans">Proposta à vista</span>
                                     <strong class="text-navy font-sans" id="negotiationProposal">R$ 0,00</strong>
                                 </div>
+                                <div id="negotiationInstallmentSummary" class="hidden border-t border-slate-200 pt-3 mt-3 space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500 text-sm font-sans">Valor parcelado</span>
+                                        <strong class="text-navy font-sans" id="negotiationInstallmentTotal">R$ 0,00</strong>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-500 text-sm font-sans">Valor da parcela</span>
+                                        <strong class="text-navy font-sans" id="negotiationInstallmentValue">R$ 0,00</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="negotiationPaymentBlock" class="hidden grid gap-3 mb-4">
+                                <select id="paymentModeInput"
+                                    class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans">
+                                    <option value="vista">Pagamento à vista</option>
+                                    <option value="parcelado">Pagamento parcelado</option>
+                                </select>
+
+                                <select id="installmentCountInput"
+                                    class="hidden w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent transition font-sans">
+                                </select>
                             </div>
 
                             <select id="paymentDateInput"
@@ -1221,6 +1243,32 @@
                 return Number.isFinite(fallback) ? fallback : 0;
             }
 
+            function normalizeInstallmentData(parcelamento) {
+                const parcelasDisponiveis = Array.isArray(parcelamento?.parcelasDisponiveis)
+                    ? parcelamento.parcelasDisponiveis
+                        .map(q => Number(q))
+                        .filter(q => Number.isFinite(q) && q >= 2)
+                    : [];
+
+                const valorNegociadoParcelado = parseMoneyLike(
+                    parcelamento?.valorNegociadoParceladoFormatado ||
+                    parcelamento?.valorNegociadoParcelado ||
+                    0
+                );
+
+                return {
+                    ...parcelamento,
+                    valorNegociadoParcelado,
+                    valorNegociadoParceladoFormatado:
+                        parcelamento?.valorNegociadoParceladoFormatado ||
+                        formatBRL(valorNegociadoParcelado),
+                    parcelasDisponiveis,
+                    valorMinimoParcela: Number(parcelamento?.valorMinimoParcela || 100),
+                    percentualDescontoVista: Number(parcelamento?.percentualDescontoVista || 0),
+                    percentualDescontoParcelado: Number(parcelamento?.percentualDescontoParcelado || 0)
+                };
+            }
+
             function normalizeCards(cards) {
                 return (Array.isArray(cards) ? cards : []).map(c => {
                     const pres = getCredorPresentation(c?.credor || "", c?.unidade || "");
@@ -1263,7 +1311,7 @@
                         tipoAcao: c?.tipoAcao || pres.tipoAcao,
                         podeNegociar: c?.podeNegociar === true,
                         permiteParcelamento: c?.permiteParcelamento === true,
-                        parcelamento: c?.parcelamento || {},
+                        parcelamento: normalizeInstallmentData(c?.parcelamento || {}),
                         detalhes
                     };
                 });
@@ -1498,6 +1546,76 @@ ${detailsTableHtml}
                 d.value = "";
             }
 
+            function getInstallmentAmount(total, count) {
+                const nTotal = Number(total || 0);
+                const nCount = Number(count || 0);
+                if (!Number.isFinite(nTotal) || !Number.isFinite(nCount) || nCount <= 0) return 0;
+                return nTotal / nCount;
+            }
+
+            function updateInstallmentUI() {
+                const modeInput = $("paymentModeInput");
+                const countInput = $("installmentCountInput");
+                const summary = $("negotiationInstallmentSummary");
+                const totalEl = $("negotiationInstallmentTotal");
+                const valueEl = $("negotiationInstallmentValue");
+
+                const mode = modeInput ? modeInput.value : "vista";
+                const canParcel = selectedCard?.permiteParcelamento === true &&
+                    Array.isArray(selectedCard?.parcelamento?.parcelasDisponiveis) &&
+                    selectedCard.parcelamento.parcelasDisponiveis.length > 0;
+
+                if (!canParcel || mode !== "parcelado") {
+                    if (countInput) countInput.classList.add("hidden");
+                    if (summary) summary.classList.add("hidden");
+                    return;
+                }
+
+                if (countInput) countInput.classList.remove("hidden");
+                if (summary) summary.classList.remove("hidden");
+
+                const qtd = Number(countInput?.value || selectedCard.parcelamento.parcelasDisponiveis[0] || 0);
+                const totalParcelado = Number(selectedCard?.parcelamento?.valorNegociadoParcelado || 0);
+                const valorParcela = getInstallmentAmount(totalParcelado, qtd);
+
+                if (totalEl) totalEl.textContent = selectedCard?.parcelamento?.valorNegociadoParceladoFormatado || formatBRL(totalParcelado);
+                if (valueEl) valueEl.textContent = qtd ? `${qtd}x de ${formatBRL(valorParcela)}` : "-";
+            }
+
+            function setupPaymentOptions(card) {
+                const block = $("negotiationPaymentBlock");
+                const modeInput = $("paymentModeInput");
+                const countInput = $("installmentCountInput");
+                const summary = $("negotiationInstallmentSummary");
+
+                const parcelas = Array.isArray(card?.parcelamento?.parcelasDisponiveis)
+                    ? card.parcelamento.parcelasDisponiveis
+                    : [];
+
+                const canParcel = card?.permiteParcelamento === true && parcelas.length > 0;
+
+                if (!block || !modeInput || !countInput) return;
+
+                if (!canParcel) {
+                    block.classList.add("hidden");
+                    countInput.classList.add("hidden");
+                    if (summary) summary.classList.add("hidden");
+                    modeInput.value = "vista";
+                    countInput.innerHTML = "";
+                    return;
+                }
+
+                block.classList.remove("hidden");
+                modeInput.value = "vista";
+
+                countInput.innerHTML = parcelas.map(qtd => {
+                    const valorParcela = getInstallmentAmount(card.parcelamento.valorNegociadoParcelado, qtd);
+                    return `<option value="${qtd}">${qtd}x de ${formatBRL(valorParcela)}</option>`;
+                }).join("");
+
+                updateInstallmentUI();
+            }
+
             function openNegotiation(card) {
                 selectedCard = card;
                 lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
@@ -1513,6 +1631,7 @@ ${detailsTableHtml}
                 if (c) c.textContent = card?.propostaQuitacaoFormatada || "R$ 0,00";
                 if (d) d.value = "";
 
+                setupPaymentOptions(card);
                 setupNegotiationCalendar();
                 setActiveView("vNegotiate");
             }
@@ -1630,6 +1749,8 @@ ${detailsTableHtml}
             on("btnBlockedHumano", "click", () => openChat(lastHumanChat));
             on("btnAgreementHumano", "click", () => openChat(lastHumanChat));
             on("btnNegotiationHumano", "click", () => openChat(lastHumanChat));
+            on("paymentModeInput", "change", updateInstallmentUI);
+            on("installmentCountInput", "change", updateInstallmentUI);
 
             on("btnConsultar", "click", async () => {
                 hideText("startError");
@@ -1799,11 +1920,27 @@ ${detailsTableHtml}
                 }
 
                 const paymentDate = $("paymentDateInput")?.value || "";
+                const paymentMode = $("paymentModeInput")?.value || "vista";
+                const installmentCount = Number($("installmentCountInput")?.value || 0);
+                const isParcelado = paymentMode === "parcelado" && selectedCard?.permiteParcelamento === true;
+
                 const val = validatePaymentDate(paymentDate);
 
                 if (!val.ok) {
                     return showText("negotiationError", val.message);
                 }
+
+                if (isParcelado && (!installmentCount || installmentCount < 2)) {
+                    return showText("negotiationError", "Selecione a quantidade de parcelas.");
+                }
+
+                const valorNegociado = isParcelado
+                    ? Number(selectedCard?.parcelamento?.valorNegociadoParcelado || 0)
+                    : Number(selectedCard?.propostaQuitacao || 0);
+
+                const valorParcela = isParcelado
+                    ? getInstallmentAmount(valorNegociado, installmentCount)
+                    : valorNegociado;
 
                 setActiveView("vLoading");
 
@@ -1815,7 +1952,14 @@ ${detailsTableHtml}
                         numeroContrato: selectedCard.numeroContrato,
                         valorTotal: selectedCard.valorTotal,
                         propostaQuitacao: selectedCard.propostaQuitacao,
-                        dataPagamento: paymentDate
+                        dataPagamento: paymentDate,
+                        tipoPagamento: isParcelado ? "parcelado" : "avista",
+                        quantidadeParcelas: isParcelado ? installmentCount : 1,
+                        valorNegociado,
+                        valorNegociadoFormatado: formatBRL(valorNegociado),
+                        valorParcela,
+                        valorParcelaFormatado: formatBRL(valorParcela),
+                        parcelamento: selectedCard.parcelamento || {}
                     });
 
                     if (data?.proximoStep === "sucesso_negociacao" || data?.status === "ok") {
