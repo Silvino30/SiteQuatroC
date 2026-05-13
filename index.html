@@ -566,6 +566,18 @@
                             </button>
                         </div>
 
+                        <!-- Sucesso segunda via -->
+                        <div class="view" id="vSecondCopySuccess">
+                            <h4 class="text-navy font-bold text-xl font-sans mb-2">Segunda via solicitada</h4>
+                            <p class="text-slate-500 text-sm font-medium leading-relaxed mb-6 font-sans" id="secondCopySuccessMsg">
+                                A solicitação de segunda via foi realizada com sucesso.
+                            </p>
+                            <button id="btnSecondCopyNewSearch" type="button"
+                                class="w-full bg-navy text-white font-bold py-5 rounded-2xl hover:bg-accent transition shadow-lg uppercase tracking-widest text-xs font-sans">
+                                Nova pesquisa
+                            </button>
+                        </div>
+
                         <!-- IRA -->
                         <div class="view" id="vIraSchedule">
                             <h4 class="text-navy font-bold text-xl font-sans mb-2">Solicitar agendamento</h4>
@@ -1311,6 +1323,7 @@
                         tipoAcao: c?.tipoAcao || pres.tipoAcao,
                         podeNegociar: c?.podeNegociar === true,
                         permiteParcelamento: c?.permiteParcelamento === true,
+                        permiteSegundaVia: c?.permiteSegundaVia === true || c?.segundaVia === true || c?.tipoAcao === "SEGUNDA_VIA",
                         parcelamento: normalizeInstallmentData(c?.parcelamento || {}),
                         detalhes
                     };
@@ -1319,6 +1332,26 @@
 
             function isAmilOperadoras(credorRaw) {
                 return norm(credorRaw).includes("AMIL OPERADORAS");
+            }
+
+            function isSantaHelena(credorRaw) {
+                return norm(credorRaw).includes("SANTA HELENA");
+            }
+
+            function isCredorSegundaVia(credorRaw) {
+                return isAmilOperadoras(credorRaw) || isSantaHelena(credorRaw);
+            }
+
+            function shouldShowSecondCopy(card) {
+                const isAgreement = String(card?.tipo || "").toLowerCase() === "acordo";
+                if (isAgreement) return false;
+
+                const valorTotal = Number(card?.valorTotal || 0);
+                const credorElegivel = isCredorSegundaVia(card?.credor || card?.credorNome || "");
+
+                // Regra: Segunda via somente para Amil Operadoras/Santa Helena,
+                // sem acordo ativo e abaixo da alçada mínima de negociação.
+                return credorElegivel && card?.podeNegociar !== true && valorTotal > 0 && valorTotal < 300;
             }
 
             function getBusinessDates(count = 5) {
@@ -1354,10 +1387,12 @@
                 // Se o Consolidar Cards retornou podeNegociar=false, não exibe proposta nem botão Negociar.
                 const canNegotiate = card?.podeNegociar === true;
                 const canSchedule = !canNegotiate && (card?.tipoAcao || pres.tipoAcao) === "AGENDAR";
+                const canSecondCopy = !canNegotiate && !canSchedule && shouldShowSecondCopy(card);
 
                 return {
                     canNegotiate,
                     canSchedule,
+                    canSecondCopy,
                     canHuman: true,
                     chatUrl: card?.chatUrl || pres.chat
                 };
@@ -1502,6 +1537,15 @@ ${detailsTableHtml}
                         actionsWrap.appendChild(btnAg);
                     }
 
+                    if (actions.canSecondCopy) {
+                        const btnSecond = document.createElement("button");
+                        btnSecond.type = "button";
+                        btnSecond.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
+                        btnSecond.textContent = "Segunda via";
+                        btnSecond.addEventListener("click", () => requestSecondCopy(card));
+                        actionsWrap.appendChild(btnSecond);
+                    }
+
                     if (actions.canHuman) {
                         const btnHum = document.createElement("button");
                         btnHum.type = "button";
@@ -1614,6 +1658,48 @@ ${detailsTableHtml}
                 }).join("");
 
                 updateInstallmentUI();
+            }
+
+            async function requestSecondCopy(card) {
+                selectedCard = card;
+                lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                setActiveView("vLoading");
+
+                try {
+                    const data = await callBackend("solicitar_segunda_via", {
+                        documento: currentDoc,
+                        credor: card.credor,
+                        idContrato: card.idContrato,
+                        numeroContrato: card.numeroContrato,
+                        valorTotal: card.valorTotal
+                    });
+
+                    const link = data?.boletoUrl || data?.linkBoleto || data?.urlBoleto || data?.url || "";
+                    if (link) {
+                        window.open(link, "_blank", "noopener,noreferrer");
+                    }
+
+                    const msg = $("secondCopySuccessMsg");
+                    if (msg) {
+                        msg.textContent = data?.mensagem || "A solicitação de segunda via foi realizada com sucesso.";
+                    }
+
+                    if (data?.status === "ok" || data?.proximoStep === "segunda_via_emitida" || link) {
+                        return setActiveView("vSecondCopySuccess");
+                    }
+
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = data?.mensagem || "Não foi possível solicitar a segunda via no momento.";
+                    }
+                    setActiveView("vError");
+                } catch (e) {
+                    const errorMsg = $("errorMsg");
+                    if (errorMsg) {
+                        errorMsg.textContent = "Não foi possível solicitar a segunda via no momento.";
+                    }
+                    setActiveView("vError");
+                }
             }
 
             function openNegotiation(card) {
@@ -1744,6 +1830,7 @@ ${detailsTableHtml}
             on("btnNovaConsultaNoDebt", "click", goStart);
             on("btnNovaConsultaErr", "click", goStart);
             on("btnSuccessNewSearch", "click", goStart);
+            on("btnSecondCopyNewSearch", "click", goStart);
             on("btnIraSuccessNewSearch", "click", goStart);
 
             on("btnBlockedHumano", "click", () => openChat(lastHumanChat));
