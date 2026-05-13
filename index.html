@@ -1542,7 +1542,7 @@ ${detailsTableHtml}
                         btnSecond.type = "button";
                         btnSecond.className = "w-full bg-navy text-white font-bold py-4 rounded-2xl hover:bg-accent transition uppercase tracking-widest text-xs font-sans";
                         btnSecond.textContent = "Segunda via";
-                        btnSecond.addEventListener("click", () => requestSecondCopy(card));
+                        btnSecond.addEventListener("click", () => openSecondCopyNegotiation(card));
                         actionsWrap.appendChild(btnSecond);
                     }
 
@@ -1660,64 +1660,68 @@ ${detailsTableHtml}
                 updateInstallmentUI();
             }
 
-            async function requestSecondCopy(card) {
-                selectedCard = card;
-                lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
-                setActiveView("vLoading");
+            function openSecondCopyNegotiation(card) {
+                const secondCard = {
+                    ...card,
+                    tipoPagamentoOperacao: "segunda_via",
+                    propostaQuitacao: Number(card?.valorTotal || 0),
+                    propostaQuitacaoFormatada: card?.valorTotalFormatado || formatBRL(card?.valorTotal || 0),
+                    permiteParcelamento: false,
+                    parcelamento: {}
+                };
 
-                try {
-                    const data = await callBackend("solicitar_segunda_via", {
-                        documento: currentDoc,
-                        credor: card.credor,
-                        idContrato: card.idContrato,
-                        numeroContrato: card.numeroContrato,
-                        valorTotal: card.valorTotal
-                    });
-
-                    const link = data?.boletoUrl || data?.linkBoleto || data?.urlBoleto || data?.url || "";
-                    if (link) {
-                        window.open(link, "_blank", "noopener,noreferrer");
-                    }
-
-                    const msg = $("secondCopySuccessMsg");
-                    if (msg) {
-                        msg.textContent = data?.mensagem || "A solicitação de segunda via foi realizada com sucesso.";
-                    }
-
-                    if (data?.status === "ok" || data?.proximoStep === "segunda_via_emitida" || link) {
-                        return setActiveView("vSecondCopySuccess");
-                    }
-
-                    const errorMsg = $("errorMsg");
-                    if (errorMsg) {
-                        errorMsg.textContent = data?.mensagem || "Não foi possível solicitar a segunda via no momento.";
-                    }
-                    setActiveView("vError");
-                } catch (e) {
-                    const errorMsg = $("errorMsg");
-                    if (errorMsg) {
-                        errorMsg.textContent = "Não foi possível solicitar a segunda via no momento.";
-                    }
-                    setActiveView("vError");
-                }
+                openNegotiation(secondCard, "segunda_via");
             }
 
-            function openNegotiation(card) {
-                selectedCard = card;
-                lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+            function openNegotiation(card, modoOperacao = "negociacao") {
+                selectedCard = {
+                    ...card,
+                    tipoPagamentoOperacao: modoOperacao === "segunda_via" ? "segunda_via" : (card?.tipoPagamentoOperacao || "negociacao")
+                };
+
+                const isSegundaVia = selectedCard.tipoPagamentoOperacao === "segunda_via";
+
+                lastHumanChat = selectedCard?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
                 hideText("negotiationError");
+
+                const title = document.querySelector("#vNegotiate h4");
+                const subtitle = document.querySelector("#vNegotiate > p");
+                const proposalLabel = $("negotiationProposal")?.parentElement?.querySelector("span");
+                const confirmButton = $("btnConfirmNegotiation");
+
+                if (title) title.textContent = isSegundaVia ? "Segunda via" : "Negociação automática";
+                if (subtitle) subtitle.textContent = isSegundaVia
+                    ? "Selecione a data desejada para emissão da segunda via."
+                    : "Selecione a data desejada para pagamento.";
+                if (proposalLabel) proposalLabel.textContent = isSegundaVia ? "Valor original" : "Proposta à vista";
+                if (confirmButton) confirmButton.textContent = isSegundaVia ? "Emitir segunda via" : "Confirmar negociação";
 
                 const a = $("negotiationCreditor");
                 const b = $("negotiationContract");
                 const c = $("negotiationProposal");
                 const d = $("paymentDateInput");
 
-                if (a) a.textContent = card?.credorNome || "-";
-                if (b) b.textContent = card?.numeroContrato || "-";
-                if (c) c.textContent = card?.propostaQuitacaoFormatada || "R$ 0,00";
+                if (a) a.textContent = selectedCard?.credorNome || "-";
+                if (b) b.textContent = selectedCard?.numeroContrato || "-";
+                if (c) c.textContent = isSegundaVia
+                    ? (selectedCard?.valorTotalFormatado || formatBRL(selectedCard?.valorTotal || 0))
+                    : (selectedCard?.propostaQuitacaoFormatada || "R$ 0,00");
                 if (d) d.value = "";
 
-                setupPaymentOptions(card);
+                if (isSegundaVia) {
+                    const block = $("negotiationPaymentBlock");
+                    const countInput = $("installmentCountInput");
+                    const summary = $("negotiationInstallmentSummary");
+                    const modeInput = $("paymentModeInput");
+
+                    if (block) block.classList.add("hidden");
+                    if (countInput) countInput.classList.add("hidden");
+                    if (summary) summary.classList.add("hidden");
+                    if (modeInput) modeInput.value = "vista";
+                } else {
+                    setupPaymentOptions(selectedCard);
+                }
+
                 setupNegotiationCalendar();
                 setActiveView("vNegotiate");
             }
@@ -2009,7 +2013,8 @@ ${detailsTableHtml}
                 const paymentDate = $("paymentDateInput")?.value || "";
                 const paymentMode = $("paymentModeInput")?.value || "vista";
                 const installmentCount = Number($("installmentCountInput")?.value || 0);
-                const isParcelado = paymentMode === "parcelado" && selectedCard?.permiteParcelamento === true;
+                const isSegundaVia = selectedCard?.tipoPagamentoOperacao === "segunda_via";
+                const isParcelado = !isSegundaVia && paymentMode === "parcelado" && selectedCard?.permiteParcelamento === true;
 
                 const val = validatePaymentDate(paymentDate);
 
@@ -2021,9 +2026,11 @@ ${detailsTableHtml}
                     return showText("negotiationError", "Selecione a quantidade de parcelas.");
                 }
 
-                const valorNegociado = isParcelado
-                    ? Number(selectedCard?.parcelamento?.valorNegociadoParcelado || 0)
-                    : Number(selectedCard?.propostaQuitacao || 0);
+                const valorNegociado = isSegundaVia
+                    ? Number(selectedCard?.valorTotal || 0)
+                    : (isParcelado
+                        ? Number(selectedCard?.parcelamento?.valorNegociadoParcelado || 0)
+                        : Number(selectedCard?.propostaQuitacao || 0));
 
                 const valorParcela = isParcelado
                     ? getInstallmentAmount(valorNegociado, installmentCount)
@@ -2038,9 +2045,9 @@ ${detailsTableHtml}
                         idContrato: selectedCard.idContrato,
                         numeroContrato: selectedCard.numeroContrato,
                         valorTotal: selectedCard.valorTotal,
-                        propostaQuitacao: selectedCard.propostaQuitacao,
+                        propostaQuitacao: isSegundaVia ? selectedCard.valorTotal : selectedCard.propostaQuitacao,
                         dataPagamento: paymentDate,
-                        tipoPagamento: isParcelado ? "parcelado" : "avista",
+                        tipoPagamento: isSegundaVia ? "segunda_via" : (isParcelado ? "parcelado" : "avista"),
                         quantidadeParcelas: isParcelado ? installmentCount : 1,
                         valorNegociado,
                         valorNegociadoFormatado: formatBRL(valorNegociado),
