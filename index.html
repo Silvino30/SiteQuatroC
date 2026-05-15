@@ -1744,6 +1744,32 @@ ${detailsTableHtml}
                 if (iraEmail && emailInput) iraEmail.value = emailInput.value.trim();
                 if (iraWhatsapp && phoneInput) iraWhatsapp.value = onlyDigits(phoneInput.value);
 
+                const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const maxDate = new Date(today);
+maxDate.setDate(maxDate.getDate() + 15);
+
+const minValue = formatDateInput(today);
+const maxValue = formatDateInput(maxDate);
+
+['iraDate1', 'iraDate2'].forEach(id => {
+  const el = $(id);
+  if (el) {
+    el.min = minValue;
+    el.max = maxValue;
+  }
+});
+                
+                ['iraTime1', 'iraTime2'].forEach(id => {
+  const el = $(id);
+  if (el) {
+    el.min = '08:00';
+    el.max = '18:00';
+    el.step = 900;
+  }
+});
+
                 setActiveView("vIraSchedule");
             }
 
