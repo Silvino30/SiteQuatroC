@@ -588,12 +588,16 @@
                             <div class="grid gap-4">
                                 <div class="grid md:grid-cols-2 gap-4">
                                     <input id="iraDate1" type="date" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
-                                    <input id="iraTime1" type="time" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                    <select id="iraTime1" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                        <option value="">Selecione o horário</option>
+                                    </select>
                                 </div>
 
                                 <div class="grid md:grid-cols-2 gap-4">
                                     <input id="iraDate2" type="date" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
-                                    <input id="iraTime2" type="time" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                    <select id="iraTime2" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                        <option value="">Selecione o horário</option>
+                                    </select>
                                 </div>
 
                                 <input id="iraStreet" type="text" placeholder="Logradouro" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
@@ -1317,7 +1321,6 @@
                         idContrato: c?.idContrato || "",
                         valorTotal,
                         valorTotalFormatado: c?.valorTotalFormatado || formatBRL(valorTotal),
-                        exibirValorTotal: c?.exibirValorTotal !== false,
                         propostaQuitacao,
                         propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(propostaQuitacao),
                         exibirProposta: c?.exibirProposta === true,
@@ -1489,17 +1492,13 @@
                             ${isAgreement ? `<span class="inline-flex items-center px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-bold uppercase tracking-widest text-navy font-sans">Acordo ativo</span>` : ""}
                         </div>
 
-                        ${(card.exibirValorTotal !== false || isAgreement) ? `
                         <div class="space-y-2 mb-4">
                             <div class="flex justify-between gap-4">
                                 <span class="text-slate-500 text-sm font-sans">${labelValor}</span>
                                 <strong class="text-navy font-sans text-right">${card.valorTotalFormatado}</strong>
                             </div>
                             ${proposalRowHtml}
-                        </div>` : (proposalRowHtml ? `
-                        <div class="space-y-2 mb-4">
-                            ${proposalRowHtml}
-                        </div>` : '')}
+                        </div>
 
                         <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
                             ${detailsButtonText}
@@ -1743,32 +1742,6 @@ ${detailsTableHtml}
 
                 if (iraEmail && emailInput) iraEmail.value = emailInput.value.trim();
                 if (iraWhatsapp && phoneInput) iraWhatsapp.value = onlyDigits(phoneInput.value);
-
-                const today = new Date();
-today.setHours(0, 0, 0, 0);
-
-const maxDate = new Date(today);
-maxDate.setDate(maxDate.getDate() + 15);
-
-const minValue = formatDateInput(today);
-const maxValue = formatDateInput(maxDate);
-
-['iraDate1', 'iraDate2'].forEach(id => {
-  const el = $(id);
-  if (el) {
-    el.min = minValue;
-    el.max = maxValue;
-  }
-});
-                
-                ['iraTime1', 'iraTime2'].forEach(id => {
-  const el = $(id);
-  if (el) {
-    el.min = '08:00';
-    el.max = '18:00';
-    el.step = 900;
-  }
-});
 
                 setActiveView("vIraSchedule");
             }
