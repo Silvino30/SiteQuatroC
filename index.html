@@ -587,14 +587,18 @@
 
                             <div class="grid gap-4">
                                 <div class="grid md:grid-cols-2 gap-4">
-                                    <input id="iraDate1" type="date" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                    <select id="iraDate1" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                        <option value="">Selecione a data</option>
+                                    </select>
                                     <select id="iraTime1" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
                                         <option value="">Selecione o horário</option>
                                     </select>
                                 </div>
 
                                 <div class="grid md:grid-cols-2 gap-4">
-                                    <input id="iraDate2" type="date" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                    <select id="iraDate2" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
+                                        <option value="">Selecione a data</option>
+                                    </select>
                                     <select id="iraTime2" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-accent font-sans">
                                         <option value="">Selecione o horário</option>
                                     </select>
@@ -1492,13 +1496,17 @@
                             ${isAgreement ? `<span class="inline-flex items-center px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-bold uppercase tracking-widest text-navy font-sans">Acordo ativo</span>` : ""}
                         </div>
 
+                        ${(card.tipo !== "ira" && card.exibirValorTotal !== false) ? `
                         <div class="space-y-2 mb-4">
                             <div class="flex justify-between gap-4">
                                 <span class="text-slate-500 text-sm font-sans">${labelValor}</span>
                                 <strong class="text-navy font-sans text-right">${card.valorTotalFormatado}</strong>
                             </div>
                             ${proposalRowHtml}
-                        </div>
+                        </div>` : (proposalRowHtml ? `
+                        <div class="space-y-2 mb-4">
+                            ${proposalRowHtml}
+                        </div>` : "")}
 
                         <button type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-2xl hover:border-accent transition uppercase tracking-widest text-xs font-sans mb-3 btn-toggle-details">
                             ${detailsButtonText}
@@ -1592,6 +1600,65 @@ ${detailsTableHtml}
                     return `<option value="${value}">${label}</option>`;
                 }).join("");
                 d.value = "";
+            }
+
+            function getIraBusinessDatesWithinDays(days = 15) {
+                const dates = [];
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const cursor = new Date(today);
+                cursor.setDate(cursor.getDate() + 1);
+
+                const limit = new Date(today);
+                limit.setDate(limit.getDate() + days);
+                limit.setHours(0, 0, 0, 0);
+
+                while (cursor <= limit) {
+                    const day = cursor.getDay();
+                    if (day !== 0 && day !== 6) {
+                        dates.push(new Date(cursor));
+                    }
+                    cursor.setDate(cursor.getDate() + 1);
+                }
+
+                return dates;
+            }
+
+            function setupIraDateOptions() {
+                const date1 = $("iraDate1");
+                const date2 = $("iraDate2");
+                const dates = getIraBusinessDatesWithinDays(15);
+                const options = '<option value="">Selecione a data</option>' + dates.map(dt => {
+                    const value = formatDateInput(dt);
+                    const label = dt.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" });
+                    return `<option value="${value}">${label}</option>`;
+                }).join("");
+
+                [date1, date2].forEach(el => {
+                    if (!el) return;
+                    el.innerHTML = options;
+                    el.value = "";
+                });
+            }
+
+            function setupIraTimeOptions() {
+                const time1 = $("iraTime1");
+                const time2 = $("iraTime2");
+                const options = ['<option value="">Selecione o horário</option>'];
+
+                for (let total = 8 * 60; total <= 18 * 60; total += 15) {
+                    const hh = String(Math.floor(total / 60)).padStart(2, "0");
+                    const mm = String(total % 60).padStart(2, "0");
+                    const value = `${hh}:${mm}`;
+                    options.push(`<option value="${value}">${value}</option>`);
+                }
+
+                [time1, time2].forEach(el => {
+                    if (!el) return;
+                    el.innerHTML = options.join("");
+                    el.value = "";
+                });
             }
 
             function getInstallmentAmount(total, count) {
@@ -1742,6 +1809,9 @@ ${detailsTableHtml}
 
                 if (iraEmail && emailInput) iraEmail.value = emailInput.value.trim();
                 if (iraWhatsapp && phoneInput) iraWhatsapp.value = onlyDigits(phoneInput.value);
+
+                setupIraDateOptions();
+                setupIraTimeOptions();
 
                 setActiveView("vIraSchedule");
             }
@@ -2045,6 +2115,9 @@ ${detailsTableHtml}
                 try {
                     const data = await callBackend("confirmar_negociacao", {
                         documento: currentDoc,
+                        nomeInformado: $("nameInput")?.value.trim() || "",
+                        telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                        emailInformado: $("emailInput")?.value.trim() || "",
                         credor: selectedCard.credor,
                         idContrato: selectedCard.idContrato,
                         numeroContrato: selectedCard.numeroContrato,
@@ -2095,6 +2168,9 @@ ${detailsTableHtml}
                 try {
                     const data = await callBackend("confirmar_agendamento_ira", {
                         documento: currentDoc,
+                        nomeInformado: $("nameInput")?.value.trim() || "",
+                        telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                        emailInformado: $("emailInput")?.value.trim() || "",
                         credor: selectedCard.credor,
                         idContrato: selectedCard.idContrato,
                         numeroContrato: selectedCard.numeroContrato,
