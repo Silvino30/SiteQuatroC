@@ -1640,6 +1640,12 @@ ${detailsTableHtml}
                     el.innerHTML = options;
                     el.value = "";
                 });
+
+                updateIraSecondOptionConstraints();
+            }
+
+            function getIraTimeSlots() {
+                return ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"];
             }
 
             function setupIraTimeOptions() {
@@ -1647,18 +1653,92 @@ ${detailsTableHtml}
                 const time2 = $("iraTime2");
                 const options = ['<option value="">Selecione o horário</option>'];
 
-                for (let total = 8 * 60; total <= 18 * 60; total += 15) {
-                    const hh = String(Math.floor(total / 60)).padStart(2, "0");
-                    const mm = String(total % 60).padStart(2, "0");
-                    const value = `${hh}:${mm}`;
+                getIraTimeSlots().forEach(value => {
                     options.push(`<option value="${value}">${value}</option>`);
-                }
+                });
 
                 [time1, time2].forEach(el => {
                     if (!el) return;
                     el.innerHTML = options.join("");
                     el.value = "";
                 });
+
+                updateIraSecondOptionConstraints();
+            }
+
+            function iraTimeToMinutes(value) {
+                const parts = String(value || "").split(":");
+                if (parts.length < 2) return NaN;
+                const hh = Number(parts[0]);
+                const mm = Number(parts[1]);
+                if (!Number.isFinite(hh) || !Number.isFinite(mm)) return NaN;
+                return hh * 60 + mm;
+            }
+
+            function getIraDateTimeMinutes(dateValue, timeValue) {
+                if (!dateValue || !timeValue) return NaN;
+                const dt = new Date(String(dateValue) + "T00:00:00");
+                if (Number.isNaN(dt.getTime())) return NaN;
+                return dt.getTime() / 60000 + iraTimeToMinutes(timeValue);
+            }
+
+            function updateIraSecondOptionConstraints() {
+                const date1 = $("iraDate1");
+                const time1 = $("iraTime1");
+                const date2 = $("iraDate2");
+                const time2 = $("iraTime2");
+                if (!date1 || !time1 || !date2 || !time2) return;
+
+                const firstDate = date1.value;
+                const firstTime = time1.value;
+                const firstDateTime = getIraDateTimeMinutes(firstDate, firstTime);
+                const minSecondDateTime = Number.isFinite(firstDateTime) ? firstDateTime + 120 : NaN;
+
+                Array.from(date2.options).forEach(option => {
+                    if (!option.value) {
+                        option.disabled = false;
+                        return;
+                    }
+
+                    if (!Number.isFinite(minSecondDateTime)) {
+                        option.disabled = false;
+                        return;
+                    }
+
+                    const hasValidTimeForDate = getIraTimeSlots().some(slot => {
+                        const candidate = getIraDateTimeMinutes(option.value, slot);
+                        return Number.isFinite(candidate) && candidate >= minSecondDateTime;
+                    });
+
+                    option.disabled = !hasValidTimeForDate;
+                });
+
+                if (date2.value) {
+                    const selectedDateOption = Array.from(date2.options).find(option => option.value === date2.value);
+                    if (selectedDateOption?.disabled) {
+                        date2.value = "";
+                        time2.value = "";
+                    }
+                }
+
+                const previousTime2 = time2.value;
+                const time2Options = ['<option value="">Selecione o horário</option>'];
+
+                getIraTimeSlots().forEach(slot => {
+                    let disabled = false;
+
+                    if (date2.value && Number.isFinite(minSecondDateTime)) {
+                        const candidate = getIraDateTimeMinutes(date2.value, slot);
+                        disabled = !Number.isFinite(candidate) || candidate < minSecondDateTime;
+                    }
+
+                    time2Options.push(`<option value="${slot}"${disabled ? " disabled" : ""}>${slot}</option>`);
+                });
+
+                time2.innerHTML = time2Options.join("");
+
+                const selectedTimeStillValid = Array.from(time2.options).some(option => option.value === previousTime2 && !option.disabled);
+                time2.value = selectedTimeStillValid ? previousTime2 : "";
             }
 
             function getInstallmentAmount(total, count) {
@@ -1855,6 +1935,22 @@ ${detailsTableHtml}
                     return { ok: false, message: "Preencha todos os campos do agendamento.", data: ag };
                 }
 
+                const validIraDates = getIraBusinessDatesWithinDays(15).map(formatDateInput);
+                if (!validIraDates.includes(ag.data1) || !validIraDates.includes(ag.data2)) {
+                    return { ok: false, message: "Selecione datas válidas dentro do período disponível.", data: ag };
+                }
+
+                const validIraTimes = getIraTimeSlots();
+                if (!validIraTimes.includes(ag.hora1) || !validIraTimes.includes(ag.hora2)) {
+                    return { ok: false, message: "Selecione horários válidos entre 08h e 18h, com intervalo de 2 horas.", data: ag };
+                }
+
+                const firstDateTime = getIraDateTimeMinutes(ag.data1, ag.hora1);
+                const secondDateTime = getIraDateTimeMinutes(ag.data2, ag.hora2);
+                if (!Number.isFinite(firstDateTime) || !Number.isFinite(secondDateTime) || secondDateTime < firstDateTime + 120) {
+                    return { ok: false, message: "A segunda opção deve ser pelo menos 2 horas após a primeira opção selecionada.", data: ag };
+                }
+
                 if (!isValidEmail(ag.email)) {
                     return { ok: false, message: "Informe um e-mail válido.", data: ag };
                 }
@@ -1902,6 +1998,10 @@ ${detailsTableHtml}
                 const input = $("iraZip");
                 if (input) input.value = onlyDigits(input.value).slice(0, 8);
             });
+
+            on("iraDate1", "change", updateIraSecondOptionConstraints);
+            on("iraTime1", "change", updateIraSecondOptionConstraints);
+            on("iraDate2", "change", updateIraSecondOptionConstraints);
 
             on("btnVoltar", "click", goStart);
             on("btnNovaConsultaNoRecord", "click", goStart);
