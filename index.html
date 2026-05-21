@@ -1362,21 +1362,30 @@
                 return credorElegivel && card?.podeNegociar !== true && valorTotal > 0 && valorTotal < 300;
             }
 
-            function getBusinessDates(count = 5) {
-                const dates = [];
-                const cursor = new Date();
-                cursor.setHours(0, 0, 0, 0);
+function getBusinessDates(count = 5) {
+    const dates = [];
 
-                while (dates.length < count) {
-                    const day = cursor.getDay();
-                    if (day !== 0 && day !== 6) {
-                        dates.push(new Date(cursor));
-                    }
-                    cursor.setDate(cursor.getDate() + 1);
-                }
+    const cursor = new Date();
 
-                return dates;
-            }
+    cursor.setHours(0, 0, 0, 0);
+
+    // INICIA SEMPRE NO PRÓXIMO DIA
+    cursor.setDate(cursor.getDate() + 1);
+
+    while (dates.length < count) {
+
+        const day = cursor.getDay();
+
+        // SOMENTE SEGUNDA A SEXTA
+        if (day !== 0 && day !== 6) {
+            dates.push(new Date(cursor));
+        }
+
+        cursor.setDate(cursor.getDate() + 1);
+    }
+
+    return dates;
+}
 
             function resolveCardActions(card) {
                 const isAgreement = String(card?.tipo || "").toLowerCase() === "acordo";
