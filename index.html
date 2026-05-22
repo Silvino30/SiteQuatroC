@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quatro C | Gestão de Recebíveis e Cobrança Especializada</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2 family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
@@ -360,7 +360,7 @@
                                     <label for="emailInput" class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent">
                                         E-mail
                                     </label>
-                                    <input id="emailInput" type="email" autocomplete="off" placeholder="nome@cliente.com"
+                                    <input id="emailInput" type="email" autocomplete="off" placeholder="nome@empresa.com"
                                         class="w-full pt-7 pb-3 px-4 bg-transparent outline-none text-base font-medium text-slate-800 placeholder-slate-300">
                                 </div>
                             </div>
@@ -409,7 +409,7 @@
                             <button id="btnValidateCode" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-sm uppercase tracking-widest text-xs font-sans">
                                 Validar código
                             </button>
-                            <button id="btnResendCode" type="button" class="w-full bg-white border-2 border-slate-100 text-navy font-bold py-4 rounded-xl hover:bg-slate-50 transition uppercase tracking-widest text-xs font-sans">
+                            <button id="btnResendCode" type="button" class="w-full bg-white border border-slate-200 text-navy font-bold py-4 rounded-xl hover:bg-slate-50 transition uppercase tracking-widest text-xs font-sans">
                                 Solicitar novo código
                             </button>
                         </div>
@@ -980,7 +980,6 @@
             function isCPF(d) { return d.length === 11; }
             function isCNPJ(d) { return d.length === 14; }
             
-            // CORREÇÃO CRÍTICA: Sintaxe da Expressão Regular estruturada e validada para e-mails institucionais e tradicionais
             function isValidEmail(email) { 
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim()); 
             }
@@ -1122,6 +1121,7 @@
                 setActiveView("vStart");
             }
 
+            // RESTAURAÇÃO EXPLICITA: Função original de requisição AJAX ao Cloudflare Worker
             async function callBackend(step, payload) {
                 const body = { step, sessionId, ...payload };
                 const res = await fetch(CRM_ENDPOINT, {
@@ -1204,7 +1204,7 @@
                             setActiveView("vError");
                         }
                     });
-                    wrap.appendChild(btn);
+                    grid.appendChild(wrapper);
                 });
             }
 
@@ -1268,6 +1268,7 @@
                 return { canNegotiate, canSchedule, canSecondCopy, canHuman: true, chatUrl: card?.chatUrl || pres.chat };
             }
 
+            // RESTAURAÇÃO COMPLETA: Função renderCards estruturada com a nova roupagem Calm Corporate
             function renderCards(cards) {
                 const grid = $("cardsGrid"); if (!grid) return;
                 const title = $("cardsTitle"); const subtitle = $("cardsSubtitle");
@@ -1301,7 +1302,7 @@
                     } else if (isAgreement) {
                         midBlockHtml = `<div class="bg-slate-50 border border-slate-200/60 rounded-xl p-4 space-y-2 mb-4 select-none"><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">${labelValor}</span><strong class="text-sm font-bold text-navy tabular-numbers">${card.valorTotalFormatado}</strong></div><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">Vencimento</span><strong class="text-sm font-semibold text-navy tracking-tight tabular-numbers">${card.detalhes?.[0]?.vencimentoFormatado || "--/--/----"}</strong></div></div>`;
                     } else {
-                        midBlockHtml = `<div class="bg-slate-50 border border-slate-200/60 rounded-xl p-4 mb-4"><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">${showProposal ? 'Valor total' : 'Valor total updated'}</span><span class="${showProposal ? 'text-sm font-semibold text-slate-500' : 'text-base font-bold text-navy tracking-tight'} tabular-numbers">${card.valorTotalFormatado}</span></div>${proposalRowHtml}</div>`;
+                        midBlockHtml = `<div class="bg-slate-50 border border-slate-200/60 rounded-xl p-4 mb-4"><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">${showProposal ? 'Valor total' : 'Valor total atualizado'}</span><span class="${showProposal ? 'text-sm font-semibold text-slate-500' : 'text-base font-bold text-navy tracking-tight'} tabular-numbers">${card.valorTotalFormatado}</span></div>${proposalRowHtml}</div>`;
                     }
 
                     const isInstitucionalPuro = !isAgreement && !actions.canNegotiate && !actions.canSchedule && !actions.canSecondCopy;
@@ -1492,35 +1493,6 @@
                 setupIraDateOptions(); setupIraTimeOptions(); setActiveView("vIraSchedule");
             }
 
-            function renderCards_legacy_do_not_use(cards) { return renderCards(cards); }
-
-            function validatePaymentDate(dateStr) {
-                if (!dateStr) return { ok: false, message: "Selecione uma data de pagamento." };
-                const selected = String(dateStr || ""); const allowedDates = getBusinessDates(5).map(formatDateInput);
-                if (!allowedDates.includes(selected)) return { ok: false, message: "A data deve estar dentro das 5 próximas datas úteis disponíveis." };
-                return { ok: true, message: "" };
-            }
-
-            function validateIraForm() {
-                const ag = {
-                    data1: $("iraDate1")?.value || "", hora1: $("iraTime1")?.value || "", data2: $("iraDate2")?.value || "", hora2: $("iraTime2")?.value || "",
-                    logradouro: $("iraStreet")?.value.trim() || "", numero: $("iraNumber")?.value.trim() || "", bairro: $("iraDistrict")?.value.trim() || "",
-                    cep: onlyDigits($("iraZip")?.value || ""), cidade: $("iraCity")?.value.trim() || "", referencia: $("iraReference")?.value.trim() || "",
-                    responsavel: $("iraResponsible")?.value.trim() || "", email: $("iraEmail")?.value.trim() || "", whatsapp: onlyDigits($("iraWhatsapp")?.value || "")
-                };
-                const requiredFilled = Object.values(ag).every(v => String(v || "").trim());
-                if (!requiredFilled) return { ok: false, message: "Preencha todos os campos do agendamento.", data: ag };
-                const validIraDates = getIraBusinessDatesWithinDays(15).map(formatDateInput);
-                if (!validIraDates.includes(ag.data1) || !validIraDates.includes(ag.data2)) return { ok: false, message: "Selecione datas válidas dentro do período disponível.", data: ag };
-                const validIraTimes = getIraTimeSlots();
-                if (!validIraTimes.includes(ag.hora1) || !validIraTimes.includes(ag.hora2)) return { ok: false, message: "Selecione horários válidos entre 08h e 18h.", data: ag };
-                const firstDateTime = getIraDateTimeMinutes(ag.data1, ag.hora1); const secondDateTime = getIraDateTimeMinutes(ag.data2, ag.hora2);
-                if (!Number.isFinite(firstDateTime) || !Number.isFinite(secondDateTime) || secondDateTime < firstDateTime + 120) return { ok: false, message: "A segunda opção deve ser pelo menos 2 horas após a primeira.", data: ag };
-                if (!isValidEmail(ag.email)) return { ok: false, message: "Informe um e-mail válido.", data: ag };
-                if (!isValidPhone(ag.whatsapp)) return { ok: false, message: "Informe um WhatsApp válido com 10 ou 11 dígitos.", data: ag };
-                return { ok: true, message: "", data: ag };
-            }
-
             function normalizarNomeInvisivel(str) {
                 const conectores = ["de", "da", "do", "dos", "das", "e", "em"];
                 let partes = str.trim().toLowerCase().split(/\s+/);
@@ -1532,7 +1504,6 @@
                 return partesFormatadas.filter(Boolean).join(" ");
             }
 
-            // CORREÇÃO: Mecanismo de validação em tempo real e reatividade estável do botão primário
             function engineValidacaoFormulario() {
                 const docDigitos = onlyDigits($("docInput")?.value || "");
                 const phoneDigitos = onlyDigits($("phoneInput")?.value || "");
@@ -1563,7 +1534,6 @@
             on("segCPF", "click", () => setDocType("CPF"));
             on("segCNPJ", "click", () => setDocType("CNPJ"));
 
-            // CORREÇÃO: Acoplamento correto das funções de máscara e escuta progressiva
             on("docInput", "input", (e) => {
                 const digits = onlyDigits(e.target.value); 
                 const inferred = detectTypeFromDigits(digits);
@@ -1633,7 +1603,7 @@
             on("paymentModeInput", "change", updateInstallmentUI);
             on("installmentCountInput", "change", updateInstallmentUI);
             
-            // CORREÇÃO: Disparador mantendo a integridade semântica original com os dados estruturais limpos
+            // CORREÇÃO CRÍTICA FIX: Restauração da rotina assíncrona original vinculada ao CRM_ENDPOINT e renderCards
             on("btnConsultar", "click", async () => {
                 if (!engineValidacaoFormulario()) return;
                 hideText("startError");
@@ -1673,8 +1643,13 @@
                         return setActiveView("vValidateCode");
                     }
                     if (data?.proximoStep === "validar_identidade") { 
-                        renderIdentityOptions(data?.options || [], data?.fullName || nome, data?.type || "CPF"); 
+                        renderIdentityOptions(data?.options || [], data?.fullName || nome, data->type || "CPF"); 
                         return setActiveView("vConfirmName"); 
+                    }
+                    // CRITICAL ACQUISITION FIX: Interceptação correta da flag vNext enviada pelo Worker do n8n
+                    if (data?.proximoStep === "mostrar_cards") {
+                        renderCards(data?.cards || []);
+                        return setActiveView("vNext");
                     }
                     
                     const errorMsg = $("errorMsg"); 
@@ -1698,6 +1673,7 @@
                     if (data?.proximoStep === "codigo_invalido") { showText("validationCodeError", data?.mensagem || "Código inválido."); return setActiveView("vValidateCode"); }
                     if (data?.proximoStep === "bloqueado") { lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT; return setActiveView("vBlocked"); }
                     if (data?.proximoStep === "validar_identidade") { renderIdentityOptions(data?.options || [], data?.fullName || ($("nameInput")?.value.trim() || ""), data?.type || "CPF"); return setActiveView("vConfirmName"); }
+                    if (data?.proximoStep === "mostrar_cards") { renderCards(data?.cards || []); return setActiveView("vNext"); }
                     const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível validar o código no momento.";
                     setActiveView("vError");
                 } catch (e) {
@@ -1753,7 +1729,7 @@
                     const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível enviar a solicitação.";
                     setActiveView("vError");
                 } catch (e) {
-                    const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = "Não foi possível enviar a solicitação.";
+                    const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = "Nosso sistema está temporariamente indisponível.";
                     setActiveView("vError");
                 }
             });
