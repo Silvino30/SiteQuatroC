@@ -875,83 +875,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const form = document.getElementById("diagnostico-form");
-            if (form) {
-                form.addEventListener("submit", async function (e) {
-                    e.preventDefault();
-                    const btn = this.querySelector("button");
-                    const status = document.getElementById("form-status");
-
-                    const nomeContato = document.getElementById("nome_contato")?.value || "";
-                    const nomeEmpresa = document.getElementById("nome_empresa")?.value || "";
-                    const emailCorp = document.getElementById("email_corporativo")?.value || "";
-                    const telefone = document.getElementById("telefone")?.value || "";
-                    const preferencia = document.getElementById("preferencia_contato")?.value || "";
-                    const volume = document.getElementById("volume_inadimplencia")?.value || "";
-
-                    if (btn) {
-                        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Processando solicitação...';
-                        btn.disabled = true;
-                    }
-
-                    const payload = {
-                        fields: {
-                            "TITLE": `Lead Portal Quatro C: ${nomeEmpresa}`,
-                            "NAME": nomeContato,
-                            "COMPANY_TITLE": nomeEmpresa,
-                            "EMAIL": [{ "VALUE": emailCorp, "VALUE_TYPE": "WORK" }],
-                            "PHONE": [{ "VALUE": telefone, "VALUE_TYPE": "WORK" }],
-                            "COMMENTS": `Preferência: ${preferencia} | Volume: ${volume}`,
-                            "SOURCE_ID": "WEB",
-                            "UTM_SOURCE": "portal_corporativo"
-                        },
-                        params: { "REGISTER_SONET_EVENT": "Y" }
-                    };
-                    try {
-                        const response = await fetch(BITRIX_ENDPOINT, {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(payload)
-                        });
-                        if (response.ok) {
-                            if (status) {
-                                status.innerHTML = '<i class="fas fa-check-circle mr-1 text-green-500"></i> Diagnóstico solicitado! Nossa equipe entrará em contato em breve.';
-                                status.classList.remove("hidden", "text-red-500");
-                                status.classList.add("text-green-600");
-                            }
-                            this.reset();
-                        } else { throw new Error("Bitrix Error"); }
-                    } catch (error) {
-                        if (status) {
-                            status.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Houve um erro no envio. Por favor, utilize o canal de suporte via WhatsApp.';
-                            status.classList.remove("hidden", "text-green-600");
-                            status.classList.add("text-red-500");
-                        }
-                    } finally {
-                        if (btn) {
-                            btn.innerHTML = "Solicitar Auditoria Gratuita";
-                            btn.disabled = false;
-                        }
-                    }
-                });
-            }
-
-            const nav = document.getElementById("main-nav");
-            window.addEventListener("scroll", () => {
-                if (!nav) return;
-                if (window.scrollY > 40) {
-                    nav.classList.add("py-2.5", "shadow-sm");
-                    nav.classList.remove("py-4");
-                } else {
-                    nav.classList.remove("py-2.5", "shadow-sm");
-                    nav.classList.add("py-4");
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
             const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
             const CHAT_LINK_SASCAR        = "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y";
@@ -1121,7 +1044,6 @@
                 setActiveView("vStart");
             }
 
-            // RESTAURAÇÃO EXPLICITA: Função original de requisição AJAX ao Cloudflare Worker
             async function callBackend(step, payload) {
                 const body = { step, sessionId, ...payload };
                 const res = await fetch(CRM_ENDPOINT, {
@@ -1204,13 +1126,32 @@
                             setActiveView("vError");
                         }
                     });
-                    grid.appendChild(wrapper);
+                    wrap.appendChild(btn);
                 });
+            }
+
+            function parseMoneyLike(v) {
+                if (v === null || v === undefined || v === "") return 0;
+                if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+                const s = String(v).trim();
+                if (!s) return 0;
+                if (s.includes("R$") || s.includes(",")) {
+                    const normalized = s.replace(/\s/g, "").replace(/R\$/g, "").replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, "");
+                    const n = Number(normalized); return Number.isFinite(n) ? n : 0;
+                }
+                const digits = s.replace(/[^\d-]/g, "");
+                if (/^-?\d+$/.test(digits)) {
+                    const intVal = Number(digits);
+                    if (!Number.isFinite(intVal)) return 0;
+                    if (Math.abs(intVal) >= 10000 && !s.includes(".")) return intVal / 100;
+                    return intVal;
+                }
+                const fallback = Number(s.replace(/[^\d.-]/g, "")); return Number.isFinite(fallback) ? fallback : 0;
             }
 
             function normalizeInstallmentData(parcelamento) {
                 const parcelasDisponiveis = Array.isArray(parcelamento?.parcelasDisponiveis) ? parcelamento.parcelasDisponiveis.map(q => Number(q)).filter(q => Number.isFinite(q) && q >= 2) : [];
-                const valorNegociadoParcelado = parseMoneyLike(parcelamento?.valorNegociadoParceladoFormatado || parcelamento?.valorNegociadoParcelado || 0);
+                const valorNegociadoParcelado = parseMoneyLike(parcelamento?.valorNegociatedParceladoFormatado || parcelamento?.valorNegociadoParcelado || 0);
                 return {
                     ...parcelamento, valorNegociadoParcelado,
                     valorNegociadoParceladoFormatado: parcelamento?.valorNegociadoParceladoFormatado || formatBRL(valorNegociadoParcelado),
@@ -1268,7 +1209,6 @@
                 return { canNegotiate, canSchedule, canSecondCopy, canHuman: true, chatUrl: card?.chatUrl || pres.chat };
             }
 
-            // RESTAURAÇÃO COMPLETA: Função renderCards estruturada com a nova roupagem Calm Corporate
             function renderCards(cards) {
                 const grid = $("cardsGrid"); if (!grid) return;
                 const title = $("cardsTitle"); const subtitle = $("cardsSubtitle");
@@ -1311,11 +1251,15 @@
                     const detailsTableHtml = isLogistica ? `
                                 <table class="w-full text-xs text-left text-slate-700 font-sans">
                                     <thead class="bg-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none"><tr><th class="p-3 text-left">Placa</th><th class="p-3 text-left">OS</th><th class="p-3 text-left">Data OS</th></tr></thead>
-                                    <tbody>${(card.detalhes || []).map(row => `<tr class="border-t border-slate-100"><td class="p-3 tabular-numbers">${row.placa || "-"}</td><td class="p-3 tabular-numbers">${row.os || "-"}</td><td class="p-3 tabular-numbers">${row.dataOS || "-"}</td></tr>`).join("")}</tbody>
+                                    <tbody>${(card.detalhes || []).map(row => `
+                                            <tr class="border-t border-slate-100"><td class="p-3 tabular-numbers">${row.placa || "-"}</td><td class="p-3 tabular-numbers">${row.os || "-"}</td><td class="p-3 tabular-numbers">${row.dataOS || "-"}</td></tr>
+                                        `).join("")}</tbody>
                                 </table>` : `
                                 <table class="w-full text-xs text-left text-slate-700 font-sans">
                                     <thead class="bg-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none"><tr><th class="p-3 text-left">Vencimento</th><th class="p-3 text-right">Valor</th></tr></thead>
-                                    <tbody>${(card.detalhes || []).map(row => `<tr class="border-t border-slate-100"><td class="p-3 tabular-numbers">${row.vencimentoFormatado || "-"}</td><td class="p-3 text-right tabular-numbers">${row.valorFormatado || "-"}</td></tr>`).join("")}</tbody>
+                                    <tbody>${(card.detalhes || []).map(row => `
+                                            <tr class="border-t border-slate-100"><td class="p-3 tabular-numbers">${row.vencimentoFormatado || "-"}</td><td class="p-3 text-right tabular-numbers">${row.valorFormatado || "-"}</td></tr>
+                                        `).join("")}</tbody>
                                 </table>`;
 
                     wrapper.innerHTML = `
@@ -1493,6 +1437,9 @@
                 setupIraDateOptions(); setupIraTimeOptions(); setActiveView("vIraSchedule");
             }
 
+            // ==========================================
+            // LOGICA DA ETAPA DE IDENTIFICAÇÃO (MÁSCARAS & ENGINE DE VALIDAÇÃO)
+            // ==========================================
             function normalizarNomeInvisivel(str) {
                 const conectores = ["de", "da", "do", "dos", "das", "e", "em"];
                 let partes = str.trim().toLowerCase().split(/\s+/);
@@ -1507,6 +1454,7 @@
             function engineValidacaoFormulario() {
                 const docDigitos = onlyDigits($("docInput")?.value || "");
                 const phoneDigitos = onlyDigits($("phoneInput")?.value || "");
+                
                 const docValido = (docDigitos.length === 11 || docDigitos.length === 14);
                 const nameValido = ($("nameInput")?.value.trim().length || 0) >= 3;
                 const phoneValido = (phoneDigitos.length === 10 || phoneDigitos.length === 11);
@@ -1603,7 +1551,9 @@
             on("paymentModeInput", "change", updateInstallmentUI);
             on("installmentCountInput", "change", updateInstallmentUI);
             
-            // CORREÇÃO CRÍTICA FIX: Restauração da rotina assíncrona original vinculada ao CRM_ENDPOINT e renderCards
+            // ==========================================
+            // COMUNICAÇÃO ASSÍNCRONA COM O WORKER (PRESERVADA)
+            // ==========================================
             on("btnConsultar", "click", async () => {
                 if (!engineValidacaoFormulario()) return;
                 hideText("startError");
@@ -1643,10 +1593,9 @@
                         return setActiveView("vValidateCode");
                     }
                     if (data?.proximoStep === "validar_identidade") { 
-                        renderIdentityOptions(data?.options || [], data?.fullName || nome, data->type || "CPF"); 
+                        renderIdentityOptions(data?.options || [], data?.fullName || nome, data?.type || "CPF"); 
                         return setActiveView("vConfirmName"); 
                     }
-                    // CRITICAL ACQUISITION FIX: Interceptação correta da flag vNext enviada pelo Worker do n8n
                     if (data?.proximoStep === "mostrar_cards") {
                         renderCards(data?.cards || []);
                         return setActiveView("vNext");
@@ -1714,7 +1663,7 @@
                     const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível concluir a negociação.";
                     setActiveView("vError");
                 } catch (e) {
-                    const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = "Não foi possível concluir a negociação.";
+                    const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = "Nosso sistema está temporariamente indisponível.";
                     setActiveView("vError");
                 }
             });
