@@ -1647,6 +1647,88 @@
                 }
             });
 
+
+            function validatePaymentDate(dateStr) {
+                if (!dateStr) {
+                    return { ok: false, message: "Selecione uma data de vencimento." };
+                }
+
+                const allowedDates = getBusinessDates(5).map(formatDateInput);
+
+                if (!allowedDates.includes(String(dateStr))) {
+                    return { ok: false, message: "Selecione uma data válida dentro das opções disponíveis." };
+                }
+
+                return { ok: true, message: "" };
+            }
+
+            function validateIraForm() {
+                const agendamento = {
+                    data1: $("iraDate1")?.value || "",
+                    hora1: $("iraTime1")?.value || "",
+                    data2: $("iraDate2")?.value || "",
+                    hora2: $("iraTime2")?.value || "",
+                    logradouro: $("iraStreet")?.value.trim() || "",
+                    numero: $("iraNumber")?.value.trim() || "",
+                    bairro: $("iraDistrict")?.value.trim() || "",
+                    cep: onlyDigits($("iraZip")?.value || ""),
+                    cidade: $("iraCity")?.value.trim() || "",
+                    referencia: $("iraReference")?.value.trim() || "",
+                    responsavel: $("iraResponsible")?.value.trim() || "",
+                    email: $("iraEmail")?.value.trim() || "",
+                    whatsapp: onlyDigits($("iraWhatsapp")?.value || "")
+                };
+
+                const camposObrigatorios = [
+                    agendamento.data1,
+                    agendamento.hora1,
+                    agendamento.data2,
+                    agendamento.hora2,
+                    agendamento.logradouro,
+                    agendamento.numero,
+                    agendamento.bairro,
+                    agendamento.cep,
+                    agendamento.cidade,
+                    agendamento.referencia,
+                    agendamento.responsavel,
+                    agendamento.email,
+                    agendamento.whatsapp
+                ];
+
+                if (camposObrigatorios.some(v => !String(v || "").trim())) {
+                    return { ok: false, message: "Preencha todos os campos do agendamento.", data: agendamento };
+                }
+
+                const datasValidas = getIraBusinessDatesWithinDays(15).map(formatDateInput);
+
+                if (!datasValidas.includes(agendamento.data1) || !datasValidas.includes(agendamento.data2)) {
+                    return { ok: false, message: "Selecione datas válidas dentro do período disponível.", data: agendamento };
+                }
+
+                const horariosValidos = getIraTimeSlots();
+
+                if (!horariosValidos.includes(agendamento.hora1) || !horariosValidos.includes(agendamento.hora2)) {
+                    return { ok: false, message: "Selecione horários válidos entre 08h e 18h.", data: agendamento };
+                }
+
+                const primeiraOpcao = getIraDateTimeMinutes(agendamento.data1, agendamento.hora1);
+                const segundaOpcao = getIraDateTimeMinutes(agendamento.data2, agendamento.hora2);
+
+                if (!Number.isFinite(primeiraOpcao) || !Number.isFinite(segundaOpcao) || segundaOpcao < primeiraOpcao + 120) {
+                    return { ok: false, message: "A segunda opção deve ser pelo menos 2 horas após a primeira.", data: agendamento };
+                }
+
+                if (!isValidEmail(agendamento.email)) {
+                    return { ok: false, message: "Informe um e-mail válido.", data: agendamento };
+                }
+
+                if (!isValidPhone(agendamento.whatsapp)) {
+                    return { ok: false, message: "Informe um telefone válido.", data: agendamento };
+                }
+
+                return { ok: true, message: "", data: agendamento };
+            }
+
             on("btnConfirmNegotiation", "click", async () => {
                 hideText("negotiationError"); if (!selectedCard) return showText("negotiationError", "Selecione um contrato para negociar.");
                 const paymentDate = $("paymentDateInput")?.value || ""; const paymentMode = $("paymentModeInput")?.value || "vista";
@@ -1659,7 +1741,9 @@
                 setActiveView("vLoading");
                 try {
                     const data = await callBackend("confirmar_negociacao", { documento: currentDoc, nomeInformado: $("nameInput")?.value.trim() || "", telefoneInformado: onlyDigits($("phoneInput")?.value || ""), emailInformado: $("emailInput")?.value.trim() || "", credor: selectedCard.credor, idContrato: selectedCard.idContrato, numeroContrato: selectedCard.numeroContrato, valorTotal: selectedCard.valorTotal, propostaQuitacao: isSecondVia ? selectedCard.valorTotal : selectedCard.propostaQuitacao, dataPagamento: paymentDate, tipoPagamento: isSecondVia ? "segunda_via" : (isParcelado ? "parcelado" : "avista"), quantidadeParcelas: isParcelado ? installmentCount : 1, valorNegociado, valorNegociadoFormatado: formatBRL(valorNegociado), valorParcela, valorParcelaFormatado: formatBRL(valorParcela), parcelamento: selectedCard.parcelamento || {} });
-                    if (data?.proximoStep === "sucesso_negociacao" || data?.status === "ok") return setActiveView("vNegotiationSuccess");
+                    if (data?.proximoStep === "sucesso_negociacao" || data?.status === "ok") {
+                        return setActiveView(isSecondVia ? "vSecondCopySuccess" : "vNegotiationSuccess");
+                    }
                     const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível concluir a negociação.";
                     setActiveView("vError");
                 } catch (e) {
