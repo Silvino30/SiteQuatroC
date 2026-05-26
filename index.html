@@ -318,7 +318,7 @@
 
                     <div class="view active space-y-6" id="vStart">
                         <div class="space-y-1.5">
-                            <h3 class="text-xl font-semibold tracking-tight text-navy">Vamos localizar o seu atendimento.</h3>
+                            <h3 class="text-xl font-semibold tracking-tight text-navy">Vamos iniciar o seu atendimento.</h3>
                             <p class="text-sm text-corporativo-suporte leading-relaxed">
                                 Insira o documento do titular da conta. Caso você seja um representante ou parceiro, utilize seus próprios dados nos campos de contato abaixo.
                             </p>
@@ -392,7 +392,7 @@
                         <div class="space-y-2 mb-6">
                             <h3 class="text-xl font-semibold tracking-tight text-navy">Confirmação de identidade</h3>
                             <p class="text-sm text-slate-500 leading-relaxed font-sans" id="validateCodeText">
-                                Enviamos um código de acesso de 6 dígitos para o seu e-mail cadastrado. Insira o número abaixo para prosseguir com segurança.
+                                Enviamos um código de acesso de 6 dígitos para o e-mail informado. Insira o número abaixo para prosseguir com segurança.
                             </p>
                         </div>
 
@@ -1587,7 +1587,7 @@
                     }
                     if (data?.proximoStep === "validar_codigo_contato") {
                         const txt = $("validateCodeText"); 
-                        if (txt) txt.textContent = data?.mensagem || `Enviamos um código de validação para ${email}. Digite abaixo para prosseguir.`;
+                        if (txt) txt.textContent = data?.mensagem || `Enviamos um código de validação para o e-mail informado. Digite abaixo para prosseguir.`;
                         hideText("validationCodeError"); 
                         if ($("validationCodeInput")) $("validationCodeInput").value = "";
                         return setActiveView("vValidateCode");
