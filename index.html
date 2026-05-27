@@ -1325,13 +1325,13 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                     btn.addEventListener("click", async () => {
                         setActiveView("vLoading");
                         try {
-                            const data = await callBackend("confirmar_identidade", { 
-  documento: currentDoc, 
-  opcaoSelecionada: opt,
-  nome: $("nameInput")?.value?.trim() || "",
-  telefone: $("phoneInput")?.value?.trim() || "",
-  email: $("emailInput")?.value?.trim() || ""
-});
+                            const data = await callBackend("confirmar_identidade", {
+    documento: currentDoc,
+    opcaoSelecionada: opt,
+    nome: dadosAcesso.nome,
+    telefone: dadosAcesso.telefone,
+    email: dadosAcesso.email
+  });
                             foundRecord = { ...(foundRecord || {}), ...(data || {}) };
 
                             if (data?.proximoStep === "identidade_incorreta") {
