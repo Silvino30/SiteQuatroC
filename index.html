@@ -1326,12 +1326,13 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                         setActiveView("vLoading");
                         try {
                             const data = await callBackend("confirmar_identidade", {
-    documento: currentDoc,
-    opcaoSelecionada: opt,
-    nome: dadosAcesso.nome,
-    telefone: dadosAcesso.telefone,
-    email: dadosAcesso.email
-  });
+  documento: currentDoc,
+  opcaoSelecionada: opt,
+
+  nome: document.getElementById("nameInput")?.value?.trim() || "",
+  telefone: document.getElementById("phoneInput")?.value?.trim() || "",
+  email: document.getElementById("emailInput")?.value?.trim() || ""
+});
                             foundRecord = { ...(foundRecord || {}), ...(data || {}) };
 
                             if (data?.proximoStep === "identidade_incorreta") {
