@@ -1,950 +1,2200 @@
-<!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth h-full bg-slate-50">
+	<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quatro C | Gestão de Recebíveis e Cobrança Especializada</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="#CE2E3C" name="theme-color"/>
+<meta content="Portal oficial de autoatendimento da Quatro C para consulta segura e negociação digital." name="description"/>
+<title>Quatro C | Portal de Autoatendimento</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --red: #CE2E3C;
+      --red-dark: #A3222E;
+      --red-soft: #F8E8EA;
+      --gold: #EB9B3C;
+      --green: #2C8A61;
+      --graphite: #4F4F4F;
+      --gray: #ACABB1;
+      --gray-2: #E8E8EC;
+      --gray-3: #F6F6F8;
+      --white: #FFFFFF;
+      --shadow-lg: 0 28px 70px rgba(36, 36, 40, 0.14);
+      --shadow-md: 0 18px 36px rgba(36, 36, 40, 0.08);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --container: 1240px;
+      --anchor-offset: 122px;
+    }
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: {
-                            DEFAULT: '#00264d',
-                            dark: '#001a33',
-                            light: '#003d80'
-                        },
-                        accent: '#FF6600',
-                        neutralBg: '#F8FAFC',
-                        corporativo: {
-                            navy: '#00264d',
-                            prata: '#F8FAFC',
-                            borda: '#E2E8F0',
-                            texto: '#334155',
-                            suporte: '#64748B'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'container': '0 20px 40px -12px rgba(0, 38, 77, 0.04)',
-                        'input-focus': '0 0 0 4px rgba(255, 102, 0, 0.03)'
-                    }
-                }
-            }
+    * { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+    }
+
+    #inicio,
+    #como-funciona,
+    #portal,
+    #canais {
+      scroll-margin-top: 24px;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Roboto", Arial, sans-serif;
+      color: var(--graphite);
+      background:
+        radial-gradient(circle at top left, rgba(206, 46, 60, 0.06), transparent 34%),
+        linear-gradient(180deg, #FFFFFF 0%, #FCFCFD 42%, #F6F6F8 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--container));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      height: 5px;
+      background: linear-gradient(90deg, var(--red) 0 70%, var(--gold) 70% 86%, var(--green) 86% 100%);
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(232, 232, 236, 0.95);
+    }
+
+    .header-inner {
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-logo-wrap {
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(232,232,236,0.95);
+      box-shadow: 0 10px 30px rgba(36,36,40,0.05);
+    }
+
+    .brand-logo {
+      display: block;
+      width: auto;
+      height: 76px;
+      max-width: 330px;
+      object-fit: contain;
+    }
+
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #5F5F68;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--red);
+      background: rgba(206, 46, 60, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border: 1px solid rgba(206, 46, 60, 0.16);
+      border-radius: 14px;
+      background: var(--white);
+      color: #4F4F58;
+      box-shadow: 0 10px 24px rgba(36, 36, 40, 0.07);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease;
+    }
+
+    .menu-toggle:hover {
+      color: var(--red);
+      border-color: rgba(206, 46, 60, 0.30);
+      background: #FFF7F8;
+      transform: translateY(-1px);
+    }
+
+    .menu-toggle-lines,
+    .menu-toggle-lines::before,
+    .menu-toggle-lines::after {
+      width: 20px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      display: block;
+      transition: transform .22s ease, opacity .22s ease;
+    }
+
+    .menu-toggle-lines {
+      position: relative;
+    }
+
+    .menu-toggle-lines::before,
+    .menu-toggle-lines::after {
+      content: "";
+      position: absolute;
+      left: 0;
+    }
+
+    .menu-toggle-lines::before { top: -6px; }
+    .menu-toggle-lines::after { top: 6px; }
+
+    .menu-toggle[aria-expanded="true"] .menu-toggle-lines {
+      background: transparent;
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-toggle-lines::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-toggle-lines::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: var(--white);
+      border: 1px solid rgba(206, 46, 60, 0.14);
+      box-shadow: 0 12px 28px rgba(36, 36, 40, 0.06);
+      font-size: 12px;
+      font-weight: 700;
+      color: #65656E;
+      white-space: nowrap;
+    }
+
+    .header-badge svg {
+      flex: 0 0 auto;
+      color: var(--green);
+    }
+
+    .hero {
+      padding: 48px 0 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.14fr) minmax(360px, 0.86fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(206, 46, 60, 0.08);
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 18px 0 0;
+      max-width: 690px;
+      font-size: clamp(34px, 4.35vw, 60px);
+      line-height: 1.06;
+      letter-spacing: -0.05em;
+      color: #303038;
+      text-wrap: balance;
+    }
+
+    .hero h1 span { color: var(--red); }
+
+    .hero p {
+      margin: 20px 0 0;
+      max-width: 660px;
+      font-size: clamp(16px, 1.45vw, 20px);
+      line-height: 1.72;
+      color: #6B6B74;
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 14px;
+    }
+
+    .btn {
+      min-height: 54px;
+      padding: 0 24px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      border: 0;
+      box-shadow: 0 18px 34px rgba(206, 46, 60, 0.28);
+    }
+
+    .btn-secondary {
+      color: #3D3D45;
+      background: var(--white);
+      border: 1px solid rgba(79,79,79,0.12);
+      box-shadow: 0 12px 28px rgba(36, 36, 40, 0.07);
+    }
+
+    .hero-points {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 12px;
+      max-width: 780px;
+    }
+
+    .point-card {
+      height: 100%;
+      padding: 16px 16px 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(232, 232, 236, 0.95);
+      box-shadow: 0 12px 26px rgba(36,36,40,0.05);
+    }
+
+    .point-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+
+    .point-card p {
+      margin: 10px 0 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #66666F;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: auto;
+      display: grid;
+      align-items: start;
+      align-self: start;
+      padding: 4px 0 0 8px;
+    }
+
+    .triangle-accent {
+      position: absolute;
+      pointer-events: none;
+      fill: none;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      z-index: 0;
+      opacity: 1;
+    }
+
+    .triangle-accent path { vector-effect: non-scaling-stroke; }
+
+    .triangle-gold {
+      width: 180px;
+      top: -8px;
+      right: 8px;
+      color: rgba(235, 155, 60, 0.82);
+      transform: rotate(10deg);
+    }
+
+    .triangle-green {
+      width: 170px;
+      left: -8px;
+      bottom: 14px;
+      color: rgba(44, 138, 97, 0.78);
+      transform: rotate(-16deg);
+    }
+
+    .hero-panel {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      margin-top: 0;
+      padding: 30px;
+      border-radius: var(--radius-xl);
+      color: var(--white);
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.14), transparent 24%),
+        linear-gradient(140deg, #D43241 0%, #BF2937 40%, #A3222E 100%);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: auto -30px -46px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-panel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .hero-panel h2 {
+      margin: 18px 0 10px;
+      font-size: 28px;
+      line-height: 1.16;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .hero-panel p {
+      margin: 0;
+      max-width: 500px;
+      color: rgba(255,255,255,0.82);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .journey-list {
+      margin-top: 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .journey-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 13px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(6px);
+    }
+
+    .journey-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.16);
+    }
+
+    .journey-item strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .journey-item span {
+      display: block;
+      color: rgba(255,255,255,0.82);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .hero-meta {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .meta-chip {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.11);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .steps {
+      padding: 20px 0 10px;
+    }
+
+    .section-head {
+      max-width: 840px;
+      margin-bottom: 22px;
+    }
+
+    .section-head span {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      color: #303038;
+    }
+
+    .section-head p {
+      margin: 14px 0 0;
+      max-width: 760px;
+      font-size: 17px;
+      line-height: 1.65;
+      color: #71717A;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .step-card {
+      position: relative;
+      padding: 26px 24px 22px;
+      overflow: hidden;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(232,232,236,0.95);
+      box-shadow: var(--shadow-md);
+    }
+
+    .step-no {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--red-soft);
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .step-card h4 {
+      margin: 18px 0 10px;
+      font-size: 21px;
+      line-height: 1.2;
+      color: #303038;
+    }
+
+    .step-card p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #71717A;
+    }
+
+    .portal-section {
+      padding: 26px 0 80px;
+      position: relative;
+    }
+
+    .portal-shell {
+      overflow: hidden;
+      border-radius: 30px;
+      border: 1px solid rgba(232,232,236,0.95);
+      background: rgba(255,255,255,0.98);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .portal-intro {
+      padding: 22px 24px 0;
+    }
+
+    .portal-bar {
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(232,232,236,0.95);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FCFCFD 100%);
+    }
+
+    .bar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #FFF7F8;
+      color: #66666F;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(206, 46, 60, 0.10);
+    }
+
+    .bar-chip svg { color: var(--red); }
+
+    .portal-toolbar {
+      min-height: 76px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid rgba(232,232,236,0.95);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FBFBFC 100%);
+    }
+
+    .portal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .portal-icon {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: var(--red);
+      background: rgba(206, 46, 60, 0.08);
+    }
+
+    .portal-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 900;
+      color: #303038;
+    }
+
+    .portal-caption {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #81818A;
+    }
+
+    .portal-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--white);
+      border: 1px solid rgba(232,232,236,0.95);
+      color: #676770;
+      cursor: pointer;
+      transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      color: var(--red);
+      border-color: rgba(206,46,60,0.22);
+      background: #FFF7F8;
+    }
+
+    .portal-stage {
+      position: relative;
+      min-height: 760px;
+      background: #F8F8FA;
+    }
+
+    .portal-frame {
+      width: 100%;
+      height: 760px;
+      border: 0;
+      display: block;
+      background: var(--white);
+    }
+
+    .loading-layer,
+    .placeholder-layer {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      text-align: center;
+      background: #F8F8FA;
+    }
+
+    .loading-layer { z-index: 3; }
+    .placeholder-layer { z-index: 2; }
+    .hidden { display: none !important; }
+
+    .loader {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 16px;
+      border: 4px solid rgba(206, 46, 60, 0.14);
+      border-top-color: var(--red);
+      border-radius: 999px;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .placeholder-card {
+      max-width: 620px;
+      padding: 40px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.98);
+      border: 1px dashed #D9D9DF;
+      box-shadow: 0 18px 42px rgba(36,36,40,0.08);
+    }
+
+    .placeholder-card svg { color: var(--red); }
+
+    .placeholder-card h4 {
+      margin: 20px 0 10px;
+      font-size: 26px;
+      color: #303038;
+      letter-spacing: -0.03em;
+    }
+
+    .placeholder-card p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #72727B;
+    }
+
+    .config-code {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      overflow-x: auto;
+      text-align: left;
+      color: #F7F7F7;
+      background: #2C2C31;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .support-card {
+      margin-top: 18px;
+      padding: 22px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(232,232,236,0.95);
+      box-shadow: var(--shadow-md);
+    }
+
+    .support-card svg {
+      flex: 0 0 auto;
+      color: var(--red);
+    }
+
+    .support-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #303038;
+      font-size: 15px;
+    }
+
+    .support-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #70707A;
+    }
+
+
+    .support-actions {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .support-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: #FFF7F8;
+      border: 1px solid rgba(206, 46, 60, 0.12);
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 800;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .support-link:hover {
+      transform: translateY(-1px);
+      background: #FFEFF2;
+      border-color: rgba(206, 46, 60, 0.24);
+    }
+    .footer {
+      padding: 28px 0 36px;
+      border-top: 1px solid rgba(232,232,236,0.95);
+      background: rgba(255,255,255,0.80);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      color: #81818A;
+      font-size: 12px;
+    }
+
+    .footer strong { color: #303038; }
+
+    @media (max-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.96fr);
+        gap: 36px;
+      }
+
+      .hero h1 {
+        max-width: 620px;
+        font-size: clamp(34px, 4vw, 52px);
+      }
+
+      .hero-panel {
+        padding: 26px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      :root { --anchor-offset: 132px; }
+      .hero-grid,
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-points {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .hero-visual {
+        min-height: auto;
+        padding: 10px 0 0;
+      }
+
+      .triangle-gold {
+        width: 150px;
+        top: -2px;
+        right: 8px;
+      }
+
+      .triangle-green {
+        width: 140px;
+        left: 0;
+        bottom: 10px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      :root { --anchor-offset: 156px; }
+      .container { width: min(calc(100% - 24px), var(--container)); }
+      .header-inner {
+        position: relative;
+        min-height: 78px;
+        gap: 12px;
+      }
+
+      .brand-logo {
+        height: 54px;
+        max-width: 220px;
+      }
+
+      .brand-logo-wrap {
+        padding: 5px 9px;
+        border-radius: 15px;
+      }
+
+      .header-right {
+        width: auto;
+        margin-left: auto;
+        flex-wrap: nowrap;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+        flex: 0 0 auto;
+      }
+
+      .header-nav {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 10px;
+        display: grid;
+        gap: 6px;
+        overflow: visible;
+        border: 1px solid rgba(232, 232, 236, 0.98);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 24px 54px rgba(36, 36, 40, 0.16);
+        backdrop-filter: blur(18px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-8px) scale(0.98);
+        transform-origin: top right;
+        transition: opacity .20s ease, transform .20s ease, visibility .20s ease;
+        z-index: 80;
+      }
+
+      .header-nav.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+
+      .nav-link {
+        width: 100%;
+        min-height: 48px;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        border-radius: 14px;
+        white-space: normal;
+        font-size: 13px;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        background: rgba(206, 46, 60, 0.08);
+      }
+
+      .header-badge { display: none; }
+
+      body.menu-open {
+        overflow: hidden;
+      }
+      .hero { padding-top: 32px; }
+      .hero h1 {
+        max-width: 100%;
+        font-size: 36px;
+        line-height: 1.08;
+      }
+      .hero p {
+        max-width: 100%;
+        font-size: 16px;
+      }
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .btn { width: 100%; }
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+      .point-card {
+        padding: 16px;
+      }
+      .hero-visual {
+        padding-top: 8px;
+      }
+      .triangle-gold {
+        width: 120px;
+        top: -2px;
+        right: 0;
+      }
+      .triangle-green {
+        width: 112px;
+        left: 2px;
+        bottom: 6px;
+      }
+      .hero-panel { padding: 24px; border-radius: 24px; }
+      .hero-panel h2 { font-size: 25px; }
+      .journey-item {
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+      }
+      .journey-icon {
+        width: 40px;
+        height: 40px;
+      }
+      .steps { padding-top: 12px; }
+      .portal-intro { padding: 18px 18px 0; }
+      .portal-shell { border-radius: 22px; }
+      .portal-bar,
+      .portal-toolbar {
+        padding: 14px 14px;
+      }
+
+      .portal-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .portal-actions { width: 100%; }
+      .portal-stage,
+      .portal-frame {
+        min-height: 680px;
+        height: 680px;
+      }
+
+      .placeholder-card {
+        padding: 28px 20px;
+      }
+
+      .support-card {
+        padding: 18px;
+      }
+
+      .support-actions {
+        flex-direction: column;
+      }
+
+      .support-link {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 540px) {
+      :root { --anchor-offset: 148px; }
+
+      .brand-logo {
+        height: 48px;
+        max-width: 185px;
+      }
+
+      .menu-toggle {
+        width: 44px;
+        height: 44px;
+      }
+      .hero {
+        padding-top: 24px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.1em;
+      }
+
+      .btn {
+        min-height: 50px;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+      }
+
+      .hero-panel {
+        padding: 22px 18px;
+      }
+
+      .hero-panel-badge,
+      .meta-chip {
+        font-size: 10px;
+      }
+
+      .journey-item {
+        padding: 12px;
+      }
+
+      .portal-stage,
+      .portal-frame {
+        min-height: 620px;
+        height: 620px;
+      }
+    }
+
+  
+
+    /* Ajustes de alinhamento e consistência visual — versão 2 */
+    .section-head {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .section-head p {
+      margin-left: auto;
+      margin-right: auto;
+      text-wrap: balance;
+    }
+
+    .portal-bar {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .portal-toolbar {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .portal-title-wrap {
+      justify-content: center;
+    }
+
+    .portal-caption {
+      max-width: 620px;
+      line-height: 1.55;
+      text-wrap: balance;
+    }
+
+    .support-card {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .support-card > div {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .support-card p {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      text-wrap: balance;
+    }
+
+    .support-actions {
+      justify-content: center;
+    }
+
+    @media (max-width: 720px) {
+      .portal-title-wrap {
+        flex-direction: column;
+      }
+
+      .support-card {
+        flex-direction: column;
+      }
+    }
+
+    /* Refinamentos visuais — versão 3 */
+    .steps .section-head,
+    .portal-intro {
+      margin-bottom: 28px;
+    }
+
+    .support-title-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .support-title-row strong {
+      margin: 0;
+    }
+
+    .support-icon {
+      width: 34px;
+      height: 34px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 11px;
+      color: var(--red);
+      background: rgba(206, 46, 60, 0.07);
+      border: 1px solid rgba(206, 46, 60, 0.13);
+    }
+
+    .support-icon svg {
+      color: inherit;
+    }
+
+    .premium-message {
+      width: min(100%, 860px);
+      color: #687181;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.65;
+      letter-spacing: 0;
+    }
+
+    .premium-message span {
+      display: block;
+    }
+
+    .premium-message span + span {
+      margin-top: 5px;
+    }
+
+    @media (max-width: 720px) {
+      .support-title-row {
+        gap: 8px;
+      }
+
+      .premium-message {
+        font-size: 12.5px;
+        line-height: 1.6;
+      }
+    }
+
+  </style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        navy: { DEFAULT: '#CE2E3C', dark: '#A3222E', light: '#E24A58' },
+        accent: '#EB9B3C',
+        neutralBg: '#F6F6F8',
+        corporativo: {
+          navy: '#CE2E3C', prata: '#F6F6F8', borda: '#E8E8EC',
+          texto: '#4F4F4F', suporte: '#71717A'
         }
-    </script>
+      },
+      fontFamily: { sans: ['Roboto','Arial','sans-serif'] },
+      boxShadow: {
+        container: '0 28px 70px rgba(36,36,40,.14)',
+        'input-focus': '0 0 0 4px rgba(206,46,60,.06)'
+      }
+    }
+  }
+};
+</script><style>
+/* Aplicação incorporada: comportamento das telas */
+.view { display: none; }
+.view.active { display: block; animation: autoappFade .28s ease; }
+.tabular-numbers { font-variant-numeric: tabular-nums; }
+@keyframes autoappFade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 
-    <style>
-        .view { display: none; }
-        .view.active { display: block; animation: fadeInPortal 0.35s ease; }
-        .tabular-numbers { font-variant-numeric: tabular-nums; }
+/* Integração visual com a landing page oficial */
+.portal-stage { min-height: 0 !important; padding: 22px; background: #F8F8FA; }
+.embedded-autoapp { width: 100%; max-width: 980px; margin: 0 auto; }
+.autoapp-shell {
+  width: 100%; position: relative; overflow: hidden;
+  padding: clamp(22px, 3vw, 38px) !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(232,232,236,.98) !important;
+  background: rgba(255,255,255,.99) !important;
+  box-shadow: 0 24px 54px rgba(36,36,40,.10) !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+}
+.autoapp-shell #progressBar { background: linear-gradient(90deg,#CE2E3C,#A3222E) !important; }
+.autoapp-shell .bg-navy { background-color: #CE2E3C !important; }
+.autoapp-shell .text-navy { color: #CE2E3C !important; }
+.autoapp-shell .border-navy { border-color: #CE2E3C !important; }
+.autoapp-shell .hover\:bg-slate-800:hover { background-color: #A3222E !important; }
+.autoapp-shell .focus-within\:border-accent:focus-within { border-color: #CE2E3C !important; }
+.autoapp-shell .group:focus-within .group-focus-within\:text-accent { color: #CE2E3C !important; }
+.autoapp-shell button:not(:disabled) { cursor: pointer; }
+.autoapp-shell button { letter-spacing: .035em; }
+.autoapp-shell input, .autoapp-shell select, .autoapp-shell textarea { font-family: inherit; }
+.autoapp-shell input:focus, .autoapp-shell select:focus, .autoapp-shell textarea:focus { outline: none; }
+.autoapp-shell .rounded-2xl { border-radius: 18px; }
+.autoapp-shell .rounded-xl { border-radius: 14px; }
+.autoapp-shell .shadow-md, .autoapp-shell .shadow-sm { box-shadow: 0 12px 28px rgba(36,36,40,.07); }
+@media (max-width: 760px) {
+  .portal-stage { padding: 10px; }
+  .autoapp-shell { padding: 20px 16px !important; border-radius: 22px !important; }
+}
 
-        @keyframes fadeInPortal {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
 
-        .nav-blur {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: saturate(180%) blur(20px);
-        }
+/* Refinamentos finais — versão 4 */
+/* Logo mais leve e proporcional à barra superior */
+.header-inner {
+  min-height: 82px;
+}
 
-        .hero-pattern {
-            background-color: #ffffff;
-            background-image: radial-gradient(#00264d 0.5px, transparent 0.5px);
-            background-size: 32px 32px;
-            opacity: 0.03;
-        }
+.brand {
+  flex: 0 0 auto;
+}
 
-        .cycle-line {
-            background: repeating-linear-gradient(
-                90deg,
-                #00264d 0,
-                #00264d 4px,
-                transparent 4px,
-                transparent 10px
-            );
-        }
+.brand-logo-wrap {
+  width: 96px;
+  height: 68px;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(232, 232, 236, 0.72);
+  box-shadow: none;
+}
 
-        @keyframes bounce-slow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  max-width: 82px;
+  max-height: 56px;
+  object-fit: contain;
+}
 
-        .animate-bounce-slow {
-            animation: bounce-slow 4s infinite ease-in-out;
-        }
+/* Ícone e título do portal passam a funcionar como um único conjunto */
+.portal-toolbar {
+  justify-content: center;
+}
 
-        @keyframes pulse-whatsapp {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 8px rgba(37, 211, 102, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
+.portal-title-wrap {
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
 
-        .whatsapp-pulse {
-            animation: pulse-whatsapp 2s infinite;
-        }
-    </style>
-</head>
-<body class="bg-slate-50 text-corporativo-texto font-sans antialiased text-left h-full">
+.portal-title-wrap > div {
+  width: auto;
+  flex: 0 1 auto;
+  text-align: left;
+}
 
-    <nav class="nav-blur fixed w-full z-50 border-b border-corporativo-borda transition-all duration-300" id="main-nav">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-navy p-2 rounded-xl shadow-sm">
-                    <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M30 35H45V45H55V35H70V65H55V55H45V65H30V35Z" fill="white"/>
-                        <path d="M75 20L85 30L75 40" stroke="#FF6600" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-lg font-bold text-navy tracking-tight leading-none">QUATRO C</span>
-                    <span class="text-[9px] uppercase font-bold text-slate-400 tracking-[0.18em] mt-0.5">Gestão e Cobrança</span>
-                </div>
-            </div>
+.portal-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 15px;
+  border: 1px solid rgba(206, 46, 60, 0.10);
+  background: rgba(206, 46, 60, 0.08);
+}
 
-            <div class="hidden lg:flex items-center space-x-10 text-[11px] font-semibold uppercase tracking-wider text-corporativo-suporte">
-                <a href="#home" class="hover:text-navy transition-colors">Início</a>
-                <a href="#ciclo" class="hover:text-navy transition-colors">O Ciclo</a>
-                <a href="#servicos" class="hover:text-navy transition-colors">Serviços</a>
-                <a href="#autoatendimento" class="hover:text-navy transition-colors">Autoatendimento</a>
-                <a href="#contato" class="bg-navy text-white px-5 py-2.5 rounded-xl hover:bg-slate-800 transition-all text-center shadow-sm">Consultoria</a>
-            </div>
+@media (max-width: 720px) {
+  .header-inner {
+    min-height: 72px;
+  }
+
+  .brand-logo-wrap {
+    width: 78px;
+    height: 58px;
+    padding: 4px 7px;
+    border-radius: 14px;
+  }
+
+  .brand-logo {
+    max-width: 68px;
+    max-height: 48px;
+  }
+
+  .portal-title-wrap {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .portal-title-wrap > div {
+    text-align: left;
+  }
+
+  .portal-icon {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-title-wrap {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .portal-title-wrap > div {
+    text-align: center;
+  }
+}
+
+
+/* Refinamentos finais — versão 5 */
+/* Logo integrado à barra, sem moldura e com proporção mais natural */
+.header-inner {
+  min-height: 92px;
+}
+
+.brand {
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand-logo-wrap {
+  width: 112px;
+  height: 78px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.brand-logo {
+  width: 112px;
+  height: 78px;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  display: block;
+}
+
+/* Ícone do portal alinhado de verdade ao bloco de título */
+.portal-toolbar {
+  justify-content: center;
+}
+
+.portal-title-wrap {
+  width: max-content;
+  max-width: calc(100% - 40px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 48px auto;
+  align-items: center;
+  justify-content: center;
+  column-gap: 14px;
+}
+
+.portal-title-wrap > div {
+  width: auto;
+  min-width: 0;
+  flex: none;
+  text-align: left;
+}
+
+.portal-icon {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  margin: 0;
+  align-self: center;
+}
+
+@media (max-width: 720px) {
+  .header-inner { min-height: 80px; }
+  .brand { margin-left: 2px; }
+  .brand-logo-wrap,
+  .brand-logo {
+    width: 92px;
+    height: 64px;
+  }
+
+  .portal-title-wrap {
+    grid-template-columns: 44px minmax(0, auto);
+    column-gap: 12px;
+    max-width: calc(100% - 24px);
+  }
+
+  .portal-icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-title-wrap {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    column-gap: 10px;
+    width: 100%;
+  }
+
+  .portal-title-wrap > div {
+    text-align: left;
+  }
+}
+</style></head>
+<body>
+<div class="topbar"></div>
+<header class="header">
+<div class="container header-inner">
+<a aria-label="Quatro C - início" class="brand" href="#inicio">
+<div class="brand-logo-wrap">
+<img alt="Quatro C" class="brand-logo" referrerpolicy="no-referrer" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaBEI-qyRmYw_D0waBvLPcxsHtI0AbVj8kX3eyla0WmQ&amp;s=10"/>
+</div>
+</a>
+<div class="header-right">
+<button aria-controls="main-navigation" aria-expanded="false" aria-label="Abrir menu de navegação" class="menu-toggle" type="button">
+<span aria-hidden="true" class="menu-toggle-lines"></span>
+</button>
+<nav aria-label="Navegação principal" class="header-nav" id="main-navigation">
+<a class="nav-link" href="#inicio">Início</a>
+<a class="nav-link" href="#como-funciona">Como funciona</a>
+<a class="nav-link" href="#portal">Autoatendimento</a>
+<a class="nav-link" href="#canais">Canais de apoio</a>
+</nav>
+<div class="header-badge">
+<svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M9 12L11 14L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Portal oficial • disponível 24 horas
         </div>
-    </nav>
-
-    <header id="home" class="relative pt-36 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white border-b border-corporativo-borda">
-        <div class="absolute inset-0 hero-pattern"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="space-y-6">
-                    <span class="inline-block px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200/60 text-corporativo-suporte text-[10px] font-bold uppercase tracking-wider">
-                        Excelência em Recuperação de Ativos
-                    </span>
-                    <h1 class="text-4xl lg:text-6xl font-semibold text-navy tracking-tight leading-[1.1]">
-                        Inteligência na gestão de seus <span class="text-accent">recebíveis</span>.
-                    </h1>
-                    <p class="text-base text-corporativo-suporte leading-relaxed max-w-lg font-normal">
-                        Atuamos como parceiros estratégicos do seu departamento financeiro, otimizando com total discrição e eficiência todo o ciclo de crédito corporativo.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-2">
-                        <a href="#contato" class="bg-navy text-white px-8 py-3.5 rounded-xl font-medium text-sm shadow-sm hover:bg-slate-800 transition-all text-center">
-                            Auditar Carteira
-                        </a>
-                        <a href="#autoatendimento" class="bg-white border border-corporativo-borda text-navy px-8 py-3.5 rounded-xl font-medium text-sm hover:border-slate-400 transition-all text-center">
-                            Portal de Resolução
-                        </a>
-                    </div>
-                </div>
-                <div class="relative">
-                    <div class="bg-slate-50 border border-corporativo-borda rounded-3xl p-3 shadow-sm relative overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200" alt="Finance Professional" class="rounded-2xl mix-blend-multiply opacity-90">
-                        <div class="absolute bottom-8 left-8 bg-white p-5 rounded-2xl shadow-xl border border-corporativo-borda animate-bounce-slow">
-                            <p class="text-3xl font-bold text-navy leading-none mb-0.5">35%</p>
-                            <p class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Aumento médio de Liquidez</p>
-                        </div>
-                    </div>
-                </div>
+</div>
+</div>
+</header>
+<main id="inicio">
+<section class="hero">
+<div class="container hero-grid">
+<div>
+<div class="eyebrow">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M4 12H20" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<path d="M12 4L20 12L12 20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Atendimento digital com acolhimento
+          </div>
+<h1>A Quatro C criou um espaço para ajudar você a seguir <span>com mais clareza, privacidade e tranquilidade.</span></h1>
+<p>
+            Se você chegou até aqui, a ideia é simples: facilitar. Neste ambiente, você consulta suas informações com segurança, entende as possibilidades disponíveis e escolhe o melhor caminho para seguir no seu tempo, com autonomia e sem ruído.
+          </p>
+<div class="hero-actions">
+<a class="btn btn-primary" href="#portal">
+              Acessar meu atendimento
+              <svg aria-hidden="true" fill="none" height="18" viewbox="0 0 24 24" width="18">
+<path d="M5 12H19M14 7L19 12L14 17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+<a class="btn btn-secondary" href="#como-funciona">
+              Entender como funciona
+            </a>
+</div>
+<div class="hero-points">
+<div class="point-card">
+<div class="point-kicker">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"></circle>
+<path d="M12 8V12L15 14" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+                No seu ritmo
+              </div>
+<p>Você acessa quando quiser e conduz o atendimento com mais liberdade.</p>
+</div>
+<div class="point-card">
+<div class="point-kicker">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Com segurança
+              </div>
+<p>Suas informações são consultadas em um ambiente reservado e orientado.</p>
+</div>
+<div class="point-card">
+<div class="point-kicker">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M4 12H20" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<path d="M12 4L20 12L12 20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Com objetividade
+              </div>
+<p>Menos burocracia, mais clareza para entender o que está disponível.</p>
+</div>
+</div>
+</div>
+<div aria-label="Resumo da experiência de autoatendimento" class="hero-visual">
+<svg aria-hidden="true" class="triangle-accent triangle-gold" viewbox="0 0 100 92">
+<path d="M50 5C55 5 59 8 62 13L96 73C101 82 95 88 86 88H14C5 88-1 82 4 73L38 13C41 8 45 5 50 5Z" stroke="currentColor" stroke-width="3.2"></path>
+</svg>
+<svg aria-hidden="true" class="triangle-accent triangle-green" viewbox="0 0 100 92">
+<path d="M50 5C55 5 59 8 62 13L96 73C101 82 95 88 86 88H14C5 88-1 82 4 73L38 13C41 8 45 5 50 5Z" stroke="currentColor" stroke-width="3.2"></path>
+</svg>
+<aside class="hero-panel">
+<div class="hero-panel-badge">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Portal oficial de autoatendimento
             </div>
-        </div>
-    </header>
-
-    <section id="ciclo" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-16 max-w-xl space-y-2">
-                <h2 class="text-3xl font-semibold text-navy tracking-tight">
-                    Abordagem linear voltada para a saúde do fluxo de caixa.
-                </h2>
-                <p class="text-sm text-corporativo-suporte font-medium">
-                    Monitoramento técnico e diplomático em cada fase de liquidação.
-                </p>
-            </div>
-
-            <div class="relative grid md:grid-cols-4 gap-8">
-                <div class="absolute top-10 left-0 w-full h-px cycle-line hidden md:block opacity-10"></div>
-
-                <div class="relative z-10 p-5 bg-slate-50 border border-corporativo-borda rounded-2xl space-y-4">
-                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-navy border border-corporativo-borda shadow-sm">
-                        <i class="fas fa-shield-halved text-base"></i>
-                    </div>
-                    <div class="space-y-1">
-                        <h4 class="font-bold text-navy text-xs uppercase tracking-wider">01. Prevenção</h4>
-                        <p class="text-corporativo-suporte text-xs leading-relaxed">
-                            Gestão preventiva para mitigar intercorrências de faturamento antes do vencimento.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="relative z-10 p-5 bg-slate-50 border border-corporativo-borda rounded-2xl space-y-4">
-                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-navy border border-corporativo-borda shadow-sm">
-                        <i class="fas fa-paper-plane text-base"></i>
-                    </div>
-                    <div class="space-y-1">
-                        <h4 class="font-bold text-navy text-xs uppercase tracking-wider">02. Administrativo</h4>
-                        <p class="text-corporativo-suporte text-xs leading-relaxed">
-                            Contatos iniciais de rotina desenhados sob réguas humanizadas de cobrança.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="relative z-10 p-5 bg-white border border-slate-300 rounded-2xl shadow-sm space-y-4 scale-105">
-                    <div class="w-12 h-12 bg-navy rounded-xl flex items-center justify-center text-white shadow-sm">
-                        <i class="fas fa-chess-knight text-base"></i>
-                    </div>
-                    <div class="space-y-1">
-                        <h4 class="font-bold text-navy text-xs uppercase tracking-wider">03. Estratégico</h4>
-                        <p class="text-corporativo-texto text-xs leading-relaxed font-medium">
-                            Intervenção técnica corporativa para contas que demandam mediação pontual.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="relative z-10 p-5 bg-slate-50 border border-corporativo-borda rounded-2xl space-y-4">
-                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-navy border border-corporativo-borda shadow-sm">
-                        <i class="fas fa-handshake-angle text-base"></i>
-                    </div>
-                    <div class="space-y-1">
-                        <h4 class="font-bold text-navy text-xs uppercase tracking-wider">04. Extrajudicial</h4>
-                        <p class="text-corporativo-suporte text-xs leading-relaxed">
-                            Soluções extrajudiciais amigáveis com foco em acordos sustentáveis de quitação.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="servicos" class="py-24 bg-slate-50 border-y border-corporativo-borda">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-3 gap-8">
-                <div class="lg:row-span-2 bg-navy text-white p-10 rounded-3xl flex flex-col justify-between shadow-sm">
-                    <div class="space-y-4">
-                        <h2 class="text-3xl font-semibold tracking-tight leading-tight">
-                            Atuação personalizada como extensão do seu financeiro.
-                        </h2>
-                        <p class="text-slate-400 text-sm font-light">
-                            Adequamos nossa metodologia de abordagem preservando estritamente a reputação da sua marca.
-                        </p>
-                    </div>
-                    <div class="space-y-3 mt-8">
-                        <div class="flex items-center gap-3 bg-white/5 p-3.5 rounded-xl border border-white/10 text-xs font-semibold uppercase tracking-wider">
-                            <i class="fas fa-check-circle text-accent"></i> Resolução Amigável de Ativos
-                        </div>
-                        <div class="flex items-center gap-3 bg-white/5 p-3.5 rounded-xl border border-white/10 text-xs font-semibold uppercase tracking-wider">
-                            <i class="fas fa-check-circle text-accent"></i> Sigilo e Segurança Legal
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-8 rounded-3xl border border-corporativo-borda shadow-[0_4px_20px_rgba(0,38,77,0.01)] hover:shadow-sm transition">
-                    <i class="fas fa-list-check text-xl text-accent mb-4 block"></i>
-                    <h4 class="font-bold text-navy text-base mb-1.5">Gestão de Régua</h4>
-                    <p class="text-corporativo-suporte text-xs leading-relaxed">
-                        Automação estratégica das réguas de avisos preventivos em conformidade com as boas práticas.
-                    </p>
-                </div>
-
-                <div class="bg-white p-8 rounded-3xl border border-corporativo-borda shadow-[0_4px_20px_rgba(0,38,77,0.01)] hover:shadow-sm transition">
-                    <i class="fas fa-fingerprint text-xl text-navy mb-4 block"></i>
-                    <h4 class="font-bold text-navy text-base mb-1.5">Higienização de Dados</h4>
-                    <p class="text-corporativo-suporte text-xs leading-relaxed">
-                        Localização assertiva por meio de barramentos de inteligência de dados.
-                    </p>
-                </div>
-
-                <div class="bg-white p-8 rounded-3xl border border-corporativo-borda shadow-[0_4px_20px_rgba(0,38,77,0.01)] hover:shadow-sm transition">
-                    <i class="fas fa-balance-scale text-xl text-navy mb-4 block"></i>
-                    <h4 class="font-bold text-navy text-base mb-1.5">Mediação e Acordos</h4>
-                    <p class="text-corporativo-suporte text-xs leading-relaxed">
-                        Apoio técnico para reinserir as contas em atraso em fluxos normais de liquidação.
-                    </p>
-                </div>
-
-                <div class="bg-white p-8 rounded-3xl border border-corporativo-borda shadow-[0_4px_20px_rgba(0,38,77,0.01)] hover:shadow-sm transition">
-                    <i class="fas fa-chart-bar text-xl text-accent mb-4 block"></i>
-                    <h4 class="font-bold text-navy text-base mb-1.5">BI & Performance</h4>
-                    <p class="text-corporativo-suporte text-xs leading-relaxed">
-                        Transparência total por meio de relatórios de safra e dashboards analíticos de performance.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="autoatendimento" class="py-24 bg-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/3 h-full bg-slate-50 -skew-x-12 translate-x-1/3 border-l border-corporativo-borda select-none"></div>
-
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-12 gap-12 lg:items-center">
-                
-                <div class="text-left lg:col-span-5 space-y-6">
-                    <h2 class="text-3xl lg:text-4xl font-semibold text-navy tracking-tight">Espaço de Atendimento Digital</h2>
-                    <p class="text-corporativo-suporte leading-relaxed font-normal text-sm">
-                        Disponibilizamos um ecossistema seguro e discreto para que sua empresa analise faturas, emita segundas vias ou elabore propostas online sem burocracias, com total autonomia.
-                    </p>
-                    <div class="space-y-3.5 pt-2">
-                        <div class="flex items-center gap-3 text-xs font-semibold text-corporativo-texto uppercase tracking-wide">
-                            <i class="fas fa-check-double text-navy text-sm"></i> Simulações Personalizadas
-                        </div>
-                        <div class="flex items-center gap-3 text-xs font-semibold text-corporativo-texto uppercase tracking-wide">
-                            <i class="fas fa-clock text-navy text-sm"></i> Acesso Disponível 24/7
-                        </div>
-                        <div class="flex items-center gap-3 text-xs font-semibold text-corporativo-texto uppercase tracking-wide">
-                            <i class="fas fa-user-shield text-navy text-sm"></i> Sigilo Governança de Dados
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-7 bg-white rounded-3xl border border-corporativo-borda shadow-container p-6 sm:p-8 relative overflow-hidden max-w-xl mx-auto lg:w-full">
-                    
-                    <div class="absolute top-0 left-0 w-full h-1 bg-slate-100">
-                        <div id="progressBar" class="w-1/3 h-full bg-navy transition-all duration-500"></div>
-                    </div>
-
-                    <div class="flex items-center justify-between mb-6 select-none">
-                        <p id="stepIndicator" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-sans">
-                            Identificação de Acesso
-                        </p>
-                        <button id="btnVoltar" type="button" class="text-corporativo-suporte hover:text-navy transition font-bold text-xs uppercase tracking-wider font-sans" style="visibility:hidden;">
-                            <i class="fas fa-arrow-left text-[10px] mr-1"></i> Voltar
-                        </button>
-                    </div>
-
-                    <div class="view active space-y-6" id="vStart">
-                        <div class="space-y-1.5">
-                            <h3 class="text-xl font-semibold tracking-tight text-navy">Vamos iniciar o seu atendimento.</h3>
-                            <p class="text-sm text-corporativo-suporte leading-relaxed">
-                                Insira o documento do titular da conta. Caso você seja um representante ou parceiro, utilize seus próprios dados nos campos de contato abaixo.
-                            </p>
-                        </div>
-
-                        <div class="space-y-4 pt-1">
-                            <div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
-                                <label for="docInput" class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent">
-                                    Documento do titular
-                                </label>
-                                <input id="docInput" type="text" inputmode="numeric" autocomplete="off" placeholder="CPF ou CNPJ"
-                                    class="w-full pt-7 pb-3 px-4 bg-transparent outline-none text-base font-semibold text-slate-800 tracking-wide placeholder-slate-300 tabular-numbers">
-                                <div id="docBadge" class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-widest text-navy bg-slate-200/50 px-2 py-0.5 rounded transition-all opacity-0 pointer-events-none select-none">
-                                    -
-                                </div>
-                            </div>
-
-                            <div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
-                                <label for="nameInput" class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent">
-                                    Informe seu nome
-                                </label>
-                                <input id="nameInput" type="text" autocomplete="off" placeholder=""
-                                    class="w-full pt-7 pb-3 px-4 bg-transparent outline-none text-base font-medium text-slate-800 placeholder-slate-300">
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
-                                    <label for="phoneInput" class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent">
-                                        WhatsApp ou Telefone
-                                    </label>
-                                    <div class="flex items-center w-full pt-4">
-                                        <span class="pl-4 pr-1 text-base font-medium text-slate-400 select-none tracking-wide">+55</span>
-                                        <input id="phoneInput" type="tel" inputmode="numeric" autocomplete="off" placeholder="(00) 00000-0000"
-                                            class="w-full pt-3 pb-3 px-1 bg-transparent outline-none text-base font-medium text-slate-800 tracking-wide placeholder-slate-300 tabular-numbers">
-                                    </div>
-                                </div>
-
-                                <div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
-                                    <label for="emailInput" class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent">
-                                        E-mail
-                                    </label>
-                                    <input id="emailInput" type="email" autocomplete="off" placeholder="nome@cliente.com"
-                                        class="w-full pt-7 pb-3 px-4 bg-transparent outline-none text-base font-medium text-slate-800 placeholder-slate-300">
-                                </div>
-                            </div>
-                        </div>
-
-                        <p id="startError" class="text-xs text-red-600 font-medium bg-red-50/60 border border-red-100 px-4 py-3 rounded-xl hidden flex items-center gap-2.5 transition-all font-sans"></p>
-
-                        <button id="btnConsultar" type="button" disabled
-                            class="w-full mt-6 bg-slate-100 text-slate-300 font-semibold py-5 rounded-2xl transition-all duration-200 text-sm tracking-wide flex items-center justify-center gap-2 cursor-not-allowed select-none font-sans">
-                            <span>Avançar para Identificação</span>
-                            <i class="fas fa-chevron-right text-[10px] mt-0.5"></i>
-                        </button>
-
-                        <p class="text-[11px] text-slate-400 font-medium leading-relaxed text-center max-w-xs mx-auto select-none">
-                            Utilizamos estas informações exclusivamente para cruzar dados com nossa base interna e proteger o histórico das contas contra acessos de terceiros.
-                        </p>
-                    </div>
-
-                    <div id="vLoading" class="view space-y-6">
-                        <div class="text-center py-12 space-y-4">
-                            <div class="mx-auto w-10 h-10 rounded-full border-2 border-slate-100 border-t-navy animate-spin"></div>
-                            <p class="text-sm text-slate-400 font-medium select-none font-sans">
-                                Localizando informações de cadastro...
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="vValidateCode" class="view space-y-6">
-                        <div class="space-y-4 mb-6">
-                            <h3 class="text-xl font-semibold tracking-tight text-navy">Confirmação de identidade</h3>
-                            <div class="space-y-3 max-w-sm">
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans" id="validateCodeText">
-                                    Enviamos um código de validação para o e-mail informado.
-                                </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
-                                    Digite o código abaixo para prosseguir com segurança.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4 pt-2">
-                            <div class="relative group bg-slate-50 border border-slate-200/80 rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
-                                <input id="validationCodeInput" type="text" maxlength="6" inputmode="numeric" autocomplete="off" placeholder="Digite o código"
-                                    class="w-full p-5 bg-transparent outline-none text-center text-lg font-bold tracking-[0.4em] text-slate-800 placeholder-slate-300 font-sans tabular-numbers">
-                                </div>
-                        </div>
-
-                        <p id="validationCodeError" class="text-xs text-red-600 font-medium bg-red-50/60 border border-red-100 px-4 py-3 rounded-xl hidden flex items-center gap-2.5 transition-all font-sans"></p>
-
-                        <div class="space-y-3 pt-2">
-                            <button id="btnValidateCode" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-sm uppercase tracking-widest text-xs font-sans">
-                                Validar código
-                            </button>
-                            <button id="btnResendCode" type="button" class="w-full bg-white border border-slate-200 text-navy font-bold py-4 rounded-xl hover:bg-slate-50 transition uppercase tracking-widest text-xs font-sans">
-                                Solicitar novo código
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="vConfirmName" class="view space-y-6">
-                        <div class="space-y-2 mb-6">
-                            <h3 class="text-xl font-semibold tracking-tight text-navy">Confirme o titular</h3>
-                            <p class="text-sm text-slate-500 leading-relaxed font-sans" id="confirmSubtitle">
-                                Para garantir o sigilo das informações e evitar o acesso de terceiros, selecione o nome ou a razão social correta vinculada ao documento informado:
-                            </p>
-                        </div>
-
-                        <div id="nameOptions" class="grid gap-3 pt-2"></div>
-
-                        <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest font-sans text-center select-none">
-                            Proteção antifraude ativa.
-                        </p>
-                    </div>
-
-                    <div id="vBlocked" class="view space-y-6">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
-                                    <i class="fas fa-user-shield text-lg"></i>
-                            </div>
-                            <div class="space-y-2 max-w-sm mx-auto">
-                                <h3 class="text-xl font-semibold tracking-tight text-navy">Acesso suspenso temporariamente</h3>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
-                                    Por medidas de segurança e proteção de dados, suspendemos as tentativas automáticas neste painel. Nossa equipe especializada está pronta para dar suporte imediato.
-                                </p>
-                            </div>
-                        </div>
-
-                        <button id="btnBlockedHumano" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans">
-                            Falar com atendente
-                        </button>
-                        <p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
-                            Se preferir, nossa ouvidoria está disponível nos números 0800 025 5072 ou (11) 3323-9412.
-                        </p>
-                    </div>
-
-                    <div id="vIdentityError" class="view space-y-6">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center text-amber-500">
-                                <i class="fas fa-triangle-exclamation text-lg"></i>
-                            </div>
-                            <div class="space-y-3 max-w-sm mx-auto">
-                                <h3 class="text-xl font-semibold tracking-tight text-navy">Identidade não confirmada</h3>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
-                                    O nome selecionado não corresponde ao cadastro localizado.
-                                </p>
-                                <p id="identityAttemptMsg" class="text-sm text-slate-500 leading-relaxed font-sans">
-                                    Tentativa 1 de 3. Revise as opções com atenção antes de continuar.
-                                </p>
-                            </div>
-                        </div>
-
-                        <button id="btnIdentityTryAgain" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans">
-                            Tentar novamente
-                        </button>
-                        <p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
-                            Por segurança, novas tentativas podem ser suspensas temporariamente após sucessivas falhas.
-                        </p>
-                    </div>
-
-                    <div id="vNoRecord" class="view space-y-6">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
-                                <i class="fas fa-magnifying-glass text-base"></i>
-                            </div>
-                            <div class="space-y-4 max-w-sm mx-auto">
-                                <h3 class="text-xl font-semibold tracking-tight text-navy">Consulta concluída</h3>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans" id="noRecordMsg">
-                                    Não localizamos informações vinculadas ao documento informado neste momento.
-                                </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
-                                    Caso deseje validar outras informações ou confirmar seu cadastro, nossa equipe permanece disponível pelos canais de atendimento.
-                                </p>
-                            </div>
-                        </div>
-
-                        <button id="btnNovaConsultaNoRecord" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans">
-                            Realizar nova pesquisa
-                        </button>
-                        <p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
-                            Nossa equipe permanece disponível pelos canais de atendimento: 0800 025 5072 ou (11) 3323-9412.
-                        </p>
-                    </div>
-
-                    <div id="vNoDebt" class="view space-y-6">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
-                                <i class="fas fa-circle-check text-lg"></i>
-                            </div>
-                            <div class="space-y-2 max-w-sm mx-auto">
-
-    <h3 class="text-xl font-semibold tracking-tight text-navy">
-        Tudo regularizado
-    </h3>
-
-    <div class="space-y-4 max-w-sm mx-auto">
-
-        <p class="text-sm text-slate-500 leading-relaxed font-sans">
-            No momento desta consulta, não localizamos pendências financeiras vinculadas ao documento informado em nossa base de atendimento.
-        </p>
-
-        <p class="text-sm text-slate-500 leading-relaxed font-sans">
-            Caso tenha recebido alguma comunicação recente ou deseje confirmar informações adicionais, nossa equipe permanece disponível para suporte.
-        </p>
-
-    </div>
+<h2>Uma jornada mais leve, do início ao fim.</h2>
+<p>
+              O portal foi pensado para acolher, orientar e simplificar. Tudo acontece em poucos passos, com uma experiência clara e intuitiva para que você siga com mais confiança.
+            </p>
+<div class="journey-list">
+<div class="journey-item">
+<div class="journey-icon">
+<svg aria-hidden="true" fill="none" height="22" viewbox="0 0 24 24" width="22">
+<circle cx="11" cy="11" r="6" stroke="white" stroke-width="2"></circle>
+<path d="M20 20L16.5 16.5" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<strong>Consulte com clareza</strong>
+<span>Visualize suas informações de forma direta, sem complicação e com privacidade.</span>
+</div>
+</div>
+<div class="journey-item">
+<div class="journey-icon">
+<svg aria-hidden="true" fill="none" height="22" viewbox="0 0 24 24" width="22">
+<path d="M6 8H18" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+<path d="M6 12H18" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+<path d="M6 16H13" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<strong>Entenda suas opções</strong>
+<span>O atendimento mostra os caminhos disponíveis para que você escolha com tranquilidade.</span>
+</div>
+</div>
+<div class="journey-item">
+<div class="journey-icon">
+<svg aria-hidden="true" fill="none" height="22" viewbox="0 0 24 24" width="22">
+<path d="M5 12L10 17L19 7" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<strong>Conclua com autonomia</strong>
+<span>Você segue em frente em um processo digital simples, objetivo e disponível 24 horas.</span>
+</div>
+</div>
+</div>
+<div class="hero-meta">
+<span class="meta-chip">Privacidade em primeiro lugar</span>
+<span class="meta-chip">Experiência digital orientada</span>
+<span class="meta-chip">Disponível 24/7</span>
+</div>
+</aside>
+</div>
+</div>
+</section>
+<section class="steps" id="como-funciona">
+<div class="container">
+<div class="section-head">
+<span>Como funciona</span>
+<h3>Uma experiência desenhada para ser simples, intuitiva e respeitosa.</h3>
 
 </div>
-                        </div>
+<div class="steps-grid">
+<article class="step-card">
+<div class="step-no">01</div>
+<h4>Identifique-se com segurança</h4>
+<p>O acesso ao portal começa de forma simples, em um ambiente digital preparado para orientar cada etapa.</p>
+</article>
+<article class="step-card">
+<div class="step-no">02</div>
+<h4>Visualize e compreenda</h4>
+<p>As informações são apresentadas com mais clareza, ajudando você a entender o cenário sem ruído ou excesso de complexidade.</p>
+</article>
+<article class="step-card">
+<div class="step-no">03</div>
+<h4>Siga com autonomia</h4>
+<p>Depois, você escolhe o melhor caminho para continuar de forma prática, segura e no momento que fizer mais sentido.</p>
+</article>
+</div>
+</div>
+</section>
+<section class="portal-section" id="portal">
+<div class="container">
+<div class="section-head portal-intro">
+<span>Seu atendimento começa aqui</span>
+<h3>Um ambiente único para consultar, entender e seguir em frente.</h3>
 
-                        <button id="btnNovaConsultaNoDebt" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans">
-                            Nova pesquisa
+</div>
+<div class="portal-shell">
+<div class="portal-bar">
+<span class="bar-chip">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Navegação protegida
+            </span>
+<span class="bar-chip">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"></circle>
+<path d="M12 8V12L15 14" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+              Disponível a qualquer hora
+            </span>
+<span class="bar-chip">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M5 12L10 17L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Experiência guiada e intuitiva
+            </span>
+</div>
+<div class="portal-toolbar">
+<div class="portal-title-wrap">
+<span aria-hidden="true" class="portal-icon">
+<svg fill="none" height="20" viewbox="0 0 24 24" width="20">
+<rect height="16" rx="3" stroke="currentColor" stroke-width="2" width="16" x="4" y="4"></rect>
+<path d="M8 9H16M8 12H16M8 15H13" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</span>
+<div>
+<p class="portal-title">Portal de Autoatendimento</p>
+<p class="portal-caption">Consulta segura, negociação digital e acompanhamento em uma única experiência.</p>
+</div>
+</div>
+
+</div>
+<div class="portal-stage"><div class="embedded-autoapp"><div aria-label="Aplicação de autoatendimento Quatro C" class="lg:col-span-7 bg-white rounded-3xl border border-corporativo-borda p-6 sm:p-8 relative overflow-hidden autoapp-shell">
+<div class="absolute top-0 left-0 w-full h-1 bg-slate-100">
+<div class="w-1/3 h-full bg-navy transition-all duration-500" id="progressBar"></div>
+</div>
+<div class="flex items-center justify-between mb-6 select-none">
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-sans" id="stepIndicator">
+                            Identificação de Acesso
+                        </p>
+<button class="text-corporativo-suporte hover:text-navy transition font-bold text-xs uppercase tracking-wider font-sans" id="btnVoltar" style="visibility:hidden;" type="button">
+<i class="fas fa-arrow-left text-[10px] mr-1"></i> Voltar
                         </button>
-                    </div>
-
-                    <div id="vError" class="view space-y-6">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500/80">
-                                <i class="fas fa-triangle-exclamation text-base"></i>
-                            </div>
-                            <div class="space-y-4 max-w-sm mx-auto">
-                                <h3 class="text-xl font-semibold tracking-tight text-navy">
-                                    Sistema temporariamente indisponível
-                                </h3>
-
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans" id="errorMsg">
-                                    No momento, nosso portal de atendimento está passando por uma instabilidade temporária.
+</div>
+<div class="view active space-y-6" id="vStart">
+<div class="space-y-1.5">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Vamos iniciar o seu atendimento.</h3>
+<p class="text-sm text-corporativo-suporte leading-relaxed">
+                                Insira o documento do titular da conta. Caso você seja um representante ou parceiro, utilize seus próprios dados nos campos de contato abaixo.
+                            </p>
+</div>
+<div class="space-y-4 pt-1">
+<div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
+<label class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent" for="docInput">
+                                    Documento do titular
+                                </label>
+<input autocomplete="off" class="w-full pt-7 pb-3 px-4 bg-transparent outline-none text-base font-semibold text-slate-800 tracking-wide placeholder-slate-300 tabular-numbers" id="docInput" inputmode="numeric" placeholder="CPF ou CNPJ" type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold uppercase tracking-widest text-navy bg-slate-200/50 px-2 py-0.5 rounded transition-all opacity-0 pointer-events-none select-none" id="docBadge">
+                                    -
+                                </div>
+</div>
+<div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
+<label class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent" for="nameInput">
+                                    Informe seu nome
+                                </label>
+<input autocomplete="off" class="w-full pt-7 pb-3 px-4 bg-transparent outline-none text-base font-medium text-slate-800 placeholder-slate-300" id="nameInput" placeholder="" type="text"/>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
+<label class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent" for="phoneInput">
+                                        WhatsApp ou Telefone
+                                    </label>
+<div class="flex items-center w-full pt-4">
+<span class="pl-4 pr-1 text-base font-medium text-slate-400 select-none tracking-wide">+55</span>
+<input autocomplete="off" class="w-full pt-3 pb-3 px-1 bg-transparent outline-none text-base font-medium text-slate-800 tracking-wide placeholder-slate-300 tabular-numbers" id="phoneInput" inputmode="numeric" placeholder="(00) 00000-0000" type="tel"/>
+</div>
+</div>
+<div class="relative group bg-corporativo-prata border border-corporativo-borda rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
+<label class="absolute top-3 left-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none transition-colors group-focus-within:text-accent" for="emailInput">
+                                        E-mail
+                                    </label>
+<input autocomplete="off" class="w-full pt-7 pb-3 px-4 bg-transparent outline-none text-base font-medium text-slate-800 placeholder-slate-300" id="emailInput" placeholder="nome@cliente.com" type="email"/>
+</div>
+</div>
+</div>
+<p class="text-xs text-red-600 font-medium bg-red-50/60 border border-red-100 px-4 py-3 rounded-xl hidden flex items-center gap-2.5 transition-all font-sans" id="startError"></p>
+<button class="w-full mt-6 bg-slate-100 text-slate-300 font-semibold py-5 rounded-2xl transition-all duration-200 text-sm tracking-wide flex items-center justify-center gap-2 cursor-not-allowed select-none font-sans" disabled="" id="btnConsultar" type="button">
+<span>Avançar para Identificação</span>
+<i class="fas fa-chevron-right text-[10px] mt-0.5"></i>
+</button>
+<p class="text-[11px] text-slate-400 font-medium leading-relaxed text-center max-w-xs mx-auto select-none">
+                            Utilizamos estas informações exclusivamente para cruzar dados com nossa base interna e proteger o histórico das contas contra acessos de terceiros.
+                        </p>
+</div>
+<div class="view space-y-6" id="vLoading">
+<div class="text-center py-12 space-y-4">
+<div class="mx-auto w-10 h-10 rounded-full border-2 border-slate-100 border-t-navy animate-spin"></div>
+<p class="text-sm text-slate-400 font-medium select-none font-sans">
+                                Localizando informações de cadastro...
+                            </p>
+</div>
+</div>
+<div class="view space-y-6" id="vValidateCode">
+<div class="space-y-4 mb-6">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Confirmação de identidade</h3>
+<div class="space-y-3 max-w-sm">
+<p class="text-sm text-slate-500 leading-relaxed font-sans" id="validateCodeText">
+                                    Enviamos um código de validação para o e-mail informado.
                                 </p>
-
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
-                                    Você pode tentar novamente em alguns instantes ou, se preferir, entrar em contato diretamente com nossa equipe pelos canais de atendimento abaixo.
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
+                                    Digite o código abaixo para prosseguir com segurança.
                                 </p>
-                            </div>
-                        </div>
-
-                        <button id="btnNovaConsultaErr" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans">
+</div>
+</div>
+<div class="space-y-4 pt-2">
+<div class="relative group bg-slate-50 border border-slate-200/80 rounded-2xl transition-all duration-200 focus-within:border-accent focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/5">
+<input autocomplete="off" class="w-full p-5 bg-transparent outline-none text-center text-lg font-bold tracking-[0.4em] text-slate-800 placeholder-slate-300 font-sans tabular-numbers" id="validationCodeInput" inputmode="numeric" maxlength="6" placeholder="Digite o código" type="text"/>
+</div>
+</div>
+<p class="text-xs text-red-600 font-medium bg-red-50/60 border border-red-100 px-4 py-3 rounded-xl hidden flex items-center gap-2.5 transition-all font-sans" id="validationCodeError"></p>
+<div class="space-y-3 pt-2">
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-sm uppercase tracking-widest text-xs font-sans" id="btnValidateCode" type="button">
+                                Validar código
+                            </button>
+<button class="w-full bg-white border border-slate-200 text-navy font-bold py-4 rounded-xl hover:bg-slate-50 transition uppercase tracking-widest text-xs font-sans" id="btnResendCode" type="button">
+                                Solicitar novo código
+                            </button>
+</div>
+</div>
+<div class="view space-y-6" id="vConfirmName">
+<div class="space-y-2 mb-6">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Confirme o titular</h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans" id="confirmSubtitle">
+                                Para garantir o sigilo das informações e evitar o acesso de terceiros, selecione o nome ou a razão social correta vinculada ao documento informado:
+                            </p>
+</div>
+<div class="grid gap-3 pt-2" id="nameOptions"></div>
+<p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest font-sans text-center select-none">
+                            Proteção antifraude ativa.
+                        </p>
+</div>
+<div class="view space-y-6" id="vBlocked">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
+<i class="fas fa-user-shield text-lg"></i>
+</div>
+<div class="space-y-2 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Acesso suspenso temporariamente</h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
+                                    Por medidas de segurança e proteção de dados, suspendemos as tentativas automáticas neste painel. Nossa equipe especializada está pronta para dar suporte imediato.
+                                </p>
+</div>
+</div>
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnBlockedHumano" type="button">
+                            Falar com atendente
+                        </button>
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
+                            Se preferir, nossa ouvidoria está disponível nos números 0800 025 5072 ou (11) 3323-9412.
+                        </p>
+</div>
+<div class="view space-y-6" id="vIdentityError">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center text-amber-500">
+<i class="fas fa-triangle-exclamation text-lg"></i>
+</div>
+<div class="space-y-3 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Identidade não confirmada</h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
+                                    O nome selecionado não corresponde ao cadastro localizado.
+                                </p>
+<p class="text-sm text-slate-500 leading-relaxed font-sans" id="identityAttemptMsg">
+                                    Tentativa 1 de 3. Revise as opções com atenção antes de continuar.
+                                </p>
+</div>
+</div>
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnIdentityTryAgain" type="button">
                             Tentar novamente
                         </button>
-
-                        <p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
+                            Por segurança, novas tentativas podem ser suspensas temporariamente após sucessivas falhas.
+                        </p>
+</div>
+<div class="view space-y-6" id="vNoRecord">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
+<i class="fas fa-magnifying-glass text-base"></i>
+</div>
+<div class="space-y-4 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Consulta concluída</h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans" id="noRecordMsg">
+                                    Não localizamos informações vinculadas ao documento informado neste momento.
+                                </p>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
+                                    Caso deseje validar outras informações ou confirmar seu cadastro, nossa equipe permanece disponível pelos canais de atendimento.
+                                </p>
+</div>
+</div>
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnNovaConsultaNoRecord" type="button">
+                            Realizar nova pesquisa
+                        </button>
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
+                            Nossa equipe permanece disponível pelos canais de atendimento: 0800 025 5072 ou (11) 3323-9412.
+                        </p>
+</div>
+<div class="view space-y-6" id="vNoDebt">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
+<i class="fas fa-circle-check text-lg"></i>
+</div>
+<div class="space-y-2 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">
+        Tudo regularizado
+    </h3>
+<div class="space-y-4 max-w-sm mx-auto">
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
+            No momento desta consulta, não localizamos pendências financeiras vinculadas ao documento informado em nossa base de atendimento.
+        </p>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
+            Caso tenha recebido alguma comunicação recente ou deseje confirmar informações adicionais, nossa equipe permanece disponível para suporte.
+        </p>
+</div>
+</div>
+</div>
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnNovaConsultaNoDebt" type="button">
+                            Nova pesquisa
+                        </button>
+</div>
+<div class="view space-y-6" id="vError">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500/80">
+<i class="fas fa-triangle-exclamation text-base"></i>
+</div>
+<div class="space-y-4 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">
+                                    Sistema temporariamente indisponível
+                                </h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans" id="errorMsg">
+                                    No momento, nosso portal de atendimento está passando por uma instabilidade temporária.
+                                </p>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
+                                    Você pode tentar novamente em alguns instantes ou, se preferir, entrar em contato diretamente com nossa equipe pelos canais de atendimento abaixo.
+                                </p>
+</div>
+</div>
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnNovaConsultaErr" type="button">
+                            Tentar novamente
+                        </button>
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans mt-3">
                             Nossa equipe permanece disponível para suporte: 0800 025 5072 ou (11) 3323-9412.
                         </p>
-                    </div>
-
-                    <div class="view space-y-6" id="vNext">
-                        <div class="space-y-1.5 mb-6 select-none">
-                            <h4 id="cardsTitle" class="text-xl font-semibold tracking-tight text-navy font-sans">
+</div>
+<div class="view space-y-6" id="vNext">
+<div class="space-y-1.5 mb-6 select-none">
+<h4 class="text-xl font-semibold tracking-tight text-navy font-sans" id="cardsTitle">
                                 Resultado da análise
                             </h4>
-                            <p id="cardsSubtitle" class="text-sm text-slate-500 leading-relaxed font-sans font-normal">
+<p class="text-sm text-slate-500 leading-relaxed font-sans font-normal" id="cardsSubtitle">
                                 Confira abaixo as informações localizadas para o documento informado e as opções disponíveis para atendimento.
                             </p>
-                        </div>
-
-                        <div class="grid gap-6 mb-6" id="cardsGrid">
-                            </div>
-                    </div>
-
-                    <div class="view" id="vActiveAgreement">
-                        <h4 class="text-navy font-bold text-xl font-sans mb-2">Acordo em andamento</h4>
-                        <p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
+</div>
+<div class="grid gap-6 mb-6" id="cardsGrid">
+</div>
+</div>
+<div class="view" id="vActiveAgreement">
+<h4 class="text-navy font-bold text-xl font-sans mb-2">Acordo em andamento</h4>
+<p class="text-slate-500 text-sm font-medium leading-relaxed mb-5 font-sans">
                             Identificamos que este contrato já possui uma negociação ativa. Acompanhe abaixo o vencimento da parcela atual:
                         </p>
-
-                        <div class="p-5 border border-slate-200/80 rounded-2xl bg-slate-50/50 space-y-3">
-                            <div class="flex justify-between items-center gap-4">
-                                <span class="text-slate-500 text-sm font-sans">Valor da parcela atual</span>
-                                <strong class="text-navy font-sans text-base tracking-tight tabular-numbers" id="activeAgreementValue">R$ 0,00</strong>
-                            </div>
-                            <div class="h-px bg-slate-200/60"></div>
-                            <div class="flex justify-between items-center gap-4">
-                                <span class="text-slate-500 text-sm font-sans">Data de vencimento</span>
-                                <strong class="text-navy font-sans text-sm tracking-tight tabular-numbers" id="activeAgreementDue">--/--/----</strong>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3 pt-4">
-                            <button id="btnAgreementHumano" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans">
+<div class="p-5 border border-slate-200/80 rounded-2xl bg-slate-50/50 space-y-3">
+<div class="flex justify-between items-center gap-4">
+<span class="text-slate-500 text-sm font-sans">Valor da parcela atual</span>
+<strong class="text-navy font-sans text-base tracking-tight tabular-numbers" id="activeAgreementValue">R$ 0,00</strong>
+</div>
+<div class="h-px bg-slate-200/60"></div>
+<div class="flex justify-between items-center gap-4">
+<span class="text-slate-500 text-sm font-sans">Data de vencimento</span>
+<strong class="text-navy font-sans text-sm tracking-tight tabular-numbers" id="activeAgreementDue">--/--/----</strong>
+</div>
+</div>
+<div class="space-y-3 pt-4">
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnAgreementHumano" type="button">
                                 Falar com atendente
                             </button>
-                            <p class="text-[11px] text-slate-400 font-medium text-center font-sans">
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans">
                                 Dúvidas ou suporte financeiro técnico: 0800 025 5072 ou (11) 3323-9412.
                             </p>
-                        </div>
-                    </div>
-
-                    <div class="view" id="vNegotiate">
-                        <div class="border-b border-slate-100 pb-4 mb-4 select-none">
-                            <h4 class="text-xl font-semibold tracking-tight text-navy font-sans">Opções de quitação</h4>
-                            <p class="text-xs text-slate-400 font-medium mt-1 font-sans uppercase tracking-wider">
-                                <span id="negotiationCreditor">-</span> &bull; Contrato: <span id="negotiationContract">-</span>
-                            </p>
-                        </div>
-
-                        <div id="negotiationPaymentBlock" class="hidden space-y-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Forma de pagamento</label>
-                                <select id="paymentModeInput" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent transition font-sans font-medium text-slate-700">
-                                    <option value="vista">Pagamento à vista</option>
-                                    <option value="parcelado">Pagamento parcelado</option>
-                                </select>
-                            </div>
-
-                            <div class="space-y-1.5">
-                                <select id="installmentCountInput" class="hidden w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent transition font-sans font-medium text-slate-700">
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="p-5 border border-slate-200/80 rounded-2xl bg-slate-50/50 space-y-3 mt-4">
-                            <div class="flex justify-between items-center gap-4">
-                                <span id="proposalLabelText" class="text-slate-500 text-sm font-sans">Proposta à vista</span>
-                                <strong class="text-navy font-sans text-base tracking-tight tabular-numbers" id="negotiationProposal">R$ 0,00</strong>
-                            </div>
-                            <div id="negotiationInstallmentSummary" class="hidden border-t border-slate-200/80 pt-3 space-y-2.5">
-                                <div class="flex justify-between items-center gap-4">
-                                    <span class="text-slate-500 text-sm font-sans">Total parcelado</span>
-                                    <strong class="text-slate-600 font-sans text-sm tabular-numbers" id="negotiationInstallmentTotal">R$ 0,00</strong>
-                                </div>
-                                <div class="flex justify-between items-center gap-4">
-                                    <span class="text-slate-500 text-sm font-sans">Plano de parcelas</span>
-                                    <strong class="text-navy font-sans text-sm tabular-numbers" id="negotiationInstallmentValue">R$ 0,00</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-1.5 mt-4">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Escolha a data para o pagamento</label>
-                            <select id="paymentDateInput" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent transition font-sans font-medium text-slate-700"></select>
-                        </div>
-
-                        <p id="negotiationError" class="mt-4 text-xs text-red-500 font-semibold hidden font-sans"></p>
-
-                        <div class="space-y-3 pt-4">
-                            <button id="btnConfirmNegotiation" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans">
+</div>
+</div>
+<div class="view" id="vNegotiate">
+<div class="border-b border-slate-100 pb-4 mb-4 select-none">
+<h4 class="text-xl font-semibold tracking-tight text-navy font-sans">Opções de quitação</h4>
+<p class="text-xs text-slate-400 font-medium mt-1 font-sans uppercase tracking-wider">
+<span id="negotiationCreditor">-</span> • Contrato: <span id="negotiationContract">-</span>
+</p>
+</div>
+<div class="hidden space-y-4" id="negotiationPaymentBlock">
+<div class="space-y-1.5">
+<label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Forma de pagamento</label>
+<select class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent transition font-sans font-medium text-slate-700" id="paymentModeInput">
+<option value="vista">Pagamento à vista</option>
+<option value="parcelado">Pagamento parcelado</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<select class="hidden w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent transition font-sans font-medium text-slate-700" id="installmentCountInput">
+</select>
+</div>
+</div>
+<div class="p-5 border border-slate-200/80 rounded-2xl bg-slate-50/50 space-y-3 mt-4">
+<div class="flex justify-between items-center gap-4">
+<span class="text-slate-500 text-sm font-sans" id="proposalLabelText">Proposta à vista</span>
+<strong class="text-navy font-sans text-base tracking-tight tabular-numbers" id="negotiationProposal">R$ 0,00</strong>
+</div>
+<div class="hidden border-t border-slate-200/80 pt-3 space-y-2.5" id="negotiationInstallmentSummary">
+<div class="flex justify-between items-center gap-4">
+<span class="text-slate-500 text-sm font-sans">Total parcelado</span>
+<strong class="text-slate-600 font-sans text-sm tabular-numbers" id="negotiationInstallmentTotal">R$ 0,00</strong>
+</div>
+<div class="flex justify-between items-center gap-4">
+<span class="text-slate-500 text-sm font-sans">Plano de parcelas</span>
+<strong class="text-navy font-sans text-sm tabular-numbers" id="negotiationInstallmentValue">R$ 0,00</strong>
+</div>
+</div>
+</div>
+<div class="space-y-1.5 mt-4">
+<label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Escolha a data para o pagamento</label>
+<select class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent transition font-sans font-medium text-slate-700" id="paymentDateInput"></select>
+</div>
+<p class="mt-4 text-xs text-red-500 font-semibold hidden font-sans" id="negotiationError"></p>
+<div class="space-y-3 pt-4">
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnConfirmNegotiation" type="button">
                                 Confirmar negociação
                             </button>
-                            <button id="btnNegotiationHumano" type="button" class="w-full bg-white border border-slate-200 text-navy font-bold py-4 rounded-xl hover:bg-slate-50 transition uppercase tracking-widest text-xs font-sans">
+<button class="w-full bg-white border border-slate-200 text-navy font-bold py-4 rounded-xl hover:bg-slate-50 transition uppercase tracking-widest text-xs font-sans" id="btnNegotiationHumano" type="button">
                                 Falar com atendente
                             </button>
-                        </div>
-                    </div>
-
-                    <div class="view space-y-6" id="vNegotiationSuccess">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
-                                <i class="fas fa-check-double text-lg"></i>
-                            </div>
-                            <div class="space-y-4 max-w-sm mx-auto">
-                                <h3 class="text-xl font-semibold tracking-tight text-navy">Negociação concluída com sucesso</h3>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+</div>
+</div>
+<div class="view space-y-6" id="vNegotiationSuccess">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
+<i class="fas fa-check-double text-lg"></i>
+</div>
+<div class="space-y-4 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Negociação concluída com sucesso</h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     Recebemos a confirmação da sua negociação.
                                 </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     Os boletos e orientações do acordo serão enviados em breve pelos contatos informados neste atendimento.
                                 </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     Caso precise de qualquer esclarecimento adicional, nossa equipe permanece à disposição pelos canais abaixo.
                                 </p>
-                            </div>
-                        </div>
-                        <div class="space-y-3 pt-2">
-                            <button id="btnNegotiationSuccessChat" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans">
+</div>
+</div>
+<div class="space-y-3 pt-2">
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnNegotiationSuccessChat" type="button">
                                 Falar com o atendimento
                             </button>
-                            <p class="text-[11px] text-slate-400 font-medium text-center font-sans">
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans">
                                 Central de Atendimento Quatro C: 0800 025 5072 ou (11) 3323-9412.
                             </p>
-                        </div>
-                    </div>
-
-                    <div class="view space-y-6" id="vSecondCopySuccess">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
-                                <i class="fas fa-file-invoice text-lg"></i>
-                            </div>
-                            <div class="space-y-4 max-w-sm mx-auto">
-                                <h3 class="text-xl font-semibold tracking-tight text-navy">Boleto emitido com sucesso</h3>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans" id="secondCopySuccessMsg">
+</div>
+</div>
+<div class="view space-y-6" id="vSecondCopySuccess">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
+<i class="fas fa-file-invoice text-lg"></i>
+</div>
+<div class="space-y-4 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Boleto emitido com sucesso</h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans" id="secondCopySuccessMsg">
                                     A emissão do documento foi concluída com sucesso.
                                 </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     O boleto atualizado será encaminhado em instantes pelos contatos informados neste atendimento.
                                 </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     Caso precise de qualquer suporte adicional, nossa equipe permanece disponível pelos canais abaixo.
                                 </p>
-                            </div>
-                        </div>
-                        <div class="space-y-3 pt-2">
-                            <button id="btnSecondCopySuccessChat" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans">
+</div>
+</div>
+<div class="space-y-3 pt-2">
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnSecondCopySuccessChat" type="button">
                                 Falar com o atendimento
                             </button>
-                            <p class="text-[11px] text-slate-400 font-medium text-center font-sans">
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans">
                                 Suporte de Atendimento: 0800 025 5072 ou (11) 3323-9412.
                             </p>
-                        </div>
-                    </div>
-
-                    <div class="view space-y-6" id="vIraSchedule">
-                        <div class="space-y-1.5 mb-5 select-none">
-                            <h4 class="text-xl font-semibold tracking-tight text-navy font-sans">Solicitar agendamento técnico</h4>
-                            <p class="text-sm text-slate-500 leading-relaxed font-sans">
+</div>
+</div>
+<div class="view space-y-6" id="vIraSchedule">
+<div class="space-y-1.5 mb-5 select-none">
+<h4 class="text-xl font-semibold tracking-tight text-navy font-sans">Solicitar agendamento técnico</h4>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                 Preencha as informações abaixo para organizarmos o recolhimento logístico.
                             </p>
-                        </div>
-
-                        <div class="space-y-5">
-                            <div class="space-y-3">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-navy/80 font-sans border-b border-slate-100 pb-1">1. Preferências de data e horário</p>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <select id="iraDate1" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans"></select>
-                                    <select id="iraTime1" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans"></select>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <select id="iraDate2" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans"></select>
-                                    <select id="iraTime2" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans"></select>
-                                </div>
-                            </div>
-
-                            <div class="space-y-3">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-navy/80 font-sans border-b border-slate-100 pb-1">2. Local de retirada dos equipamentos</p>
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                    <input id="iraZip" type="text" inputmode="numeric" maxlength="9" placeholder="CEP" class="col-span-2 sm:col-span-1 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                    <input id="iraCity" type="text" placeholder="Cidade" class="col-span-1 sm:col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                </div>
-                                <div class="grid grid-cols-3 gap-3">
-                                    <input id="iraStreet" type="text" placeholder="Logradouro / Avenida" class="col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                    <input id="iraNumber" type="text" placeholder="Número" class="col-span-1 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input id="iraDistrict" type="text" placeholder="Bairro" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                    <input id="iraReference" type="text" placeholder="Ponto de referência" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                </div>
-                            </div>
-
-                            <div class="space-y-3">
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-navy/80 font-sans border-b border-slate-100 pb-1">3. Responsável pelo acompanhamento</p>
-                                <input id="iraResponsible" type="text" placeholder="Nome completo do responsável no local" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input id="iraEmail" type="email" placeholder="E-mail de contato" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans">
-                                    <input id="iraWhatsapp" type="tel" placeholder="WhatsApp / Telefone" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans tabular-numbers">
-                                </div>
-                            </div>
-                        </div>
-
-                        <p id="iraError" class="mt-4 text-sm text-red-500 font-semibold hidden font-sans"></p>
-
-                        <button id="btnSubmitIra" type="button" class="w-full mt-4 bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans">
+</div>
+<div class="space-y-5">
+<div class="space-y-3">
+<p class="text-[10px] font-bold uppercase tracking-wider text-navy/80 font-sans border-b border-slate-100 pb-1">1. Preferências de data e horário</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<select class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans" id="iraDate1"></select>
+<select class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans" id="iraTime1"></select>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<select class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans" id="iraDate2"></select>
+<select class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-medium text-slate-700 font-sans" id="iraTime2"></select>
+</div>
+</div>
+<div class="space-y-3">
+<p class="text-[10px] font-bold uppercase tracking-wider text-navy/80 font-sans border-b border-slate-100 pb-1">2. Local de retirada dos equipamentos</p>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+<input class="col-span-2 sm:col-span-1 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraZip" inputmode="numeric" maxlength="9" placeholder="CEP" type="text"/>
+<input class="col-span-1 sm:col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraCity" placeholder="Cidade" type="text"/>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<input class="col-span-2 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraStreet" placeholder="Logradouro / Avenida" type="text"/>
+<input class="col-span-1 p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraNumber" placeholder="Número" type="text"/>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<input class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraDistrict" placeholder="Bairro" type="text"/>
+<input class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraReference" placeholder="Ponto de referência" type="text"/>
+</div>
+</div>
+<div class="space-y-3">
+<p class="text-[10px] font-bold uppercase tracking-wider text-navy/80 font-sans border-b border-slate-100 pb-1">3. Responsável pelo acompanhamento</p>
+<input class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraResponsible" placeholder="Nome completo do responsável no local" type="text"/>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<input class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans" id="iraEmail" placeholder="E-mail de contato" type="email"/>
+<input class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-accent text-xs font-sans tabular-numbers" id="iraWhatsapp" placeholder="WhatsApp / Telefone" type="tel"/>
+</div>
+</div>
+</div>
+<p class="mt-4 text-sm text-red-500 font-semibold hidden font-sans" id="iraError"></p>
+<button class="w-full mt-4 bg-navy text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnSubmitIra" type="button">
                             Enviar solicitação
                         </button>
-                    </div>
-
-                    <div class="view space-y-6" id="vIraSuccess">
-                        <div class="text-center py-4 space-y-4">
-                            <div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
-                                <i class="fas fa-calendar-check text-lg"></i>
-                            </div>
-                            <div class="space-y-4 max-w-sm mx-auto">
-                                <h3 class="text-xl font-semibold tracking-tight text-navy">Solicitação de agendamento recebida</h3>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+</div>
+<div class="view space-y-6" id="vIraSuccess">
+<div class="text-center py-4 space-y-4">
+<div class="mx-auto w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600">
+<i class="fas fa-calendar-check text-lg"></i>
+</div>
+<div class="space-y-4 max-w-sm mx-auto">
+<h3 class="text-xl font-semibold tracking-tight text-navy">Solicitação de agendamento recebida</h3>
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     Recebemos sua solicitação de agendamento técnico.
                                 </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     Nossa equipe irá validar a disponibilidade e retornará em breve pelos contatos informados.
                                 </p>
-                                <p class="text-sm text-slate-500 leading-relaxed font-sans">
+<p class="text-sm text-slate-500 leading-relaxed font-sans">
                                     Em caso de dúvidas, nosso time permanece disponível pelos canais de atendimento abaixo.
                                 </p>
-                            </div>
-                        </div>
-                        <div class="space-y-3 pt-2">
-                            <button id="btnIraSuccessChat" type="button" class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans">
+</div>
+</div>
+<div class="space-y-3 pt-2">
+<button class="w-full bg-navy text-white font-bold py-4 rounded-xl hover:bg-accent transition shadow-md uppercase tracking-widest text-xs font-sans" id="btnIraSuccessChat" type="button">
                                 Falar com o atendimento
                             </button>
-                            <p class="text-[11px] text-slate-400 font-medium text-center font-sans">
+<p class="text-[11px] text-slate-400 font-medium text-center font-sans">
                                 Dúvidas logísticas ou operacionais: 0800 025 5072 ou (11) 3323-9412.
                             </p>
-                        </div>
-                    </div>
+</div>
+</div>
+</div></div></div>
+</div>
+<div class="support-card" id="canais">
+<div>
+<div class="support-title-row">
+<span class="support-icon" aria-hidden="true">
+<svg fill="none" height="22" viewbox="0 0 24 24" width="22">
+<path d="M12 21C17 21 21 17.4 21 13C21 8.6 17 5 12 5C7 5 3 8.6 3 13C3 15.1 3.9 17 5.5 18.4L5 22L9 20.5C9.9 20.8 10.9 21 12 21Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M9 12H15M9 15H13" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</span>
+<strong>Prefere apoio humano? Tudo bem.</strong>
+</div>
+<p>Se fizer mais sentido para você, a equipe da Quatro C também pode atender pelos canais abaixo.</p>
+<div class="support-actions">
+<a aria-label="Atendimento por WhatsApp" class="support-link" href="https://wa.me/5511980161361?text=Olá%2C%20preciso%20de%20apoio%20com%20meu%20atendimento." id="support-whatsapp" rel="noopener noreferrer" target="_blank">
+<span>WhatsApp</span>
+</a>
+<a aria-label="Atendimento por chat" class="support-link" href="https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y" id="support-chat" rel="noopener noreferrer" target="_blank">
+<span>Chat online</span>
+</a>
+<a aria-label="Atendimento por e-mail" class="support-link" href="mailto:atendimento@quatroc.com.br?subject=Atendimento pelo portal" id="support-email">
+<span>E-mail</span>
+</a>
+<a aria-label="Atendimento por telefone 0800" class="support-link" href="tel:08000255072" id="support-phone">
+<span>0800 025 5072</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="footer">
+<div class="container footer-inner">
+<span><strong>Quatro C</strong> — Portal oficial de autoatendimento.</span>
+<span>Experiência digital pensada para acolher, orientar e simplificar.</span>
+</div>
+</footer>
 
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contato" class="py-24 bg-white px-6 border-t border-corporativo-borda">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-16 space-y-2">
-                <h2 class="text-3xl font-semibold text-navy tracking-tight">Solicitar Diagnóstico Especializado</h2>
-                <p class="text-sm text-corporativo-suporte font-medium max-w-md mx-auto leading-relaxed">
-                    Preencha os dados e receba uma auditoria técnica e financeira da sua carteira de recebíveis em aberto.
-                </p>
-            </div>
-
-            <form id="diagnostico-form" class="bg-slate-50 p-8 md:p-12 rounded-3xl border border-corporativo-borda shadow-[0_4px_30px_rgba(0,38,77,0.005)]">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Nome do Contato</label>
-                        <input type="text" name="nome_contato" id="nome_contato" required class="w-full p-4 bg-white rounded-xl border border-corporativo-borda outline-none focus:border-navy font-sans text-sm" placeholder="Ex: João Silva">
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Empresa</label>
-                        <input type="text" name="nome_empresa" id="nome_empresa" required class="w-full p-4 bg-white rounded-xl border border-corporativo-borda outline-none focus:border-navy font-sans text-sm" placeholder="Razão Social ou Fantasia">
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">E-mail Corporativo</label>
-                        <input type="email" name="email_corporativo" id="email_corporativo" required class="w-full p-4 bg-white rounded-xl border border-corporativo-borda outline-none focus:border-navy font-sans text-sm" placeholder="exemplo@empresa.com">
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Telefone / WhatsApp</label>
-                        <input type="tel" name="telefone" id="telefone" required class="w-full p-4 bg-white rounded-xl border border-corporativo-borda outline-none focus:border-navy font-sans text-sm" placeholder="(00) 00000-0000">
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Preferência de Retorno</label>
-                        <select name="preferencia_contato" id="preferencia_contato" class="w-full p-4 bg-white rounded-xl border border-corporativo-borda outline-none focus:border-navy font-sans text-sm font-medium text-slate-700">
-                            <option value="WhatsApp">WhatsApp</option>
-                            <option value="Telefone">Ligação Telefónica</option>
-                            <option value="E-mail">E-mail</option>
-                        </select>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1 font-sans">Volume em Aberto</label>
-                        <select name="volume_inadimplencia" id="volume_inadimplencia" class="w-full p-4 bg-white rounded-xl border border-corporativo-borda outline-none focus:border-navy font-sans text-sm font-medium text-slate-700">
-                            <option value="Até R$ 100k">Até R$ 100k</option>
-                            <option value="R$ 100k - R$ 500k">De R$ 100k a R$ 500k</option>
-                            <option value="Acima de R$ 500k">Acima de R$ 500k</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mt-8 text-center">
-                    <button type="submit" class="w-full sm:w-auto sm:px-16 bg-navy text-white font-semibold py-4 rounded-xl hover:bg-slate-800 transition shadow-sm text-sm tracking-wide uppercase font-sans">
-                        Solicitar Auditoria Gratuita
-                    </button>
-                    <p id="form-status" class="mt-4 text-xs font-semibold hidden font-sans"></p>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <footer class="bg-white border-t border-slate-100 pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
-            <div class="space-y-4">
-                <div class="flex items-center gap-3">
-                    <div class="bg-navy p-1.5 rounded-lg">
-                        <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
-                            <path d="M30 35H45V45H55V35H70V65H55V55H45V65H30V35Z" fill="white"/>
-                        </svg>
-                    </div>
-                    <span class="text-base font-bold text-navy tracking-tight font-sans">QUATRO C</span>
-                </div>
-                <p class="text-corporativo-suporte text-xs italic leading-relaxed max-w-xs font-sans">
-                    Gestão estratégica de ciclo de crédito e recovery especializado de ativos B2B e corporativos.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-8 font-sans">
-                <div class="space-y-4">
-                    <h5 class="text-navy font-bold text-[10px] uppercase tracking-wider">Links</h5>
-                    <ul class="text-corporativo-suporte text-xs space-y-2.5 font-medium">
-                        <li><a href="#home" class="hover:text-navy transition">Home</a></li>
-                        <li><a href="#ciclo" class="hover:text-navy transition">O Ciclo</a></li>
-                        <li><a href="#servicos" class="hover:text-navy transition">Serviços</a></li>
-                    </ul>
-                </div>
-                <div class="space-y-4">
-                    <h5 class="text-navy font-bold text-[10px] uppercase tracking-wider">Suporte</h5>
-                    <ul class="text-corporativo-suporte text-xs space-y-2.5 font-medium">
-                        <li><a href="#autoatendimento" class="hover:text-navy transition">Autoatendimento</a></li>
-                        <li><a href="#contato" class="hover:text-navy transition">Privacidade</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <h5 class="text-navy font-bold text-[10px] uppercase tracking-wider font-sans text-left">Contato</h5>
-                <p class="text-corporativo-suporte text-xs font-semibold flex items-center gap-2 font-sans text-left">
-                    <i class="fas fa-envelope text-accent"></i> comercial@quatroc.pt
-                </p>
-                <div class="flex gap-3 pt-2">
-                    <a href="#" class="w-9 h-9 rounded-xl bg-slate-50 border border-corporativo-borda flex items-center justify-center text-navy hover:bg-navy hover:text-white transition-all shadow-sm text-sm">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="w-9 h-9 rounded-xl bg-slate-50 border border-corporativo-borda flex items-center justify-center text-navy hover:bg-navy hover:text-white transition-all shadow-sm text-sm">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-6 border-t border-slate-100 mt-12 pt-6 text-center font-sans select-none">
-            <p class="text-[9px] font-bold text-slate-300 uppercase tracking-widest">
-                &copy; 2026 Quatro C Inteligência Financeira. Todos os direitos reservados.
-            </p>
-        </div>
-    </footer>
-
-    <div class="fixed bottom-8 right-8 z-50">
-        <a id="floatingWhatsapp" href="https://wa.me/5511962254398" target="_blank" class="flex items-center bg-white p-2 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-corporativo-borda hover:scale-105 transition-all duration-300 group">
-            <div class="relative">
-                <div class="absolute inset-0 bg-[#25D366] rounded-full whatsapp-pulse opacity-25"></div>
-                <div class="relative bg-[#25D366] text-white w-12 h-12 flex items-center justify-center rounded-full shadow-md">
-                    <i class="fab fa-whatsapp text-2xl"></i>
-                </div>
-            </div>
-            <div class="overflow-hidden max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                <div class="pl-4 pr-5">
-                    <p class="text-[10px] font-bold uppercase text-navy tracking-wider whitespace-nowrap font-sans">Suporte Especializado</p>
-                    <p class="text-[9px] text-slate-400 whitespace-nowrap font-sans">Retorno em poucos minutos</p>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <script>
+<script>
         const BITRIX_ENDPOINT = "https://grupoasserth.bitrix24.com.br/rest/1/15a2h0vrp7wfb31l/crm.lead.add.json";
-    </script>
-
-    <script>
+    </script><script>
         document.addEventListener("DOMContentLoaded", () => {
             const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
@@ -1464,7 +2714,7 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                         Number(card.valorTotal || 0) >= 15000
                     );
                     wrapper.className = isPremium
-                        ? "p-5 sm:p-6 border border-amber-300/80 rounded-2xl bg-gradient-to-br from-white via-amber-50/40 to-white shadow-[0_10px_30px_rgba(251,191,36,0.08)] transition-all duration-300 hover:shadow-[0_12px_34px_rgba(251,191,36,0.13)] relative overflow-hidden"
+                        ? "p-5 sm:p-6 border border-red-200 rounded-2xl bg-gradient-to-br from-white via-red-50/40 to-white shadow-[0_12px_34px_rgba(163,34,46,0.10)] transition-all duration-300 hover:shadow-[0_14px_38px_rgba(163,34,46,0.16)] relative overflow-hidden"
                         : "p-5 sm:p-6 border border-slate-200/80 rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,38,77,0.015)] transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,38,77,0.025)] hover:border-slate-300/60";
                     const detailsId = `card-details-${index}`; const labelValor = isAgreement ? "Valor da parcela atual" : "Valor total";
                     const actions = resolveCardActions(card);
@@ -1483,16 +2733,13 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                     } else if (isAgreement) {
                         midBlockHtml = `<div class="bg-slate-50 border border-slate-200/60 rounded-xl p-4 space-y-2 mb-4 select-none"><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">${labelValor}</span><strong class="text-sm font-bold text-navy tabular-numbers">${card.valorTotalFormatado}</strong></div><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">Vencimento</span><strong class="text-sm font-semibold text-navy tracking-tight tabular-numbers">${card.detalhes?.[0]?.vencimentoFormatado || "--/--/----"}</strong></div></div>`;
                     } else {
-                        midBlockHtml = `<div class="${isPremium ? 'bg-white/80 border border-amber-100' : 'bg-slate-50 border border-slate-200/60'} rounded-xl p-4 mb-4"><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">${showProposal ? 'Valor total' : 'Valor total atualizado'}</span><span class="${isPremium ? 'text-lg font-bold text-amber-700 tracking-tight' : (showProposal ? 'text-sm font-semibold text-slate-500' : 'text-base font-bold text-navy tracking-tight')} tabular-numbers">${card.valorTotalFormatado}</span></div>${isPremium ? '<div class="mt-4 h-[2px] w-full bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 rounded-full opacity-70"></div>' : ''}${proposalRowHtml}</div>`;
+                        midBlockHtml = `<div class="${isPremium ? 'bg-white/90 border border-red-100' : 'bg-slate-50 border border-slate-200/60'} rounded-xl p-4 mb-4"><div class="flex justify-between items-center gap-4"><span class="text-xs font-medium text-slate-500">${showProposal ? 'Valor total' : 'Valor total atualizado'}</span><span class="${isPremium ? 'text-lg font-bold text-red-700 tracking-tight' : (showProposal ? 'text-sm font-semibold text-slate-500' : 'text-base font-bold text-navy tracking-tight')} tabular-numbers">${card.valorTotalFormatado}</span></div>${isPremium ? '<div class="mt-4 h-[2px] w-full bg-gradient-to-r from-red-200 via-red-500 to-red-200 rounded-full opacity-70"></div>' : ''}${proposalRowHtml}</div>`;
                     }
 
                     const isInstitucionalPuro = !isAgreement && !actions.canNegotiate && !actions.canSchedule && !actions.canSecondCopy;
-                    const descHtml = isPremium ? `<div class="space-y-3 mb-4">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold uppercase tracking-widest">
-                            <i class="fas fa-crown text-[9px]"></i> Atendimento Especializado
-                        </div>
-                        <p class="text-xs text-slate-500 leading-relaxed font-sans">Identificamos uma tratativa que requer acompanhamento especializado.</p>
-                        <p class="text-xs text-slate-500 leading-relaxed font-sans">Nossa equipe executiva já foi sinalizada e permanece disponível para conduzir seu atendimento com prioridade e suporte personalizado.</p>
+                    const descHtml = isPremium ? `<div class="premium-message mb-5 mx-auto text-center font-sans">
+                        <span>Identificamos uma tratativa que requer acompanhamento especializado.</span>
+                        <span>Nossa equipe executiva já foi sinalizada e permanece disponível para conduzir seu atendimento com prioridade e suporte personalizado.</span>
                     </div>` : (isInstitucionalPuro ? `<p class="text-xs text-slate-500 leading-relaxed mb-4 font-sans">Para tratar esta pendência, fale com nossa equipe pelos canais de atendimento.</p>` : (card.permiteParcelamento === true && actions.canNegotiate ? `<p class="text-[11px] text-slate-400 font-medium font-sans mb-3 select-none"><i class="fas fa-tags text-slate-300 mr-1"></i> Disponível para quitação à vista ou parcelado</p>` : ''));
 
                     const detailsTableHtml = isLogistica ? `
@@ -1510,19 +2757,19 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                                 </table>`;
 
                     wrapper.innerHTML = `
-                        ${isPremium ? '<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300"></div>' : ''}
+                        ${isPremium ? '<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 via-red-700 to-red-400"></div>' : ''}
                         <div class="flex items-start justify-between gap-4 mb-5">
                             <div class="flex items-center gap-3.5">
                                 <div class="w-12 h-12 rounded-xl bg-white border border-slate-200/60 flex items-center justify-center p-1.5 shrink-0 overflow-hidden">${card.logo ? `<img src="${card.logo}" class="w-full h-full object-contain rounded-lg" alt="logo">` : `<div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400 rounded-lg"><i class="fas fa-building text-sm"></i></div>`}</div>
                                 <div class="space-y-0.5"><p class="text-base font-semibold text-navy tracking-tight leading-tight">${card.credorNome}</p><p class="text-xs font-semibold text-slate-400 tabular-numbers">Contrato: ${card.numeroContrato || "-"}</p></div>
                             </div>
-                            <span class="${isPremium ? 'inline-flex items-center px-2.5 py-1 rounded-full bg-amber-100 border border-amber-200/60 text-[10px] font-bold uppercase tracking-wider text-amber-700 select-none' : 'inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200/40 text-[10px] font-bold uppercase tracking-wider text-navy select-none'}">${isAgreement ? 'Acordo ativo' : (isPremium ? 'Atendimento especializado' : (showProposal ? 'Desconto disponível' : (isLogistica ? 'Agendamento disponível' : 'Suporte disponível')))}</span>
+                            <span class="${isPremium ? 'inline-flex items-center px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-[10px] font-bold uppercase tracking-wider text-red-700 select-none' : 'inline-flex items-center px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200/40 text-[10px] font-bold uppercase tracking-wider text-navy select-none'}">${isAgreement ? 'Acordo ativo' : (isPremium ? 'Atendimento especializado' : (showProposal ? 'Desconto disponível' : (isLogistica ? 'Agendamento disponível' : 'Suporte disponível')))}</span>
                         </div>
                         ${midBlockHtml}${descHtml}
                         ${(card.detalhes || []).length ? `<button type="button" class="w-full bg-white border border-slate-200/80 text-navy font-semibold py-3 px-4 rounded-xl hover:bg-slate-50 transition-all text-xs tracking-wide uppercase flex items-center justify-center gap-2 mb-3 btn-toggle-details"><span>Ver detalhamento</span><i class="fas fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200"></i></button>` : ''}
                         <div id="${detailsId}" class="hidden mb-4 overflow-hidden transition-all duration-300"><div class="rounded-xl border border-slate-200/60 overflow-hidden bg-slate-50/50">${detailsTableHtml}</div></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 card-actions"></div>
-                        ${isPremium ? `<p class="text-[10px] text-amber-700/70 font-semibold font-sans text-center mt-3 leading-relaxed">Nossa central especializada permanece disponível para suporte prioritário.</p>` : (isInstitucionalPuro ? `<p class="text-[10px] text-slate-400 font-medium font-sans text-center mt-3 leading-relaxed">Também estamos disponíveis pelos telefones (11) 3323-9412 e 0800 025 5072.</p>` : '')}
+                        ${isPremium ? `<p class="text-[10px] text-red-700/70 font-semibold font-sans text-center mt-3 leading-relaxed">Nossa central especializada permanece disponível para suporte prioritário.</p>` : (isInstitucionalPuro ? `<p class="text-[10px] text-slate-400 font-medium font-sans text-center mt-3 leading-relaxed">Também estamos disponíveis pelos telefones (11) 3323-9412 e 0800 025 5072.</p>` : '')}
                     `;
 
                     const toggle = wrapper.querySelector(".btn-toggle-details");
@@ -1553,7 +2800,7 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                     }
                     if (actions.canHuman) {
                         const btnHum = document.createElement("button"); btnHum.type = "button";
-                        btnHum.className = isPremium ? "w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold py-3.5 rounded-xl shadow-sm hover:opacity-95 transition text-sm tracking-wide uppercase select-none" : (isInstitucionalPuro || isAgreement ? "w-full bg-navy text-white font-semibold py-3.5 rounded-xl shadow-sm hover:bg-slate-800 transition text-sm tracking-wide uppercase select-none" : "w-full bg-white border border-slate-200 text-navy font-semibold py-3.5 rounded-xl hover:bg-slate-50 transition text-sm tracking-wide uppercase select-none");
+                        btnHum.className = isPremium ? "w-full bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold py-3.5 rounded-xl shadow-[0_12px_24px_rgba(163,34,46,0.18)] hover:from-red-700 hover:to-red-900 transition text-sm tracking-wide uppercase select-none" : (isInstitucionalPuro || isAgreement ? "w-full bg-navy text-white font-semibold py-3.5 rounded-xl shadow-sm hover:bg-slate-800 transition text-sm tracking-wide uppercase select-none" : "w-full bg-white border border-slate-200 text-navy font-semibold py-3.5 rounded-xl hover:bg-slate-50 transition text-sm tracking-wide uppercase select-none");
                         btnHum.textContent = isPremium ? "Iniciar atendimento especializado" : "Falar com atendente"; btnHum.addEventListener("click", () => openChat(actions.chatUrl)); actionsWrap.appendChild(btnHum);
                     }
                     grid.appendChild(wrapper);
@@ -2067,7 +3314,8 @@ function renderIdentityOptions(options, fullName, typeUpper) {
 
             setDocType("CPF");
         });
-    </script>
-</body>
+    </script><script>
+function reloadPortal() { window.location.reload(); }
+function openPortalExternally() { window.open(window.location.href, '_blank', 'noopener'); }
+</script></body>
 </html>
-	
