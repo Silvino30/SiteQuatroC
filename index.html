@@ -1494,7 +1494,155 @@ tailwind.config = {
     text-align: left;
   }
 }
-</style></head>
+</style>
+<style id="ajustes-responsivos-finais">
+/* Ajustes exclusivamente de enquadramento responsivo — versão final */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, svg, video, canvas {
+  max-width: 100%;
+}
+
+.container,
+.portal-shell,
+.portal-stage,
+.embedded-autoapp,
+.autoapp-shell {
+  min-width: 0;
+}
+
+.embedded-autoapp {
+  width: 100%;
+  max-width: 980px;
+}
+
+.autoapp-shell input,
+.autoapp-shell select,
+.autoapp-shell textarea {
+  max-width: 100%;
+}
+
+.autoapp-shell table {
+  width: 100%;
+}
+
+.autoapp-shell .overflow-x-auto,
+.autoapp-shell [class*="overflow-x"] {
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 980px) {
+  .container {
+    width: min(calc(100% - 32px), var(--container));
+  }
+
+  .portal-stage {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .embedded-autoapp {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    width: min(calc(100% - 24px), var(--container));
+  }
+
+  .portal-section {
+    padding-bottom: 48px;
+  }
+
+  .portal-stage {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 10px !important;
+  }
+
+  .embedded-autoapp {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .autoapp-shell {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .autoapp-shell input,
+  .autoapp-shell select,
+  .autoapp-shell textarea {
+    width: 100%;
+    font-size: 16px !important;
+  }
+
+  .autoapp-shell button,
+  .autoapp-shell a {
+    max-width: 100%;
+  }
+
+  .autoapp-shell .grid {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 540px) {
+  .container {
+    width: min(calc(100% - 20px), var(--container));
+  }
+
+  .portal-stage {
+    padding: 8px !important;
+  }
+
+  .autoapp-shell {
+    padding: 18px 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .autoapp-shell .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .autoapp-shell button {
+    width: 100%;
+  }
+
+  .autoapp-shell .flex {
+    min-width: 0;
+  }
+
+  .autoapp-shell .break-words,
+  .autoapp-shell p,
+  .autoapp-shell h1,
+  .autoapp-shell h2,
+  .autoapp-shell h3,
+  .autoapp-shell h4,
+  .autoapp-shell strong,
+  .autoapp-shell span {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 380px) {
+  .container {
+    width: min(calc(100% - 16px), var(--container));
+  }
+
+  .autoapp-shell {
+    padding: 16px 10px !important;
+  }
+}
+</style>
+</head>
 <body>
 <div class="topbar"></div>
 <header class="header">
