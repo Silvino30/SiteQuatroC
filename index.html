@@ -1495,153 +1495,240 @@ tailwind.config = {
   }
 }
 </style>
-<style id="ajustes-responsivos-finais">
-/* Ajustes exclusivamente de enquadramento responsivo — versão final */
-html, body {
+
+<style id="ajustes-responsivos-finais-v3">
+/* Responsividade final: preserva o layout aprovado e corrige apenas escala e enquadramento. */
+html {
+  width: 100%;
+  max-width: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  font-family: "Roboto", Arial, sans-serif !important;
 }
-
-img, svg, video, canvas {
-  max-width: 100%;
+body, button, input, select, textarea,
+.hero h1, .hero-panel h2, .section-head h3,
+.step-card h4, .portal-title, .autoapp-shell {
+  font-family: "Roboto", Arial, sans-serif !important;
 }
+img, svg, video, canvas { max-width: 100%; }
+.container, .hero-grid, .hero-visual, .steps-grid,
+.portal-shell, .portal-stage, .embedded-autoapp, .autoapp-shell { min-width: 0; }
 
-.container,
-.portal-shell,
-.portal-stage,
-.embedded-autoapp,
-.autoapp-shell {
-  min-width: 0;
+/* O círculo amarelo era apenas um elemento decorativo da LP. */
+.triangle-accent { display: none !important; }
+
+/* Recupera os pesos tipográficos da LP original, afetados pelo reset do Tailwind. */
+.hero h1 { font-weight: 700 !important; }
+.hero-panel h2,
+.section-head h3 { font-weight: 700 !important; }
+.step-card h4,
+.portal-title,
+.journey-item strong { font-weight: 700 !important; }
+
+/* Desktop: conteúdo contido, com respiro e sem ocupar a tela inteira. */
+.container {
+  width: min(calc(100% - 48px), 1240px);
+  margin-inline: auto;
 }
-
+.hero {
+  padding: 44px 0 26px;
+}
+.hero-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr);
+  gap: clamp(38px, 4vw, 62px);
+  align-items: start;
+}
+.hero-grid > div:first-child {
+  max-width: 700px;
+}
+.hero h1 {
+  max-width: 700px;
+  font-size: clamp(40px, 3.55vw, 56px);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+.hero p {
+  max-width: 680px;
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.66;
+}
+.hero-points { max-width: 700px; }
+.hero-panel {
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  padding: 28px;
+  border-radius: 30px;
+}
+.hero-panel h2 {
+  font-size: 27px;
+  line-height: 1.18;
+}
+.hero-panel p {
+  font-size: 15px;
+  line-height: 1.62;
+}
+.journey-item { padding: 12px; }
+.steps-grid,
+.portal-shell { width: 100%; }
+.portal-shell {
+  max-width: 1180px;
+  margin-inline: auto;
+}
+.portal-stage {
+  min-height: 0 !important;
+  height: auto !important;
+}
 .embedded-autoapp {
   width: 100%;
-  max-width: 980px;
+  max-width: 920px;
+  margin-inline: auto;
 }
-
+.autoapp-shell { width: 100%; max-width: 100%; }
 .autoapp-shell input,
 .autoapp-shell select,
-.autoapp-shell textarea {
-  max-width: 100%;
+.autoapp-shell textarea { max-width: 100%; }
+.autoapp-shell table { width: 100%; }
+
+@media (max-width: 1180px) {
+  .container { width: min(calc(100% - 40px), 1080px); }
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .86fr);
+    gap: 34px;
+  }
+  .hero h1 { font-size: clamp(38px, 4vw, 50px); }
+  .hero-panel { max-width: 500px; padding: 25px; }
 }
 
-.autoapp-shell table {
-  width: 100%;
-}
-
-.autoapp-shell .overflow-x-auto,
-.autoapp-shell [class*="overflow-x"] {
-  -webkit-overflow-scrolling: touch;
-}
-
+/* Tablet horizontal e vertical. */
 @media (max-width: 980px) {
-  .container {
-    width: min(calc(100% - 32px), var(--container));
+  .container { width: min(calc(100% - 36px), 760px); }
+  .hero { padding: 34px 0 22px; }
+  .hero-grid, .steps-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-grid { gap: 28px; }
+  .hero-grid > div:first-child {
+    width: 100%;
+    max-width: 700px;
+    margin-inline: auto;
   }
-
-  .portal-stage {
-    padding-left: 16px;
-    padding-right: 16px;
+  .hero h1 {
+    max-width: 660px;
+    font-size: clamp(34px, 5vw, 44px);
   }
-
-  .embedded-autoapp {
-    max-width: 100%;
+  .hero p { max-width: 660px; font-size: 16px; }
+  .hero-points { max-width: 700px; }
+  .hero-visual { padding: 0; }
+  .hero-panel {
+    max-width: 610px;
+    padding: 24px;
+    border-radius: 26px;
   }
+  .hero-panel h2 { font-size: 25px; }
+  .steps-grid { max-width: 680px; margin-inline: auto; }
+  .portal-shell { max-width: 760px; }
+  .portal-stage { padding: 14px !important; }
+  .embedded-autoapp { max-width: 700px; }
 }
 
+/* Android, iPhone e tablets compactos. */
 @media (max-width: 720px) {
-  .container {
-    width: min(calc(100% - 24px), var(--container));
+  :root { --anchor-offset: 132px; }
+  .container { width: min(calc(100% - 28px), 620px); }
+  .header-inner { min-height: 72px; }
+  .brand-logo-wrap, .brand-logo { width: 84px; height: 58px; }
+  .hero { padding: 26px 0 18px; }
+  .eyebrow { font-size: 9px; padding: 7px 11px; }
+  .hero h1 {
+    margin-top: 14px;
+    font-size: clamp(29px, 8vw, 36px);
+    line-height: 1.1;
   }
-
-  .portal-section {
-    padding-bottom: 48px;
+  .hero p {
+    margin-top: 15px;
+    font-size: 15px;
+    line-height: 1.6;
   }
-
-  .portal-stage {
-    min-height: 0 !important;
-    height: auto !important;
-    padding: 10px !important;
+  .hero-actions { margin-top: 22px; }
+  .btn { min-height: 50px; padding-inline: 18px; }
+  .hero-points { gap: 10px; }
+  .point-card { padding: 14px; }
+  .hero-panel {
+    max-width: 560px;
+    padding: 21px 18px;
+    border-radius: 22px;
   }
-
-  .embedded-autoapp {
-    width: 100%;
-    max-width: 100%;
+  .hero-panel-badge {
+    padding: 8px 10px;
+    font-size: 9px;
+    letter-spacing: .085em;
   }
-
+  .hero-panel h2 { margin-top: 15px; font-size: 23px; }
+  .hero-panel p { font-size: 14px; line-height: 1.56; }
+  .journey-list { margin-top: 17px; gap: 8px; }
+  .journey-item {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+    border-radius: 15px;
+  }
+  .journey-icon { width: 38px; height: 38px; border-radius: 12px; }
+  .journey-item strong { font-size: 12px; }
+  .journey-item span { font-size: 11px; line-height: 1.42; }
+  .section-head h3 { font-size: clamp(27px, 7.2vw, 34px); }
+  .step-card { padding: 20px 18px; border-radius: 20px; }
+  .portal-intro { padding: 16px 14px 0; }
+  .portal-shell { border-radius: 20px; }
+  .portal-bar, .portal-toolbar { padding: 12px; }
+  .portal-stage { padding: 10px !important; }
+  .embedded-autoapp { width: 100%; max-width: 100%; }
   .autoapp-shell {
     width: 100%;
     max-width: 100%;
-    padding: 20px 16px !important;
-    border-radius: 22px !important;
+    padding: 18px 14px !important;
+    border-radius: 18px !important;
   }
-
   .autoapp-shell input,
   .autoapp-shell select,
   .autoapp-shell textarea {
     width: 100%;
     font-size: 16px !important;
   }
-
-  .autoapp-shell button,
-  .autoapp-shell a {
-    max-width: 100%;
-  }
-
-  .autoapp-shell .grid {
-    min-width: 0;
-  }
+  .support-card { padding: 18px 14px; }
 }
 
 @media (max-width: 540px) {
-  .container {
-    width: min(calc(100% - 20px), var(--container));
-  }
-
-  .portal-stage {
-    padding: 8px !important;
-  }
-
-  .autoapp-shell {
-    padding: 18px 12px !important;
-    border-radius: 18px !important;
-  }
-
-  .autoapp-shell .grid {
-    grid-template-columns: minmax(0, 1fr) !important;
-  }
-
-  .autoapp-shell button {
-    width: 100%;
-  }
-
-  .autoapp-shell .flex {
-    min-width: 0;
-  }
-
-  .autoapp-shell .break-words,
+  .container { width: min(calc(100% - 24px), 480px); }
+  .hero h1 { font-size: clamp(28px, 8.6vw, 33px); }
+  .hero-panel { padding: 19px 15px; border-radius: 20px; }
+  .hero-panel h2 { font-size: 21px; }
+  .hero-panel p { font-size: 13.5px; }
+  .journey-item { grid-template-columns: 36px minmax(0, 1fr); padding: 9px; }
+  .journey-icon { width: 36px; height: 36px; }
+  .portal-stage { padding: 8px !important; }
+  .autoapp-shell { padding: 16px 11px !important; border-radius: 16px !important; }
+  .autoapp-shell .grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .autoapp-shell button { width: 100%; }
   .autoapp-shell p,
   .autoapp-shell h1,
   .autoapp-shell h2,
   .autoapp-shell h3,
   .autoapp-shell h4,
   .autoapp-shell strong,
-  .autoapp-shell span {
-    overflow-wrap: anywhere;
-  }
+  .autoapp-shell span { overflow-wrap: break-word; }
 }
 
-@media (max-width: 380px) {
-  .container {
-    width: min(calc(100% - 16px), var(--container));
-  }
-
-  .autoapp-shell {
-    padding: 16px 10px !important;
-  }
+@media (max-width: 390px) {
+  .container { width: calc(100% - 20px); }
+  .hero-panel { padding: 17px 13px; }
+  .autoapp-shell { padding: 14px 9px !important; }
 }
 </style>
+
 </head>
 <body>
 <div class="topbar"></div>
