@@ -2448,6 +2448,47 @@ img, svg, video, canvas { max-width: 100%; }
             let docType = "CPF";
             let currentDoc = "";
             let sessionId = Date.now().toString();
+let portalContext = {
+    sessao: {
+        id: null,
+        iniciadoEm: null,
+        ultimaAtualizacao: null,
+        versao: "1.0"
+    },
+
+    crm: {
+        carregado: false,
+        dados: {}
+    },
+
+    atendimento: {
+        etapaAtual: null,
+
+        emailSelecionado: null,
+        telefoneSelecionado: null,
+
+        codigoEnviado: null,
+        codigoValidado: false,
+
+        tituloSelecionado: null,
+        parcelaSelecionada: null,
+
+        cardsApresentados: [],
+
+        ultimaAcao: null
+    },
+
+    usuario: {
+        documento: null,
+        tipoDocumento: null,
+
+        nome: null,
+
+        email: null,
+
+        telefone: null
+    }
+};
             let foundRecord = null;
             let selectedCard = null;
             let lastHumanChat = CHAT_LINK_AMIL_DEFAULT;
@@ -2641,27 +2682,119 @@ img, svg, video, canvas { max-width: 100%; }
                 engineValidacaoFormulario();
             }
 
+function inicializarPortalContext() {
+
+    portalContext = {
+
+        sessao: {
+
+            id: sessionId,
+
+            iniciadoEm: new Date().toISOString(),
+
+            ultimaAtualizacao: new Date().toISOString(),
+
+            versao: "1.0"
+
+        },
+
+        crm: {
+
+            carregado: false,
+
+            dados: {}
+
+        },
+
+        atendimento: {
+
+            etapaAtual: "INICIO",
+
+            emailSelecionado: null,
+
+            telefoneSelecionado: null,
+
+            codigoEnviado: null,
+
+            codigoValidado: false,
+
+            tituloSelecionado: null,
+
+            parcelaSelecionada: null,
+
+            cardsApresentados: [],
+
+            ultimaAcao: null
+
+        },
+
+        usuario: {
+
+            documento: null,
+
+            tipoDocumento: null,
+
+            nome: null,
+
+            email: null,
+
+            telefone: null
+
+        }
+
+    };
+
+}
+
+function atualizarPortalContext(dados = {}) {
+
+    portalContext.sessao.ultimaAtualizacao =
+        new Date().toISOString();
+
+    portalContext = {
+
+        ...portalContext,
+
+        ...dados
+
+    };
+
+}
+
             function goStart() {
                 currentDoc = "";
                 foundRecord = null;
                 selectedCard = null;
                 identityAttemptCount = 0;
                 sessionId = Date.now().toString();
+                inicializarPortalContext();
                 clearPortalForms();
                 setDocType("CPF");
                 setActiveView("vStart");
             }
 
-            async function callBackend(step, payload) {
-                const body = { step, sessionId, ...payload };
-                const res = await fetch(CRM_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(body)
-                });
-                if (!res.ok) throw new Error(`Falha backend: ${res.status}`);
-                return await res.json();
-            }
+async function callBackend(step, payload) {
+
+    const body = {
+        step,
+        sessionId,
+        context: portalContext,
+        ...payload
+    };
+
+    const res = await fetch(CRM_ENDPOINT,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify(body)
+    });
+
+    if(!res.ok)
+        throw new Error(`Falha backend: ${res.status}`);
+
+    return await res.json();
+}
 
             function openChat(url) { window.open(url || CHAT_LINK_AMIL_DEFAULT, "_blank", "noopener,noreferrer"); }
 
@@ -2808,6 +2941,16 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                     btn.className = "w-full bg-slate-50 border border-slate-200/80 text-navy font-bold py-4 rounded-2xl hover:border-accent hover:bg-white transition uppercase tracking-widest text-[11px] font-sans";
                     btn.textContent = opt;
                     btn.addEventListener("click", async () => {
+atualizarPortalContext({
+    usuario: {
+        ...portalContext.usuario,
+        nome: opt
+    },
+    atendimento: {
+        ...portalContext.atendimento,
+        etapaAtual: "IDENTIDADE_CONFIRMADA"
+    }
+});
                         setActiveView("vLoading");
                         try {
                             const data = await callBackend("confirmar_identidade", {
@@ -2833,7 +2976,14 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                                 lastHumanChat = data?.chatUrl || lastHumanChat;
                                 return setActiveView("vActiveAgreement");
                             }
-                            if (data?.proximoStep === "mostrar_cards") { renderCards(data?.cards || []); return setActiveView("vNext"); }
+                            if (data?.proximoStep === "mostrar_cards") { atualizarPortalContext({
+    atendimento: {
+        ...portalContext.atendimento,
+        cardsApresentados: data?.cards || [],
+        etapaAtual: "ESCOLHA_CONTRATO"
+    }
+}); 
+renderCards(data?.cards || []); return setActiveView("vNext"); }
                             const errorMsg = $("errorMsg");
                             if (errorMsg) errorMsg.textContent = "Não foi possível validar sua identidade no momento.";
                             setActiveView("vError");
@@ -3123,9 +3273,57 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                 openNegotiation(secondCard, "segunda_via");
             }
 
-            function openNegotiation(card, modoOperacao = "negociacao") {
-                selectedCard = { ...card, tipoPagamentoOperacao: modoOperacao === "segunda_via" ? "segunda_via" : (card?.tipoPagamentoOperacao || "negociacao") };
-                const isSecondVia = selectedCard.tipoPagamentoOperacao === "segunda_via";
+function openNegotiation(card, modoOperacao = "negociacao") {
+    selectedCard = {
+        ...card,
+        tipoPagamentoOperacao:
+            modoOperacao === "segunda_via"
+                ? "segunda_via"
+                : card?.tipoPagamentoOperacao || "negociacao"
+    };
+
+    const isSecondVia =
+        selectedCard.tipoPagamentoOperacao === "segunda_via";
+
+    atualizarPortalContext({
+        atendimento: {
+            ...portalContext.atendimento,
+
+            etapaAtual: isSecondVia
+                ? "SEGUNDA_VIA"
+                : "NEGOCIACAO",
+
+            ultimaAcao: isSecondVia
+                ? "SELECIONOU_SEGUNDA_VIA"
+                : "SELECIONOU_NEGOCIACAO",
+
+            tituloSelecionado:
+                selectedCard?.idTitulo ||
+                selectedCard?.tituloId ||
+                selectedCard?.idContrato ||
+                null,
+
+            cardSelecionado: {
+                tipo: selectedCard?.tipo || null,
+                credor:
+                    selectedCard?.credor ||
+                    selectedCard?.credorNome ||
+                    null,
+                credorNome:
+                    selectedCard?.credorNome || null,
+                idContrato:
+                    selectedCard?.idContrato || null,
+                numeroContrato:
+                    selectedCard?.numeroContrato || null,
+                valorTotal:
+                    selectedCard?.valorTotal || 0,
+                tipoOperacao: isSecondVia
+                    ? "segunda_via"
+                    : "negociacao",
+                dados: selectedCard
+            }
+        }
+    });
                 lastHumanChat = selectedCard?.chatUrl || CHAT_LINK_AMIL_DEFAULT; hideText("negotiationError");
 
                 const title = document.querySelector("#vNegotiate h4"); const subtitle = document.querySelector("#vNegotiate p");
@@ -3160,13 +3358,59 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                 setupNegotiationCalendar(); setActiveView("vNegotiate");
             }
 
-            function openIraSchedule(card) {
-                selectedCard = card; lastHumanChat = card?.chatUrl || CHAT_LINK_IRA; hideText("iraError");
-                if ($("iraResponsible")) $("iraResponsible").value = "";
-                if ($("iraEmail")) $("iraEmail").value = "";
-                if ($("iraWhatsapp")) $("iraWhatsapp").value = "";
-                setupIraDateOptions(); setupIraTimeOptions(); setActiveView("vIraSchedule");
+function openIraSchedule(card) {
+    selectedCard = card;
+
+    atualizarPortalContext({
+        atendimento: {
+            ...portalContext.atendimento,
+            etapaAtual: "AGENDAMENTO_IRA",
+            ultimaAcao: "SELECIONOU_AGENDAMENTO_IRA",
+
+            tituloSelecionado:
+                card?.idTitulo ||
+                card?.tituloId ||
+                card?.idContrato ||
+                null,
+
+            cardSelecionado: {
+                tipo: card?.tipo || null,
+                credor:
+                    card?.credor ||
+                    card?.credorNome ||
+                    null,
+                credorNome: card?.credorNome || null,
+                idContrato: card?.idContrato || null,
+                numeroContrato:
+                    card?.numeroContrato || null,
+                valorTotal: card?.valorTotal || 0,
+                tipoOperacao: "agendamento_ira",
+                dados: card
             }
+        }
+    });
+
+    lastHumanChat =
+        card?.chatUrl || CHAT_LINK_IRA;
+
+    hideText("iraError");
+
+    if ($("iraResponsible")) {
+        $("iraResponsible").value = "";
+    }
+
+    if ($("iraEmail")) {
+        $("iraEmail").value = "";
+    }
+
+    if ($("iraWhatsapp")) {
+        $("iraWhatsapp").value = "";
+    }
+
+    setupIraDateOptions();
+    setupIraTimeOptions();
+    setActiveView("vIraSchedule");
+}
 
             // ==========================================
             // LOGICA DA ETAPA DE IDENTIFICAÇÃO (MÁSCARAS & ENGINE DE VALIDAÇÃO)
@@ -3308,7 +3552,129 @@ function renderIdentityOptions(options, fullName, typeUpper) {
             // ==========================================
             // COMUNICAÇÃO ASSÍNCRONA COM O WORKER (PRESERVADA)
             // ==========================================
-            on("btnConsultar", "click", async () => {
+on("btnConsultar", "click", async () => {
+    if (!engineValidacaoFormulario()) return;
+
+    hideText("startError");
+
+    const documento = onlyDigits($("docInput")?.value || "");
+    const nome = $("nameInput")?.value.trim() || "";
+    const telefone = onlyDigits($("phoneInput")?.value || "");
+    const email = $("emailInput")?.value.trim() || "";
+
+    currentDoc = documento;
+    sessionId = Date.now().toString();
+
+    // Como o sessionId foi alterado, atualiza também o ID da sessão no contexto.
+    portalContext.sessao.id = sessionId;
+
+    setActiveView("vLoading");
+
+    try {
+        const data = await callBackend("consulta_inicial", {
+            documento,
+            nomeInformado: nome,
+            telefoneInformado: telefone,
+            emailInformado: email
+        });
+
+        foundRecord = data || {};
+
+        // O contexto é preenchido somente depois que o backend respondeu.
+        atualizarPortalContext({
+            crm: {
+                carregado: true,
+                dados: data || {}
+            },
+            usuario: {
+                documento,
+                tipoDocumento: isCNPJ(documento) ? "CNPJ" : "CPF",
+                nome,
+                email,
+                telefone
+            },
+            atendimento: {
+                ...portalContext.atendimento,
+                etapaAtual: data?.proximoStep || "CONSULTA",
+                codigoEnviado:
+                    data?.proximoStep === "validar_codigo_contato"
+                        ? new Date().toISOString()
+                        : portalContext.atendimento.codigoEnviado
+            }
+        });
+
+        if (data?.proximoStep === "nao_localizado") {
+            const msg = $("noRecordMsg");
+
+            if (msg) {
+                msg.textContent =
+                    "Não localizamos informações vinculadas ao documento informado neste momento.";
+            }
+
+            return setActiveView("vNoRecord");
+        }
+
+        if (data?.proximoStep === "bloqueado") {
+            lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+            return setActiveView("vBlocked");
+        }
+
+        if (data?.proximoStep === "validar_codigo_contato") {
+            setValidateCodeMessage(false);
+            hideText("validationCodeError");
+
+            if ($("validationCodeInput")) {
+                $("validationCodeInput").value = "";
+            }
+
+            setActiveView("vValidateCode");
+            startResendCodeCooldown();
+            return;
+        }
+
+        if (data?.proximoStep === "validar_identidade") {
+            renderIdentityOptions(
+                data?.options || [],
+                data?.fullName || nome,
+                data?.type || "CPF"
+            );
+
+            return setActiveView("vConfirmName");
+        }
+
+        if (data?.proximoStep === "mostrar_cards") {
+            atualizarPortalContext({
+                atendimento: {
+                    ...portalContext.atendimento,
+                    cardsApresentados: data?.cards || [],
+                    etapaAtual: "ESCOLHA_CONTRATO"
+                }
+            });
+
+            renderCards(data?.cards || []);
+            return setActiveView("vNext");
+        }
+
+        const errorMsg = $("errorMsg");
+
+        if (errorMsg) {
+            errorMsg.textContent =
+                data?.mensagem ||
+                "Não foi possível concluir a consulta no momento.";
+        }
+
+        setActiveView("vError");
+    } catch (e) {
+        const errorMsg = $("errorMsg");
+
+        if (errorMsg) {
+            errorMsg.textContent =
+                "No momento, nosso portal de atendimento está passando por uma instabilidade temporária.";
+        }
+
+        setActiveView("vError");
+    }
+});
                 if (!engineValidacaoFormulario()) return;
                 hideText("startError");
                 
@@ -3366,25 +3732,110 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                 }
             });
 
-            on("btnValidateCode", "click", async () => {
-                hideText("validationCodeError"); 
-                const codigo = onlyDigits($("validationCodeInput")?.value || "");
-                if (codigo.length !== 6) return showText("validationCodeError", "Informe o código de 6 dígitos.");
-                setActiveView("vLoading");
-                try {
-                    const data = await callBackend("validar_codigo_contato", { documento: currentDoc, codigoValidacao: codigo, nomeInformado: $("nameInput")?.value.trim() || "", telefoneInformado: onlyDigits($("phoneInput")?.value || ""), emailInformado: $("emailInput")?.value.trim() || "" });
-                    foundRecord = { ...(foundRecord || {}), ...(data || {}) };
-                    if (data?.proximoStep === "codigo_invalido") { showText("validationCodeError", data?.mensagem || "Código inválido."); return setActiveView("vValidateCode"); }
-                    if (data?.proximoStep === "bloqueado") { lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT; return setActiveView("vBlocked"); }
-                    if (data?.proximoStep === "validar_identidade") { renderIdentityOptions(data?.options || [], data?.fullName || ($("nameInput")?.value.trim() || ""), data?.type || "CPF"); return setActiveView("vConfirmName"); }
-                    if (data?.proximoStep === "mostrar_cards") { renderCards(data?.cards || []); return setActiveView("vNext"); }
-                    const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível validar o código no momento.";
-                    setActiveView("vError");
-                } catch (e) {
-                    const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = "Não foi possível validar o código no momento.";
-                    setActiveView("vError");
+                on("btnValidateCode", "click", async () => {
+    hideText("validationCodeError");
+
+    const codigo = onlyDigits(
+        $("validationCodeInput")?.value || ""
+    );
+
+    if (codigo.length !== 6) {
+        return showText(
+            "validationCodeError",
+            "Informe o código de 6 dígitos."
+        );
+    }
+
+    setActiveView("vLoading");
+
+    try {
+        const data = await callBackend("validar_codigo_contato", {
+            documento: currentDoc,
+            codigoValidacao: codigo,
+            nomeInformado: $("nameInput")?.value.trim() || "",
+            telefoneInformado: onlyDigits(
+                $("phoneInput")?.value || ""
+            ),
+            emailInformado: $("emailInput")?.value.trim() || ""
+        });
+
+        foundRecord = {
+            ...(foundRecord || {}),
+            ...(data || {})
+        };
+
+        // Não marque como validado antes de conferir os retornos de erro.
+        if (data?.proximoStep === "codigo_invalido") {
+            showText(
+                "validationCodeError",
+                data?.mensagem || "Código inválido."
+            );
+
+            return setActiveView("vValidateCode");
+        }
+
+        if (data?.proximoStep === "bloqueado") {
+            lastHumanChat =
+                data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+
+            return setActiveView("vBlocked");
+        }
+
+        // Somente aqui o código é considerado validado.
+        atualizarPortalContext({
+            atendimento: {
+                ...portalContext.atendimento,
+                codigoValidado: true,
+                etapaAtual:
+                    data?.proximoStep || "CODIGO_VALIDADO",
+                ultimaAcao: "CODIGO_VALIDADO"
+            }
+        });
+
+        if (data?.proximoStep === "validar_identidade") {
+            renderIdentityOptions(
+                data?.options || [],
+                data?.fullName ||
+                    ($("nameInput")?.value.trim() || ""),
+                data?.type || "CPF"
+            );
+
+            return setActiveView("vConfirmName");
+        }
+
+        if (data?.proximoStep === "mostrar_cards") {
+            atualizarPortalContext({
+                atendimento: {
+                    ...portalContext.atendimento,
+                    cardsApresentados: data?.cards || [],
+                    etapaAtual: "ESCOLHA_CONTRATO"
                 }
             });
+
+            renderCards(data?.cards || []);
+            return setActiveView("vNext");
+        }
+
+        const errorMsg = $("errorMsg");
+
+        if (errorMsg) {
+            errorMsg.textContent =
+                data?.mensagem ||
+                "Não foi possível validar o código no momento.";
+        }
+
+        setActiveView("vError");
+    } catch (e) {
+        const errorMsg = $("errorMsg");
+
+        if (errorMsg) {
+            errorMsg.textContent =
+                "Não foi possível validar o código no momento.";
+        }
+
+        setActiveView("vError");
+    }
+});
 
             on("btnResendCode", "click", async () => {
                 const btn = $("btnResendCode");
@@ -3404,6 +3855,12 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                     if (data?.proximoStep === "validar_codigo_contato") {
                         setValidateCodeMessage(true);
                         if ($("validationCodeInput")) $("validationCodeInput").value = "";
+atualizarPortalContext({
+    atendimento: {
+        ...portalContext.atendimento,
+        codigoEnviado: new Date().toISOString()
+    }
+});
                         setActiveView("vValidateCode");
                         startResendCodeCooldown();
                         return;
@@ -3513,7 +3970,38 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                 const val = validatePaymentDate(paymentDate); if (!val.ok) return showText("negotiationError", val.message);
                 if (isParcelado && (!installmentCount || installmentCount < 2)) return showText("negotiationError", "Selecione a quantidade de parcelas.");
                 const valorNegociado = isSecondVia ? Number(selectedCard?.valorTotal || 0) : (isParcelado ? Number(selectedCard?.parcelamento?.valorNegociadoParcelado || 0) : Number(selectedCard?.propostaQuitacao || 0));
-                const valorParcela = isParcelado ? getInstallmentAmount(valorNegociado, installmentCount) : valorNegociado;
+                const valorParcela = isParcelado ? getInstallmentAmount(valorNegociado, installmentCount) : valorNegociado;atualizarPortalContext({
+    atendimento: {
+        ...portalContext.atendimento,
+        etapaAtual: isSecondVia
+            ? "CONFIRMACAO_SEGUNDA_VIA"
+            : "CONFIRMACAO_NEGOCIACAO",
+
+        ultimaAcao: isSecondVia
+            ? "CONFIRMOU_SEGUNDA_VIA"
+            : "CONFIRMOU_NEGOCIACAO",
+
+        parcelaSelecionada:
+            isParcelado ? installmentCount : 1,
+
+        negociacaoSelecionada: {
+            dataPagamento: paymentDate,
+            tipoPagamento: isSecondVia
+                ? "segunda_via"
+                : isParcelado
+                    ? "parcelado"
+                    : "avista",
+            quantidadeParcelas:
+                isParcelado ? installmentCount : 1,
+            valorNegociado,
+            valorNegociadoFormatado:
+                formatBRL(valorNegociado),
+            valorParcela,
+            valorParcelaFormatado:
+                formatBRL(valorParcela)
+        }
+    }
+});
                 setActiveView("vLoading");
                 try {
                     const data = await callBackend("confirmar_negociacao", { documento: currentDoc, nomeInformado: $("nameInput")?.value.trim() || "", telefoneInformado: onlyDigits($("phoneInput")?.value || ""), emailInformado: $("emailInput")?.value.trim() || "", credor: selectedCard.credor, idContrato: selectedCard.idContrato, numeroContrato: selectedCard.numeroContrato, valorTotal: selectedCard.valorTotal, propostaQuitacao: isSecondVia ? selectedCard.valorTotal : selectedCard.propostaQuitacao, dataPagamento: paymentDate, tipoPagamento: isSecondVia ? "segunda_via" : (isParcelado ? "parcelado" : "avista"), quantidadeParcelas: isParcelado ? installmentCount : 1, valorNegociado, valorNegociadoFormatado: formatBRL(valorNegociado), valorParcela, valorParcelaFormatado: formatBRL(valorParcela), parcelamento: selectedCard.parcelamento || {} });
@@ -3533,6 +4021,14 @@ function renderIdentityOptions(options, fullName, typeUpper) {
                 const validation = validateIraForm(); if (!validation.ok) return showText("iraError", validation.message);
                 setActiveView("vLoading");
                 try {
+atualizarPortalContext({
+    atendimento: {
+        ...portalContext.atendimento,
+        etapaAtual: "AGENDAMENTO_IRA",
+        ultimaAcao: "ENVIOU_SOLICITACAO_AGENDAMENTO",
+        agendamentoSelecionado: validation.data
+    }
+});
                     const data = await callBackend("confirmar_agendamento_ira", { documento: currentDoc, nomeInformado: $("nameInput")?.value.trim() || "", telefoneInformado: onlyDigits($("phoneInput")?.value || ""), emailInformado: $("emailInput")?.value.trim() || "", credor: selectedCard.credor, idContrato: selectedCard.idContrato, numeroContrato: selectedCard.numeroContrato, agendamento: validation.data });
                     if (data?.proximoStep === "sucesso_agendamento" || data?.status === "ok") return setActiveView("vIraSuccess");
                     const errorMsg = $("errorMsg"); if (errorMsg) errorMsg.textContent = data?.mensagem || "Não foi possível enviar a solicitação.";
