@@ -2428,8 +2428,6 @@ img, svg, video, canvas { max-width: 100%; }
 </footer>
 
 <script>
-        const BITRIX_ENDPOINT = "https://grupoasserth.bitrix24.com.br/rest/1/15a2h0vrp7wfb31l/crm.lead.add.json";
-    </script><script>
         document.addEventListener("DOMContentLoaded", () => {
             const CRM_ENDPOINT = "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
@@ -2642,6 +2640,7 @@ img, svg, video, canvas { max-width: 100%; }
             }
 
             function goStart() {
+                limparSessionToken();
                 currentDoc = "";
                 foundRecord = null;
                 selectedCard = null;
@@ -2652,15 +2651,65 @@ img, svg, video, canvas { max-width: 100%; }
                 setActiveView("vStart");
             }
 
+            // ==========================================
+            // SESSÃO — o fluxo devolve um sessionToken lacrado a cada etapa.
+            // O front apenas guarda e reenvia: quem confere o conteúdo é o n8n.
+            // ==========================================
+            const SESSION_TOKEN_KEY = "aa_sessionToken";
+            const lerSessionToken    = () => sessionStorage.getItem(SESSION_TOKEN_KEY) || "";
+            const limparSessionToken = () => sessionStorage.removeItem(SESSION_TOKEN_KEY);
+
             async function callBackend(step, payload) {
                 const body = { step, sessionId, ...payload };
-                const res = await fetch(CRM_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(body)
-                });
-                if (!res.ok) throw new Error(`Falha backend: ${res.status}`);
-                return await res.json();
+
+                if (step === "consulta_inicial") {
+                    limparSessionToken();            // nova jornada: descarta a sessão anterior
+                } else {
+                    const token = lerSessionToken();
+                    if (!token) {
+                        return {
+                            status: "erro",
+                            proximoStep: "sessao_expirada",
+                            mensagem: "Sua sessão expirou. Toque em Tentar novamente para recomeçar."
+                        };
+                    }
+                    body.sessionToken = token;       // todas as etapas seguintes reenviam o lacre
+                }
+
+                let res, data;
+                try {
+                    res = await fetch(CRM_ENDPOINT, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body)
+                    });
+                    data = await res.json();
+                } catch (e) {
+                    return {
+                        status: "erro",
+                        proximoStep: "servico_indisponivel",
+                        mensagem: "Não conseguimos concluir agora. Tente novamente em alguns instantes."
+                    };
+                }
+
+                if (!res.ok) {
+                    return {
+                        status: "erro",
+                        proximoStep: "servico_indisponivel",
+                        mensagem: (data && data.mensagem) ||
+                            "Não conseguimos concluir agora. Tente novamente em alguns instantes."
+                    };
+                }
+
+                // guarda o token renovado que veio nesta resposta
+                if (data && data.sessionToken) {
+                    sessionStorage.setItem(SESSION_TOKEN_KEY, data.sessionToken);
+                }
+                if (data && data.proximoStep === "sessao_expirada") {
+                    limparSessionToken();
+                }
+
+                return data;
             }
 
             function openChat(url) { window.open(url || CHAT_LINK_AMIL_DEFAULT, "_blank", "noopener,noreferrer"); }
