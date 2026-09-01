@@ -1,0 +1,3268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quatro C | Administração do Portal</title>
+<meta content="#CE2E3C" name="theme-color"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+<style>
+/* ===========================================================================
+   PAINEL DE ADMINISTRAÇÃO
+   Três áreas: navegação (esquerda), edição (centro), pré-visualização (direita).
+   O painel não conhece as telas: ele pergunta ao portal quais textos existem
+   e se monta a partir da resposta. Tela nova no portal aparece aqui sozinha.
+   =========================================================================== */
+:root{
+  --tinta:#15151B; --tinta-2:#5C5C6A; --tinta-3:#8A8A98;
+  --linha:#E6E6EC; --linha-2:#D5D5DE;
+  --papel:#fff; --fundo:#F5F5F8;
+  --escuro:#1D1D24; --escuro-2:#26262F;
+  /* identidade Quatro C */
+  --acento:#CE2E3C; --acento-escuro:#A3222E; --acento-fraco:#FBECEE;
+  --ouro:#EB9B3C; --verde:#2C8A61;
+  --ok:#0A7346; --alerta:#8A5D0C; --falha:#B02A22;
+  --r:8px; --r-p:6px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:'Roboto',Arial,sans-serif;
+  background:var(--fundo);color:var(--tinta);font-size:14px;line-height:1.5;
+  letter-spacing:-.005em;-webkit-font-smoothing:antialiased;
+}
+button{font:inherit;cursor:pointer;color:inherit}
+input,select,textarea{font:inherit}
+svg{display:block;flex:0 0 auto}
+.hidden{display:none !important}
+
+/* --------------------------- faixa da marca ------------------------------- */
+.topbar{
+  height:5px;
+  background:linear-gradient(90deg,var(--acento) 0 70%,var(--ouro) 70% 86%,var(--verde) 86% 100%);
+}
+
+/* ------------------------------- porta ------------------------------------ */
+.porta{
+  min-height:100vh;display:grid;place-items:center;padding:32px 24px;
+  background:
+    radial-gradient(circle at top left, rgba(206,46,60,.07), transparent 36%),
+    linear-gradient(180deg,#FFFFFF 0%,#FCFCFD 44%,#F5F5F8 100%);
+}
+.porta-caixa{
+  width:100%;max-width:404px;background:var(--papel);border:1px solid var(--linha);
+  border-radius:22px;padding:38px 34px 32px;box-shadow:0 28px 66px rgba(36,36,40,.12);
+}
+.porta-logo{display:flex;justify-content:center;margin-bottom:22px}
+.porta-logo img{height:64px;width:auto;max-width:190px;object-fit:contain}
+.porta-logo b{font-size:22px;font-weight:900;color:var(--acento);letter-spacing:-.02em}
+.porta-selo{
+  display:inline-flex;align-items:center;gap:7px;margin:0 auto 16px;padding:7px 13px;
+  border-radius:999px;background:var(--acento-fraco);border:1px solid rgba(206,46,60,.14);
+  color:var(--acento);font-size:10.5px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+}
+.porta-caixa h1{margin:0 0 7px;font-size:22px;font-weight:700;letter-spacing:-.028em;color:#303038}
+.porta-caixa p.porta-apoio{margin:0 0 26px;font-size:13.5px;line-height:1.6;color:#71717A}
+.porta-centro{display:flex;flex-direction:column;align-items:center;text-align:center}
+.porta-form{width:100%;text-align:left}
+.porta-senha{position:relative;display:flex;align-items:center}
+.porta-senha > svg{position:absolute;left:13px;color:var(--tinta-3);pointer-events:none}
+.porta-senha input{
+  width:100%;padding:12px 44px 12px 40px;border:1px solid var(--linha-2);border-radius:10px;
+  font-size:14.5px;color:var(--tinta);background:var(--papel);
+}
+.porta-senha input:focus{outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12)}
+.porta-olho{
+  position:absolute;right:6px;width:32px;height:32px;display:grid;place-items:center;
+  background:none;border:0;border-radius:8px;color:var(--tinta-3);
+}
+.porta-olho:hover{color:var(--acento);background:var(--acento-fraco)}
+.porta-caixa .btn-1{margin-top:18px;min-height:46px;font-size:14px;border-radius:10px}
+.porta-nota{
+  margin:22px 0 0;padding-top:18px;border-top:1px solid var(--linha);
+  display:flex;align-items:flex-start;gap:9px;font-size:11.5px;line-height:1.55;color:var(--tinta-3);
+}
+.porta-nota svg{flex:0 0 auto;margin-top:1px;color:var(--verde)}
+.porta-rodape{margin:20px 0 0;text-align:center;font-size:11px;color:#9A9AA6}
+
+/* ------------------------------- estrutura -------------------------------- */
+.app{display:grid;grid-template-columns:206px minmax(360px,1fr) minmax(420px,600px);height:100vh}
+@media (max-width:1180px){
+  .app{grid-template-columns:186px 1fr;height:auto}
+  .previa{display:none}
+  .previa.aberta{display:flex;position:fixed;inset:0;z-index:80;background:var(--papel)}
+}
+
+/* nav */
+.nav{background:var(--escuro);color:#fff;padding:18px 14px;overflow-y:auto;display:flex;flex-direction:column}
+.nav-marca{display:flex;align-items:center;gap:9px;padding:0 6px 18px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:14px}
+.nav-logo{flex:0 0 auto;display:grid;place-items:center;height:38px;width:52px}
+.nav-logo img{max-height:38px;max-width:52px;object-fit:contain}
+.nav-logo b{font-size:12px;font-weight:900;color:#fff;letter-spacing:-.01em}
+.nav-marca b{font-size:13px;font-weight:700;letter-spacing:-.01em}
+.nav-marca span{display:block;font-size:10px;color:rgba(255,255,255,.45);font-weight:500}
+.nav-item{
+  width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;margin-bottom:2px;
+  background:none;border:0;border-radius:var(--r-p);text-align:left;
+  font-size:13px;font-weight:500;color:rgba(255,255,255,.7);
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-item[aria-current="true"]{background:rgba(255,255,255,.13);color:#fff;font-weight:600}
+.nav-rodape{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:grid;gap:6px}
+.nav-rodape button{
+  width:100%;padding:9px 10px;border-radius:var(--r-p);border:1px solid rgba(255,255,255,.18);
+  background:none;color:rgba(255,255,255,.8);font-size:12px;font-weight:600;text-align:left;
+  display:flex;align-items:center;gap:8px;
+}
+.nav-rodape button:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-rodape button.destaque{background:#fff;color:var(--escuro);border-color:#fff}
+.nav-rodape button.destaque:hover{background:rgba(255,255,255,.88)}
+
+/* edição */
+.edicao{overflow-y:auto;padding:26px 28px 60px;background:var(--fundo)}
+.edicao-topo{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+.edicao-topo h2{margin:0 0 3px;font-size:19px;letter-spacing:-.024em}
+.edicao-topo p{margin:0;font-size:13px;color:var(--tinta-3);max-width:52ch}
+.btn-previa{
+  margin-left:auto;flex:0 0 auto;padding:8px 12px;border-radius:var(--r-p);
+  border:1px solid var(--linha-2);background:var(--papel);font-size:12.5px;font-weight:600;
+}
+@media (min-width:1181px){.btn-previa{display:none}}
+
+.bloco{background:var(--papel);border:1px solid var(--linha);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.bloco-cabeca{padding:14px 18px;border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:10px}
+.bloco-cabeca h3{margin:0;font-size:13.5px;font-weight:600}
+.bloco-cabeca .cont{margin-left:auto;font-size:11.5px;color:var(--tinta-3);font-weight:500}
+.bloco-corpo{padding:18px}
+.bloco.fechado .bloco-corpo{display:none}
+.bloco-cabeca[role="button"]{cursor:pointer}
+.bloco-cabeca .giro{transition:transform .2s;color:var(--tinta-3)}
+.bloco.fechado .bloco-cabeca .giro{transform:rotate(-90deg)}
+
+.campo{margin-bottom:14px}
+.campo:last-child{margin-bottom:0}
+.campo label{display:block;margin-bottom:5px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.campo .ajuda{margin:4px 0 0;font-size:11.5px;color:var(--tinta-3)}
+.campo input[type=text],.campo input[type=url],.campo select,.campo textarea{
+  width:100%;padding:9px 11px;border:1px solid var(--linha-2);border-radius:var(--r-p);
+  font-size:13.5px;color:var(--tinta);background:var(--papel);
+}
+.campo textarea{resize:vertical;min-height:60px;line-height:1.45}
+.campo input:focus,.campo select:focus,.campo textarea:focus{
+  outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12);
+}
+.grade2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:620px){.grade2{grid-template-columns:1fr}}
+
+/* cor */
+.cor{display:flex;align-items:center;gap:10px}
+.cor input[type=color]{
+  width:42px;height:38px;padding:0;border:1px solid var(--linha-2);border-radius:var(--r-p);
+  background:none;cursor:pointer;
+}
+.cor input[type=text]{flex:1;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+
+/* logo */
+.logo-area{display:flex;align-items:center;gap:14px}
+.logo-previa{
+  width:112px;height:52px;flex:0 0 112px;border:1px dashed var(--linha-2);border-radius:var(--r-p);
+  display:grid;place-items:center;background:#FAFAFC;overflow:hidden;
+}
+.logo-previa img{max-width:100%;max-height:100%;object-fit:contain}
+.logo-previa span{font-size:10.5px;color:var(--tinta-3);text-align:center;padding:0 6px}
+.logo-acoes{display:grid;gap:6px}
+
+/* credores */
+.credor{display:grid;grid-template-columns:1fr 130px 34px;gap:10px;align-items:end;padding:12px 0;border-bottom:1px solid var(--linha)}
+.credor:last-of-type{border-bottom:0}
+@media (max-width:620px){.credor{grid-template-columns:1fr 34px}}
+.credor .logo-previa{width:100%;height:40px;flex:none}
+.lixeira{
+  width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--linha-2);
+  border-radius:var(--r-p);background:var(--papel);color:var(--tinta-3);
+}
+.lixeira:hover{border-color:var(--falha);color:var(--falha)}
+
+/* textos */
+.busca{position:relative;margin-bottom:14px}
+.busca svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--tinta-3)}
+.busca input{width:100%;padding:9px 11px 9px 34px;border:1px solid var(--linha-2);border-radius:var(--r-p);font-size:13.5px}
+.busca input:focus{outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12)}
+
+.txt-item{padding:12px 0;border-bottom:1px solid var(--linha)}
+.txt-item:last-child{border-bottom:0}
+.txt-topo{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.txt-chave{font-size:11px;color:var(--tinta-3);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.selo{
+  padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.03em;
+  text-transform:uppercase;background:#F1F1F6;color:var(--tinta-2);
+}
+.selo.botao{background:var(--acento-fraco);color:var(--acento)}
+.selo.titulo{background:#F3EEFB;color:#6B3FA0}
+.txt-reset{margin-left:auto;background:none;border:0;padding:2px 4px;font-size:11.5px;font-weight:600;color:var(--acento)}
+.txt-reset:hover{text-decoration:underline}
+.txt-reset[disabled]{color:var(--tinta-3);cursor:default;text-decoration:none}
+.txt-item textarea{
+  width:100%;padding:8px 10px;border:1px solid var(--linha-2);border-radius:var(--r-p);
+  font-size:13.5px;resize:vertical;min-height:38px;line-height:1.45;
+}
+.txt-item textarea:focus{outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12)}
+.txt-item.alterado textarea{border-color:var(--acento)}
+
+.vazio{padding:26px;text-align:center;font-size:13px;color:var(--tinta-3)}
+
+/* prévia */
+.previa{background:var(--papel);border-left:1px solid var(--linha);display:flex;flex-direction:column}
+.previa-topo{padding:12px 16px;border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:10px}
+.previa-topo b{font-size:12.5px;font-weight:600}
+.previa-topo select{
+  margin-left:auto;padding:7px 10px;border:1px solid var(--linha-2);border-radius:var(--r-p);
+  font-size:12.5px;max-width:230px;background:var(--papel);
+}
+.previa-fechar{background:none;border:0;color:var(--tinta-3);padding:4px}
+@media (min-width:1181px){.previa-fechar{display:none}}
+.previa-palco{flex:1;background:var(--fundo);padding:16px;overflow:auto;display:flex;justify-content:center}
+.previa-palco iframe{
+  width:100%;max-width:420px;height:100%;min-height:640px;border:1px solid var(--linha);
+  border-radius:12px;background:#fff;box-shadow:0 8px 30px rgba(16,16,26,.07);
+}
+
+/* aviso */
+.aviso{
+  position:fixed;left:50%;bottom:22px;transform:translate(-50%,240%);z-index:200;
+  padding:11px 18px;border-radius:10px;background:var(--escuro);color:#fff;
+  font-size:13px;font-weight:500;box-shadow:0 12px 34px rgba(0,0,0,.25);
+  transition:transform .28s cubic-bezier(.4,0,.2,1), visibility .28s;max-width:88vw;
+  visibility:hidden;
+}
+.aviso[data-ver="1"]{transform:translate(-50%,0);visibility:visible}
+.aviso.erro{background:var(--falha)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:var(--r-p);border:0;transition:.14s}
+.btn-1{padding:10px 16px;background:var(--acento);color:#fff;font-size:13.5px;font-weight:600;width:100%}
+.btn-1:hover{background:var(--acento-escuro)}
+.btn-2{padding:8px 13px;background:var(--papel);border:1px solid var(--linha-2);font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.btn-2:hover{border-color:var(--tinta-3);color:var(--tinta)}
+</style>
+<script>
+/* Lê o portal guardado na página e devolve o HTML original. */
+function lerFontePortal() {
+  var el = document.getElementById('portal-fonte');
+  if (!el) return '';
+  return el.textContent.replace(/<\\\/script/g, '<\/script');
+}
+</script>
+</head>
+<body>
+<!-- ===================================================================
+     APLICAÇÃO DE AUTOATENDIMENTO — documento completo, guardado aqui.
+     Não é executado neste bloco: é lido como texto e montado no iframe.
+     Para atualizar o portal, troque o conteúdo deste bloco inteiro.
+     =================================================================== -->
+<script id="portal-fonte" type="text/plain">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Portal de Autoatendimento</title>
+
+<!-- ===========================================================================
+     CONFIGURAÇÃO DA MARCA — é este bloco que o painel de administração troca.
+     Nada além daqui precisa ser editado para publicar o portal de um cliente.
+     =========================================================================== -->
+<script>
+/* Marca o documento como embutido antes de qualquer estilo ser aplicado. */
+if (window.parent !== window) document.documentElement.classList.add('embutido');
+<\/script>
+<script id="portal-config">
+window.PORTAL_CONFIG = {
+  "marca": {
+    "nome": "Quatro C",
+    "logoUrl": "",
+    "logoAltura": 24,
+    "fonte": "Inter"
+  },
+  "cores": {
+    "primaria": "#CE2E3C",
+    "primariaEscura": "#A3222E"
+  },
+  "contato": {
+    "whatsapp": "https://wa.me/5511999999999",
+    "whatsappRotulo": "WhatsApp",
+    "whatsappHorario": "Seg a sex, 8h às 18h",
+    "telefone": "0800 025 5072",
+    "telefoneRotulo": "0800 025 5072",
+    "telefoneHorario": "Ligação gratuita",
+    "razaoSocial": "Quatro C Serviços Ltda",
+    "cnpj": "00.000.000/0001-00"
+  },
+  "logosCredor": {
+    "AMIL OPERADORAS": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
+    "SANTA HELENA": "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif",
+    "SASCAR FIXA VARIAVEL": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
+    "SASCAR_IRA": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
+    "REDE AMERICAS": "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif"
+  },
+  "integracao": {
+    "endpoint": "https://billowing-voice-6efd.asilvino19.workers.dev/",
+    "canaisPorCredor": {
+      "AMIL OPERADORAS": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y",
+      "SANTA HELENA": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y",
+      "SASCAR": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y",
+      "IRA": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y",
+      "REDE AMERICAS": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y",
+      "PADRAO": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
+    }
+  },
+  "textos": {
+    "rotulo.cabecaSeguro": "Ambiente seguro",
+    "botao.btnVoltar": "Voltar",
+
+    "titulo.vStart": "Consulte e negocie online",
+    "texto.vStart.1": "Preencha os dados abaixo e veja na mesma hora os valores e as condições disponíveis para você.",
+    "rotulo.campoDoc": "CPF ou CNPJ",
+    "rotulo.campoNome": "Como podemos te chamar?",
+    "rotulo.campoTel": "Celular",
+    "rotulo.campoMail": "E-mail",
+    "botao.btnConsultar": "Consultar",
+    "texto.vStart.2": "A consulta é gratuita e não gera nenhum compromisso.",
+
+    "titulo.vValidateCode": "Confirme seu e-mail",
+    "texto.vValidateCode.1": "Enviamos um código de 6 dígitos para o e-mail que você informou.",
+    "botao.btnValidateCode": "Confirmar",
+    "botao.btnResendCode": "Reenviar código",
+
+    "titulo.vConfirmName": "Selecione o seu nome completo",
+    "texto.vConfirmName.1": "Para seguir com segurança, confirme o nome do titular do documento informado.",
+
+    "titulo.vIdentityError": "Nome não confere",
+    "texto.vIdentityError.1": "O nome selecionado não corresponde ao cadastro localizado para este documento.",
+    "botao.btnIdentityTryAgain": "Tentar novamente",
+
+    "titulo.vBlocked": "Acesso restrito por segurança",
+    "texto.vBlocked.1": "Seu acesso foi bloqueado por tentativas de validação sem sucesso. Uma nova consulta será liberada automaticamente em até 24 horas. Nosso atendimento permanece disponível para seguir com você agora.",
+    "rotulo.canais.vBlocked": "Falar com o atendimento",
+
+    "titulo.vNext": "Suas pendências",
+    "texto.vNext.1": "Valores atualizados nesta consulta.",
+
+    "titulo.vNegotiate": "Escolha a forma de pagamento",
+    "rotulo.parcelas": "Parcelas",
+    "rotulo.vencimento": "Vencimento do boleto",
+    "rotulo.vencimentoParcelado": "Vencimento do primeiro boleto",
+    "rotulo.detalhes": "Detalhes da dívida",
+    "botao.btnConfirmNegotiation": "Confirmar negociação",
+
+    "titulo.vNegotiationSuccess": "Negociação fechada",
+    "titulo.vSecondCopySuccess": "Boleto emitido",
+    "botao.btnNovaConsultaSucesso": "Nova consulta",
+    "rotulo.canais.duvida": "Se ainda tiver dúvida",
+
+    "titulo.vNegotiationFailed": "Não foi possível concluir agora",
+    "texto.vNegotiationFailed.1": "Tivemos uma instabilidade no nosso sistema e o registro não pôde ser finalizado neste momento.",
+    "texto.vNegotiationFailed.2": "As informações da sua solicitação ficaram registradas",
+    "texto.vNegotiationFailed.3": "Nossa equipe já foi acionada e vai dar continuidade",
+    "rotulo.canais.falarAgora": "Prefere falar agora?",
+
+    "titulo.vActiveAgreement": "Seu acordo está em dia",
+    "botao.btnReenviarBoleto": "Reenviar boleto",
+
+    "titulo.vNoRecord": "Nada em aberto para este documento",
+    "texto.vNoRecord.1": "Não localizamos nenhuma pendência registrada na nossa base para o documento informado.",
+    "botao.btnNovaConsultaNoRecord": "Consultar outro documento",
+    "rotulo.canais.sePreferir": "Se preferir, fale com a gente",
+
+    "titulo.vNoDebt": "Você está em dia",
+    "botao.btnNovaConsultaNoDebt": "Consultar outro documento",
+
+    "titulo.vError": "Não foi possível seguir agora",
+    "texto.vError.1": "Estamos com uma instabilidade no nosso sistema. Tente novamente em alguns minutos ou fale com a gente pelos nossos canais de atendimento.",
+    "botao.btnNovaConsultaErr": "Tentar novamente",
+    "rotulo.canais.faleComAGente": "Fale com a gente",
+
+    "titulo.vIraSchedule": "Agendamento de retirada",
+    "texto.vIraSchedule.1": "Informe as preferências de data, o local e o responsável pelo acompanhamento.",
+    "texto.vIraSchedule.2": "Preferências de data e horário",
+    "texto.vIraSchedule.3": "Local de retirada",
+    "texto.vIraSchedule.4": "Responsável pelo acompanhamento",
+    "botao.btnSubmitIra": "Enviar solicitação",
+
+    "titulo.vIraSuccess": "Solicitação registrada",
+    "texto.vIraSuccess.1": "Vamos validar a disponibilidade e confirmar o agendamento pelos contatos informados.",
+
+    "texto.vLoading.1": "Consultando..."
+  }
+};
+<\/script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ===========================================================================
+   AUTOATENDIMENTO — SISTEMA VISUAL
+   Tela branca e silenciosa. A cor da marca só em: ação principal, progresso,
+   links e seleção. Nenhum bloco colorido, nenhum ícone decorativo de topo.
+   Estrutura quadrada — raio curto. Sem framework externo.
+   =========================================================================== */
+:root{
+  --marca:#CE2E3C; --marca-escura:#A3222E; --marca-rgb:206,46,60;
+  --fonte:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+
+  --tinta:#15151B; --tinta-2:#5C5C6A; --tinta-3:#8A8A98;
+  --linha:#EAEAEF; --linha-2:#D9D9E1;
+  --papel:#FFFFFF; --fundo:#F4F4F7;
+  --ok:#0A7346; --ok-fraco:#EDF7F1;
+  --falha:#B02A22;
+  --r:8px; --r-p:6px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--fonte);color:var(--tinta);line-height:1.5;
+  background:var(--fundo);font-size:15px;letter-spacing:-.006em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;cursor:pointer;color:inherit}
+svg{display:block;flex:0 0 auto}
+.hidden{display:none !important}
+
+/* ------------------------------- moldura ---------------------------------- */
+.portal{max-width:548px;margin:0 auto;padding:0 0 152px}
+.cabeca{position:sticky;top:0;z-index:20;background:var(--papel);border-bottom:1px solid var(--linha)}
+.cabeca-topo{display:flex;align-items:center;gap:12px;height:60px;padding:0 20px}
+.cabeca-logo{height:24px;width:auto;max-width:130px;object-fit:contain;object-position:left center}
+.cabeca-nome{font-size:15.5px;font-weight:700;letter-spacing:-.022em}
+.cabeca-seguro{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--tinta-3);white-space:nowrap}
+.progresso{height:3px;background:var(--linha);overflow:hidden}
+.progresso i{display:block;height:100%;width:15%;background:var(--marca);transition:width .45s cubic-bezier(.4,0,.2,1)}
+
+.corpo{padding:24px 20px 30px;background:var(--papel);min-height:62vh}
+/* Dentro de um iframe a altura do quadro é definida pelo conteúdo. Qualquer
+   medida em vh viraria uma conta circular (o conteúdo cresce, o quadro cresce,
+   o conteúdo cresce de novo), então elas são desligadas no modo embutido. */
+html.embutido body{background:var(--papel)}
+html.embutido .corpo{min-height:0}
+html.embutido .portal{padding-bottom:96px}
+.view{display:none}
+.view.active{display:block;animation:entra .24s ease}
+@keyframes entra{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.voltar{display:inline-flex;align-items:center;gap:5px;margin:0 0 18px;padding:0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca)}
+.voltar:hover{opacity:.7}
+
+h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;font-weight:700}
+.sub{margin:0 0 26px;font-size:14.5px;color:var(--tinta-2);max-width:40em}
+.sub b{color:var(--tinta);font-weight:600}
+.mini{font-size:12.5px;color:var(--tinta-3);margin:0}
+.rotulo{margin:24px 0 10px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.nota-centro{margin:18px 0 0;text-align:center;font-size:12.5px;color:var(--tinta-3)}
+.secao{margin:28px 0 12px;font-size:12.5px;font-weight:700;color:var(--tinta);padding-top:20px;border-top:1px solid var(--linha)}
+
+/* --------------------------------- campos --------------------------------- */
+.campo{margin-bottom:15px}
+.campo > label{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.caixa{position:relative;display:flex;align-items:center}
+.caixa > svg{position:absolute;left:13px;color:var(--tinta-3);pointer-events:none}
+.campo input,.campo select{
+  width:100%;padding:13px 14px;border:1px solid var(--linha-2);border-radius:var(--r);
+  font:inherit;font-size:16px;font-weight:500;color:var(--tinta);background:var(--papel);
+  transition:border-color .14s, box-shadow .14s;appearance:none;
+}
+.campo select{
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238A8A98' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:38px;
+}
+.caixa.com-ico input{padding-left:41px}
+.campo input::placeholder{color:#B6B6C3;font-weight:400}
+.campo input:focus,.campo select:focus{outline:none;border-color:var(--marca);box-shadow:0 0 0 3px rgba(var(--marca-rgb),.10)}
+.caixa:focus-within > svg{color:var(--marca)}
+.campo.invalido input{border-color:var(--falha)}
+.campo-duplo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:460px){.campo-duplo{grid-template-columns:1fr}}
+.erro{margin:6px 0 0;font-size:12.5px;font-weight:500;color:var(--falha)}
+.tipo-doc{margin-left:auto;font-size:11px;font-weight:700;color:var(--tinta-3);letter-spacing:.06em;transition:opacity .16s}
+.tipo-doc.opacity-0{opacity:0}
+
+/* --------------------------------- botões --------------------------------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r);transition:.14s;letter-spacing:-.008em}
+.btn-1{width:100%;min-height:48px;padding:0 22px;font-size:14.5px;font-weight:600;color:#fff;background:var(--marca)}
+.btn-1:hover{background:var(--marca-escura)}
+.btn-1:disabled{background:#E4E4EA;color:#A5A5B2;cursor:not-allowed}
+.btn-2{width:auto;min-height:38px;padding:0 16px;font-size:13px;font-weight:600;background:var(--papel);border:1px solid var(--linha-2);color:var(--tinta-2)}
+.btn-2:hover{border-color:var(--tinta-3);color:var(--tinta)}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.acoes-centro{justify-content:center}
+.acoes > .btn-1{flex:1 1 100%}
+.btn-txt{width:auto;min-height:auto;padding:2px 0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca);text-decoration:none}
+.btn-txt:hover{color:var(--marca-escura)}
+.btn-txt:disabled{color:var(--tinta-3);cursor:not-allowed}
+.reenvio{margin-top:16px;text-align:center}
+
+/* ------------------------- cartão de pendência ---------------------------- */
+.pend{padding:20px 0;border-top:1px solid var(--linha)}
+.pend:first-child{border-top:0;padding-top:2px}
+.pend-topo{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.logo-credor{height:22px;max-width:150px;width:auto;object-fit:contain;object-position:left center;display:block;margin-bottom:9px}
+.pend-id{min-width:0;flex:1}
+.pend-credor{font-size:15.5px;font-weight:600;letter-spacing:-.018em}
+.pend-abrir{background:none;border:0;padding:2px;margin-left:auto;color:var(--tinta-3);flex:0 0 auto}
+.pend-abrir:hover{color:var(--marca)}
+.de{font-size:13px;color:var(--tinta-3);margin:0 0 1px}
+.de s{text-decoration-thickness:1px}
+.por{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.por b{font-size:29px;font-weight:700;letter-spacing:-.04em;line-height:1.1}
+.por em{font-style:normal;font-size:13px;color:var(--tinta-3);font-weight:500}
+.linha-eco{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.eco{font-size:13.5px;font-weight:600;color:var(--ok)}
+.pct{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:var(--r-p);background:var(--ok-fraco);color:var(--ok);font-size:12px;font-weight:600}
+.destaque-esp{font-size:13.5px;font-weight:600;color:var(--marca)}
+.pend .btn-1{margin-top:16px}
+.pend .btn-2{margin-top:16px;width:100%;min-height:44px;font-size:14px}
+
+/* ----------------------------- linhas de dados ---------------------------- */
+.dados{margin:0;padding:0;list-style:none;border-top:1px solid var(--linha)}
+.dados li{display:flex;gap:16px;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--linha);font-size:14px}
+.dados dt{color:var(--tinta-3);font-size:13.5px;flex:0 0 auto}
+.dados dd{margin:0;font-weight:600;text-align:right;min-width:0}
+.dados dd.livre{font-weight:500}
+.dados li.total dt{color:var(--tinta-2);font-weight:600}
+.dados dd.paga{color:var(--ok)}
+
+/* fatos */
+.fatos{list-style:none;margin:0;padding:0}
+.fatos li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--linha);font-size:14.5px;color:var(--tinta-2)}
+.fatos li:first-child{border-top:1px solid var(--linha)}
+.fatos b{color:var(--tinta);font-weight:600}
+.fatos-ico{color:var(--tinta-3);margin-top:2px}
+.fatos li[data-tom="ok"] .fatos-ico{color:var(--ok)}
+
+/* ------------------------------- opções ----------------------------------- */
+.opcoes{margin:0;border-top:1px solid var(--linha)}
+.opcao{width:100%;display:flex;align-items:center;gap:14px;padding:15px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left;transition:.14s}
+.opcao:hover .opcao-nome{color:var(--marca)}
+.opcao[aria-pressed="true"]{background:rgba(var(--marca-rgb),.035);box-shadow:inset 3px 0 0 var(--marca);padding-left:13px}
+.opcao[aria-pressed="true"] .opcao-nome{color:var(--marca)}
+.opcao-ico{width:36px;height:36px;flex:0 0 36px;border-radius:var(--r);display:grid;place-items:center;background:#F3F3F7;color:var(--tinta-2)}
+.opcao[aria-pressed="true"] .opcao-ico{background:rgba(var(--marca-rgb),.09);color:var(--marca)}
+.opcao-txt{min-width:0;flex:1}
+.opcao-nome{display:block;font-size:15px;font-weight:600;letter-spacing:-.015em;transition:.14s}
+.opcao-sub{display:block;font-size:13px;color:var(--tinta-3);margin-top:1px}
+.opcao-dir{margin-left:auto;text-align:right;flex:0 0 auto}
+.opcao-valor{display:block;font-size:15px;font-weight:600}
+.opcao-eco{display:block;font-size:12px;color:var(--ok);font-weight:600;margin-top:1px}
+.opcao.simples{padding:16px 2px}
+.opcao.simples[aria-pressed="true"]{padding-left:13px}
+
+/* grade quadrada: parcelas e datas */
+.grade{display:grid;gap:8px}
+.grade.parcelas{grid-template-columns:repeat(auto-fit,minmax(74px,1fr))}
+.grade.datas{grid-template-columns:repeat(auto-fit,minmax(78px,1fr))}
+.opt{padding:11px 6px;border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);text-align:center;transition:.14s}
+.opt:hover{border-color:var(--tinta-3)}
+.opt[aria-pressed="true"]{border-color:var(--marca);background:rgba(var(--marca-rgb),.05);box-shadow:inset 0 0 0 1px var(--marca)}
+.opt small{display:block;font-size:10.5px;color:var(--tinta-3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.opt b{display:block;font-size:16px;font-weight:700;letter-spacing:-.02em;margin-top:1px}
+.opt i{display:block;font-style:normal;font-size:11px;color:var(--tinta-3);font-weight:500;margin-top:1px}
+.opt[aria-pressed="true"] b{color:var(--marca)}
+.opt[aria-pressed="true"] small,.opt[aria-pressed="true"] i{color:var(--marca-escura)}
+
+/* --------------------------------- sanfona -------------------------------- */
+.sanfona{border-top:1px solid var(--linha);margin-top:24px}
+.sanfona-cabeca{width:100%;display:flex;align-items:center;gap:12px;padding:16px 2px;background:none;border:0;text-align:left;font-size:14.5px;font-weight:600}
+.sanfona-cabeca svg{margin-left:auto;color:var(--tinta-3);transition:transform .22s}
+.sanfona[data-aberta="1"] .sanfona-cabeca svg{transform:rotate(180deg)}
+.sanfona-corpo{display:none;padding:0 2px 8px}
+.sanfona[data-aberta="1"] .sanfona-corpo{display:block}
+
+/* ------------------------- canais de atendimento -------------------------- */
+.canais{border-top:1px solid var(--linha)}
+.canal{width:100%;display:flex;align-items:center;gap:14px;padding:15px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left}
+.canal:hover .canal-nome{color:var(--marca)}
+.canal-ico{width:36px;height:36px;flex:0 0 36px;border-radius:var(--r);display:grid;place-items:center;background:#F3F3F7;color:var(--tinta-2)}
+.canal-nome{display:block;font-size:14.5px;font-weight:600;transition:.14s}
+.canal-sub{display:block;font-size:12.5px;color:var(--tinta-3);margin-top:1px}
+.canal svg.seta{margin-left:auto;color:var(--tinta-3)}
+.canais.discretos .canal{padding:11px 2px}
+.canais.discretos .canal-ico{width:28px;height:28px;flex:0 0 28px;border-radius:var(--r-p)}
+.canais.discretos .canal-nome{font-size:13.5px}
+.canais.discretos .canal-sub{font-size:12px}
+.canais.discretos .seta{display:none}
+
+/* --------------------------- código de segurança -------------------------- */
+.codigo-caixa{display:flex;gap:8px;margin:4px 0 0}
+.codigo-caixa input{
+  width:48px;height:56px;text-align:center;font-size:22px;font-weight:600;
+  border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);
+  color:var(--tinta);font-family:var(--fonte);padding:0;
+}
+.codigo-caixa input:focus{outline:none;border-color:var(--marca);box-shadow:0 0 0 3px rgba(var(--marca-rgb),.10)}
+.codigo-caixa.erro-cod input{border-color:var(--falha)}
+@media (max-width:400px){.codigo-caixa input{width:42px;height:50px;font-size:19px}}
+.enviado-para{margin:0 0 20px;font-size:14px;color:var(--tinta-2)}
+.enviado-para b{color:var(--tinta);font-weight:600}
+
+/* ------------------------- barra de ação fixa ----------------------------- */
+.barra{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-top:1px solid var(--linha);
+  transform:translateY(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.barra[data-ver="1"]{transform:none}
+.barra-in{max-width:548px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.barra-val{min-width:0;flex:1}
+.barra-rot{font-size:11.5px;color:var(--tinta-3);font-weight:500}
+.barra-num{font-size:20px;font-weight:700;letter-spacing:-.032em;line-height:1.2}
+.barra-eco{font-size:12px;font-weight:600;color:var(--ok)}
+.barra .btn-1{width:auto;min-width:148px;flex:0 0 auto;min-height:44px}
+@media (max-width:400px){.barra .btn-1{min-width:116px;padding:0 14px;font-size:13.5px}}
+
+.rodape{padding:20px;text-align:center;font-size:11.5px;color:var(--tinta-3);line-height:1.6}
+.rodape span{display:block}
+.rodape span + span{margin-top:3px;color:#A0A0AE}
+
+/* ------------------------------- carregando ------------------------------- */
+.carregando{padding:60px 0;text-align:center}
+.giro{
+  width:34px;height:34px;margin:0 auto 18px;border-radius:50%;
+  border:2.5px solid var(--linha);border-top-color:var(--marca);
+  animation:gira .8s linear infinite;
+}
+@keyframes gira{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="portal">
+  <header class="cabeca">
+    <div class="cabeca-topo">
+      <img alt="" class="cabeca-logo hidden" id="portalLogo" src=""/>
+      <span class="cabeca-nome" id="portalNomeMarca">Quatro C</span>
+      <span class="cabeca-seguro">
+        <svg fill="none" height="13" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="13"><rect height="10" rx="2" width="16" x="4" y="11"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg>
+        <span data-txt="rotulo.cabecaSeguro">Ambiente seguro</span>
+      </span>
+    </div>
+    <div class="progresso"><i id="progressBar"></i></div>
+  </header>
+
+  <main class="corpo">
+    <button class="voltar" id="btnVoltar" style="visibility:hidden" type="button">
+      <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M15 18l-6-6 6-6"></path></svg>
+      <span data-txt="botao.btnVoltar">Voltar</span>
+    </button>
+
+<!-- ============================== CARREGANDO =============================== -->
+<section class="view" data-prog="40" id="vLoading">
+  <div class="carregando">
+    <div class="giro"></div>
+    <p class="mini" data-txt="texto.vLoading.1">Consultando...</p>
+  </div>
+</section>
+
+<!-- ============================ IDENTIFICAÇÃO ============================== -->
+<section class="view active" data-prog="15" id="vStart">
+  <h1 data-txt="titulo.vStart">Consulte e negocie online</h1>
+  <p class="sub" data-txt="texto.vStart.1">Preencha os dados abaixo e veja na mesma hora os valores e as condições disponíveis para você.</p>
+
+  <div class="campo">
+    <label for="docInput"><span data-txt="rotulo.campoDoc">CPF ou CNPJ</span>
+      <span class="tipo-doc opacity-0" id="docBadge">CPF</span></label>
+    <div class="caixa com-ico">
+      <svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><rect height="15" rx="2" width="18" x="3" y="5"></rect><circle cx="9" cy="11" r="2.2"></circle><path d="M5.5 17c.7-1.6 2-2.3 3.5-2.3s2.8.7 3.5 2.3M15 10h4M15 13.5h4"></path></svg>
+      <input autocomplete="off" id="docInput" inputmode="numeric" placeholder="000.000.000-00" type="text"/>
+    </div>
+  </div>
+
+  <div class="campo">
+    <label for="nameInput" data-txt="rotulo.campoNome">Como podemos te chamar?</label>
+    <div class="caixa com-ico">
+      <svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><path d="M19 21v-1.5a4 4 0 00-4-4H9a4 4 0 00-4 4V21"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <input autocomplete="name" id="nameInput" placeholder="Seu nome" type="text"/>
+    </div>
+  </div>
+
+  <div class="campo-duplo">
+    <div class="campo">
+      <label for="phoneInput" data-txt="rotulo.campoTel">Celular</label>
+      <div class="caixa com-ico">
+        <svg fill="currentColor" height="17" viewbox="0 0 24 24" width="17"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.06c-.24.68-1.42 1.3-1.96 1.35-.5.05-.96.23-3.3-.71-2.82-1.14-4.6-4.06-4.74-4.25-.14-.2-1.12-1.5-1.12-2.86 0-1.36.71-2.03.96-2.31.25-.28.55-.35.73-.35.18 0 .37 0 .53.01.17.01.4-.06.62.47.23.55.78 1.9.85 2.04.07.14.11.3.02.49-.09.19-.14.3-.28.47-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.17-.2.72-.84.91-1.13.19-.28.38-.23.64-.14.26.1 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.7-.17 1.38z"></path></svg>
+        <input autocomplete="tel" id="phoneInput" inputmode="numeric" placeholder="(11) 90000-0000" type="tel"/>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="emailInput" data-txt="rotulo.campoMail">E-mail</label>
+      <div class="caixa com-ico">
+        <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><rect height="14" rx="2" width="18" x="3" y="5"></rect><path d="M3 8l9 6 9-6"></path></svg>
+        <input autocomplete="email" id="emailInput" inputmode="email" placeholder="voce@email.com" type="email"/>
+      </div>
+    </div>
+  </div>
+
+  <p class="erro hidden" id="startError"></p>
+
+  <div class="acoes">
+    <button class="btn btn-1" disabled="" id="btnConsultar" type="button"><span data-txt="botao.btnConsultar">Consultar</span></button>
+  </div>
+  <p class="nota-centro" data-txt="texto.vStart.2">A consulta é gratuita e não gera nenhum compromisso.</p>
+</section>
+
+<!-- ============================ CÓDIGO DE E-MAIL =========================== -->
+<section class="view" data-prog="25" id="vValidateCode">
+  <h1 data-txt="titulo.vValidateCode">Confirme seu e-mail</h1>
+  <p class="sub" data-txt="texto.vValidateCode.1" id="validateCodeText">Enviamos um código de 6 dígitos para o e-mail que você informou.</p>
+  <p class="enviado-para">Enviado para <b id="codigoDestino">o e-mail informado</b></p>
+
+  <div class="codigo-caixa" id="codigoCaixa">
+    <input inputmode="numeric" maxlength="1" type="text"/>
+    <input inputmode="numeric" maxlength="1" type="text"/>
+    <input inputmode="numeric" maxlength="1" type="text"/>
+    <input inputmode="numeric" maxlength="1" type="text"/>
+    <input inputmode="numeric" maxlength="1" type="text"/>
+    <input inputmode="numeric" maxlength="1" type="text"/>
+  </div>
+  <input id="validationCodeInput" type="hidden"/>
+  <p class="erro hidden" id="validationCodeError"></p>
+
+  <div class="acoes">
+    <button class="btn btn-1" disabled="" id="btnValidateCode" type="button"><span data-txt="botao.btnValidateCode">Confirmar</span></button>
+  </div>
+  <div class="reenvio">
+    <button class="btn-txt" disabled="" id="btnResendCode" type="button"><span data-txt="botao.btnResendCode">Reenviar código</span></button>
+  </div>
+</section>
+
+<!-- ========================= CONFIRMAR IDENTIDADE ========================== -->
+<section class="view" data-prog="32" id="vConfirmName">
+  <h1 data-txt="titulo.vConfirmName">Selecione o seu nome completo</h1>
+  <p class="sub" data-txt="texto.vConfirmName.1" id="confirmSubtitle">Para seguir com segurança, confirme o nome do titular do documento informado.</p>
+  <div class="opcoes" id="nameOptions"></div>
+</section>
+
+<!-- ========================== IDENTIDADE INCORRETA ========================= -->
+<section class="view" data-prog="32" id="vIdentityError">
+  <h1 data-txt="titulo.vIdentityError">Nome não confere</h1>
+  <p class="sub" data-txt="texto.vIdentityError.1">O nome selecionado não corresponde ao cadastro localizado para este documento.</p>
+  <p class="mini" id="identityAttemptMsg"></p>
+  <div class="acoes">
+    <button class="btn btn-1" id="btnIdentityTryAgain" type="button"><span data-txt="botao.btnIdentityTryAgain">Tentar novamente</span></button>
+  </div>
+</section>
+
+<!-- ================================ BLOQUEADO ============================== -->
+<section class="view" data-prog="25" id="vBlocked">
+  <h1 data-txt="titulo.vBlocked">Acesso restrito por segurança</h1>
+  <p class="sub" data-txt="texto.vBlocked.1">Seu acesso foi bloqueado por tentativas de validação sem sucesso. Uma nova consulta será liberada automaticamente em até 24 horas. Nosso atendimento permanece disponível para seguir com você agora.</p>
+  <p class="rotulo" data-txt="rotulo.canais.vBlocked">Falar com o atendimento</p>
+  <div class="canais" data-canais="1"></div>
+</section>
+
+<!-- ============================== PENDÊNCIAS =============================== -->
+<section class="view" data-prog="55" id="vNext">
+  <h1 data-txt="titulo.vNext" id="cardsTitle">Suas pendências</h1>
+  <p class="sub" data-txt="texto.vNext.1" id="cardsSubtitle">Valores atualizados nesta consulta.</p>
+  <div id="cardsGrid"></div>
+</section>
+
+<!-- ============================== NEGOCIAÇÃO =============================== -->
+<section class="view" data-barra="1" data-prog="80" id="vNegotiate">
+  <h1 data-txt="titulo.vNegotiate" id="negotiateTitle">Escolha a forma de pagamento</h1>
+  <p class="sub" id="negotiateSub"><b id="negotiationCreditor">-</b></p>
+  <span class="hidden" id="negotiationContract">-</span>
+  <span class="hidden" id="negotiationProposal">R$ 0,00</span>
+
+  <div class="opcoes hidden" id="negotiationPaymentBlock">
+    <button aria-pressed="true" class="opcao" data-mode="vista" type="button">
+      <span class="opcao-ico"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="18"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg></span>
+      <span class="opcao-txt"><span class="opcao-nome">À vista</span></span>
+      <span class="opcao-dir"><span class="opcao-valor" id="optVistaSub">-</span><span class="opcao-eco hidden" id="optVistaEco"></span></span>
+    </button>
+    <button aria-pressed="false" class="opcao" data-mode="parcelado" type="button">
+      <span class="opcao-ico"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="18"><rect height="15" rx="2" width="18" x="3" y="5"></rect><path d="M3 10h18M8 15h4"></path></svg></span>
+      <span class="opcao-txt"><span class="opcao-nome">Parcelado</span><span class="opcao-sub" id="optParceladoSub"></span></span>
+      <span class="opcao-dir"><span class="opcao-valor" id="optParceladoValor">-</span></span>
+    </button>
+  </div>
+  <span class="hidden" id="paymentModeButtons"></span>
+
+  <div class="hidden" id="installmentBlock">
+    <p class="rotulo" data-txt="rotulo.parcelas">Parcelas</p>
+    <div class="grade parcelas" id="installmentButtons"></div>
+  </div>
+
+  <p class="rotulo" id="rotuloVencimento">Vencimento do boleto</p>
+  <div class="grade datas" id="paymentDateOptions"></div>
+  <input id="paymentDateInput" type="hidden"/>
+  <input id="paymentModeInput" type="hidden" value="vista"/>
+  <input id="installmentCountInput" type="hidden"/>
+
+  <p class="erro hidden" id="negotiationError"></p>
+
+  <div class="sanfona" data-aberta="0">
+    <button class="sanfona-cabeca" data-sanfona="1" type="button"><span data-txt="rotulo.detalhes">Detalhes da dívida</span>
+      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg></button>
+    <div class="sanfona-corpo"><dl class="dados" id="negotiationDetalhes"></dl></div>
+  </div>
+</section>
+
+<!-- =========================== NEGOCIAÇÃO FECHADA ========================== -->
+<section class="view" data-prog="100" id="vNegotiationSuccess">
+  <h1 data-txt="titulo.vNegotiationSuccess">Negociação fechada</h1>
+  <p class="sub" id="negotiationSuccessSub">Seu acordo está registrado.</p>
+  <ul class="fatos">
+    <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <span id="negotiationSuccessBoleto">O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+    <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
+      <span id="negotiationSuccessVenc">Vencimento a confirmar</span></li>
+  </ul>
+  <div class="acoes acoes-centro">
+    <button class="btn btn-2" id="btnNovaConsultaSucesso" type="button"><span data-txt="botao.btnNovaConsultaSucesso">Nova consulta</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.duvida" style="margin-top:30px">Se ainda tiver dúvida</p>
+  <div class="canais discretos" data-canais="1"></div>
+</section>
+
+<!-- ============================= BOLETO EMITIDO ============================ -->
+<section class="view" data-prog="100" id="vSecondCopySuccess">
+  <h1 data-txt="titulo.vSecondCopySuccess">Boleto emitido</h1>
+  <p class="sub" id="secondCopySub">Seu boleto está registrado.</p>
+  <ul class="fatos">
+    <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <span>O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+    <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
+      <span id="secondCopyVenc">Vencimento a confirmar</span></li>
+  </ul>
+  <div class="acoes acoes-centro">
+    <button class="btn btn-2" id="btnNovaConsultaSegundaVia" type="button"><span data-txt="botao.btnNovaConsultaSucesso">Nova consulta</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.duvida" style="margin-top:30px">Se ainda tiver dúvida</p>
+  <div class="canais discretos" data-canais="1"></div>
+</section>
+
+<!-- ============================= NÃO CONCLUÍDA ============================= -->
+<!-- Serve para a negociação e para a emissão de boleto: o processo no CRM é o
+     mesmo. Por isso nenhum dado específico de proposta aparece aqui.         -->
+<section class="view" data-prog="100" id="vNegotiationFailed">
+  <h1 data-txt="titulo.vNegotiationFailed">Não foi possível concluir agora</h1>
+  <p class="sub" data-txt="texto.vNegotiationFailed.1" id="negotiationFailedMsg">Tivemos uma instabilidade no nosso sistema e o registro não pôde ser finalizado neste momento.</p>
+  <ul class="fatos">
+    <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <span data-txt="texto.vNegotiationFailed.2">As informações da sua solicitação ficaram registradas</span></li>
+    <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <span data-txt="texto.vNegotiationFailed.3">Nossa equipe já foi acionada e vai dar continuidade</span></li>
+  </ul>
+  <p class="rotulo" data-txt="rotulo.canais.falarAgora">Prefere falar agora?</p>
+  <div class="canais" data-canais="1"></div>
+</section>
+
+<!-- ============================= ACORDO VIGENTE ============================ -->
+<section class="view" data-prog="55" id="vActiveAgreement">
+  <h1 data-txt="titulo.vActiveAgreement">Seu acordo está em dia</h1>
+  <p class="sub" id="activeAgreementSub">-</p>
+  <dl class="dados" id="activeAgreementDados">
+    <li><dt>Vencimento · <span id="activeAgreementDue">--/--/----</span></dt><dd id="activeAgreementValue">R$ 0,00</dd></li>
+  </dl>
+  <div class="acoes">
+    <button class="btn btn-1" id="btnAgreementHumano" type="button"><span data-txt="botao.btnReenviarBoleto">Reenviar boleto</span></button>
+  </div>
+</section>
+
+<!-- ============================= NÃO LOCALIZADO ============================ -->
+<section class="view" data-prog="20" id="vNoRecord">
+  <h1 data-txt="titulo.vNoRecord">Nada em aberto para este documento</h1>
+  <p class="sub" data-txt="texto.vNoRecord.1" id="noRecordMsg">Não localizamos nenhuma pendência registrada na nossa base para o documento informado.</p>
+  <div class="acoes">
+    <button class="btn btn-1" id="btnNovaConsultaNoRecord" type="button"><span data-txt="botao.btnNovaConsultaNoRecord">Consultar outro documento</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.sePreferir" style="margin-top:30px">Se preferir, fale com a gente</p>
+  <div class="canais" data-canais="1"></div>
+</section>
+
+<!-- ================================= EM DIA ================================ -->
+<section class="view" data-prog="55" id="vNoDebt">
+  <h1 data-txt="titulo.vNoDebt" id="noDebtTitle">Você está em dia</h1>
+  <p class="sub" id="noDebtSub">-</p>
+  <div class="acoes">
+    <button class="btn btn-1" id="btnNovaConsultaNoDebt" type="button"><span data-txt="botao.btnNovaConsultaNoDebt">Consultar outro documento</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.sePreferir" style="margin-top:30px">Se preferir, fale com a gente</p>
+  <div class="canais" data-canais="1"></div>
+</section>
+
+<!-- ============================== INDISPONÍVEL ============================= -->
+<section class="view" data-prog="15" id="vError">
+  <h1 data-txt="titulo.vError">Não foi possível seguir agora</h1>
+  <p class="sub" data-txt="texto.vError.1" id="errorMsg">Estamos com uma instabilidade no nosso sistema. Tente novamente em alguns minutos ou fale com a gente pelos nossos canais de atendimento.</p>
+  <div class="acoes">
+    <button class="btn btn-1" id="btnNovaConsultaErr" type="button"><span data-txt="botao.btnNovaConsultaErr">Tentar novamente</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.faleComAGente" style="margin-top:30px">Fale com a gente</p>
+  <div class="canais" data-canais="1"></div>
+</section>
+
+<!-- ========================== AGENDAMENTO (IRA) ============================ -->
+<section class="view" data-prog="80" id="vIraSchedule">
+  <h1 data-txt="titulo.vIraSchedule">Agendamento de retirada</h1>
+  <p class="sub" data-txt="texto.vIraSchedule.1">Informe as preferências de data, o local e o responsável pelo acompanhamento.</p>
+
+  <p class="secao" data-txt="texto.vIraSchedule.2" style="border-top:0;padding-top:0;margin-top:0">Preferências de data e horário</p>
+  <div class="campo-duplo">
+    <div class="campo"><label for="iraDate1">1ª opção · data</label><select id="iraDate1"></select></div>
+    <div class="campo"><label for="iraTime1">1ª opção · horário</label><select id="iraTime1"></select></div>
+  </div>
+  <div class="campo-duplo">
+    <div class="campo"><label for="iraDate2">2ª opção · data</label><select id="iraDate2"></select></div>
+    <div class="campo"><label for="iraTime2">2ª opção · horário</label><select id="iraTime2"></select></div>
+  </div>
+  <p class="mini">A segunda opção precisa ser pelo menos 2 horas depois da primeira.</p>
+
+  <p class="secao" data-txt="texto.vIraSchedule.3">Local de retirada</p>
+  <div class="campo"><label for="iraStreet">Logradouro</label><input id="iraStreet" type="text"/></div>
+  <div class="campo-duplo">
+    <div class="campo"><label for="iraNumber">Número</label><input id="iraNumber" inputmode="numeric" type="text"/></div>
+    <div class="campo"><label for="iraZip">CEP</label><input id="iraZip" inputmode="numeric" placeholder="00000-000" type="text"/></div>
+  </div>
+  <div class="campo-duplo">
+    <div class="campo"><label for="iraDistrict">Bairro</label><input id="iraDistrict" type="text"/></div>
+    <div class="campo"><label for="iraCity">Cidade</label><input id="iraCity" type="text"/></div>
+  </div>
+  <div class="campo"><label for="iraReference">Ponto de referência</label><input id="iraReference" type="text"/></div>
+
+  <p class="secao" data-txt="texto.vIraSchedule.4">Responsável pelo acompanhamento</p>
+  <div class="campo"><label for="iraResponsible">Nome completo</label><input id="iraResponsible" type="text"/></div>
+  <div class="campo-duplo">
+    <div class="campo"><label for="iraWhatsapp">WhatsApp</label><input id="iraWhatsapp" inputmode="numeric" placeholder="(11) 90000-0000" type="tel"/></div>
+    <div class="campo"><label for="iraEmail">E-mail</label><input id="iraEmail" inputmode="email" type="email"/></div>
+  </div>
+
+  <p class="erro hidden" id="iraError"></p>
+  <div class="acoes">
+    <button class="btn btn-1" id="btnSubmitIra" type="button"><span data-txt="botao.btnSubmitIra">Enviar solicitação</span></button>
+  </div>
+</section>
+
+<!-- ======================== AGENDAMENTO REGISTRADO ========================= -->
+<section class="view" data-prog="100" id="vIraSuccess">
+  <h1 data-txt="titulo.vIraSuccess">Solicitação registrada</h1>
+  <p class="sub" data-txt="texto.vIraSuccess.1">Vamos validar a disponibilidade e confirmar o agendamento pelos contatos informados.</p>
+  <div class="acoes acoes-centro">
+    <button class="btn btn-2" id="btnNovaConsultaIra" type="button"><span data-txt="botao.btnNovaConsultaSucesso">Nova consulta</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.duvida" style="margin-top:30px">Se ainda tiver dúvida</p>
+  <div class="canais discretos" data-canais="1"></div>
+</section>
+
+  </main>
+
+  <p class="rodape">
+    <span id="rodapeLinha1">Canal oficial de negociação · Quatro C Serviços Ltda</span>
+    <span id="rodapeLinha2">CNPJ 00.000.000/0001-00 · Dados protegidos pela LGPD</span>
+  </p>
+</div>
+
+<div class="barra" data-ver="0" id="barraAcao">
+  <div class="barra-in">
+    <div class="barra-val">
+      <div class="barra-rot" id="barraRot">Total</div>
+      <div class="barra-num" id="barraNum">R$ 0,00</div>
+      <div class="barra-eco hidden" id="barraEco"></div>
+    </div>
+    <button class="btn btn-1" id="btnConfirmNegotiation" type="button"><span data-txt="botao.btnConfirmNegotiation">Confirmar negociação</span></button>
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------------------
+   CAMADA DE MARCA
+   Aplica cor, logo, fonte e textos do PORTAL_CONFIG. Estrutura e regras não
+   mudam — só a aparência e as palavras. É também aqui que fica a conversa
+   com o painel de administração (postMessage).
+   --------------------------------------------------------------------------- */
+(function () {
+  function hexParaRgb(hex) {
+    const s = String(hex || '').replace('#', '').trim();
+    const c = s.length === 3 ? s.split('').map(x => x + x).join('') : s;
+    const n = parseInt(c, 16);
+    if (!isFinite(n)) return '206, 46, 60';
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(', ');
+  }
+
+  /* Troca só o nó de texto: preserva ícone e elementos filhos. */
+  function trocarTexto(el, valor) {
+    if (typeof valor !== 'string' || !valor.trim()) return;
+    const temFilhoElemento = Array.from(el.childNodes).some(n => n.nodeType === 1);
+    if (!temFilhoElemento) { el.textContent = valor; return; }
+    const alvo = Array.from(el.childNodes).find(n => n.nodeType === 3 && n.textContent.trim());
+    if (alvo) alvo.textContent = valor; else el.appendChild(document.createTextNode(valor));
+  }
+
+  window.aplicarPortalConfig = function (cfg) {
+    cfg = cfg || window.PORTAL_CONFIG || {};
+    const raiz = document.documentElement.style;
+    const cores = cfg.cores || {};
+
+    if (cores.primaria) {
+      raiz.setProperty('--marca', cores.primaria);
+      raiz.setProperty('--marca-rgb', hexParaRgb(cores.primaria));
+    }
+    if (cores.primariaEscura) raiz.setProperty('--marca-escura', cores.primariaEscura);
+
+    const marca = cfg.marca || {};
+    if (marca.fonte) raiz.setProperty('--fonte', "'" + marca.fonte + "', system-ui, Arial, sans-serif");
+
+    const logo = document.getElementById('portalLogo');
+    const nome = document.getElementById('portalNomeMarca');
+    if (logo && nome) {
+      if (marca.logoUrl) {
+        logo.src = marca.logoUrl;
+        logo.alt = marca.nome || 'Logo';
+        logo.style.height = (marca.logoAltura || 24) + 'px';
+        logo.classList.remove('hidden');
+        nome.classList.add('hidden');
+      } else {
+        logo.classList.add('hidden');
+        nome.textContent = marca.nome || '';
+        nome.classList.remove('hidden');
+      }
+    }
+
+    document.querySelectorAll('[data-txt]').forEach(el => {
+      trocarTexto(el, (cfg.textos || {})[el.getAttribute('data-txt')]);
+    });
+
+    /* rodapé legal montado do contato */
+    const ct = cfg.contato || {};
+    const l1 = document.getElementById('rodapeLinha1');
+    const l2 = document.getElementById('rodapeLinha2');
+    if (l1) l1.textContent = 'Canal oficial de negociação' + (ct.razaoSocial ? ' · ' + ct.razaoSocial : '');
+    if (l2) l2.textContent = (ct.cnpj ? 'CNPJ ' + ct.cnpj + ' · ' : '') + 'Dados protegidos pela LGPD';
+
+    if (typeof window.montarCanais === 'function') window.montarCanais();
+    document.title = (marca.nome ? marca.nome + ' | ' : '') + 'Portal de Autoatendimento';
+  };
+
+  window.addEventListener('message', function (ev) {
+    if (!ev.data) return;
+
+    if (ev.data.tipo === 'portal-config') {
+      window.PORTAL_CONFIG = ev.data.config;
+      window.aplicarPortalConfig(ev.data.config);
+      return;
+    }
+
+    /* devolve o mapa de tudo que é personalizável — o painel se monta com ele */
+    if (ev.data.tipo === 'portal-pedir-mapa') {
+      const mapa = {};
+      document.querySelectorAll('[data-txt]').forEach(el => {
+        const chave = el.getAttribute('data-txt');
+        const tela = el.closest('.view');
+        mapa[chave] = {
+          tela: tela ? tela.id : 'global',
+          tipo: chave.split('.')[0],
+          padrao: (el.textContent || '').replace(/\s+/g, ' ').trim()
+        };
+      });
+      const alvo = ev.source || window.parent;
+      if (alvo) alvo.postMessage({ tipo: 'portal-mapa', mapa: mapa }, '*');
+      return;
+    }
+
+    /* mostra uma tela específica, para o painel pré-visualizar cada etapa */
+    if (ev.data.tipo === 'portal-ver-tela' && ev.data.tela) {
+      if (typeof window.preverTela === 'function') window.preverTela(ev.data.tela);
+      return;
+    }
+  });
+
+  window.addEventListener('load', function () {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ tipo: 'portal-pronto' }, '*');
+    }
+  });
+})();
+<\/script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const CFG = window.PORTAL_CONFIG || {};
+    const CT = CFG.contato || {};
+    const CRM_ENDPOINT = (CFG.integracao && CFG.integracao.endpoint)
+        || "https://billowing-voice-6efd.asilvino19.workers.dev/";
+
+    const CANAL = ((CFG.integracao || {}).canaisPorCredor || {});
+    const CHAT_LINK_SASCAR         = CANAL["SASCAR"] || CANAL["PADRAO"] || "";
+    const CHAT_LINK_IRA            = CANAL["IRA"] || CANAL["PADRAO"] || "";
+    const CHAT_LINK_AMIL_DEFAULT   = CANAL["PADRAO"] || "";
+    const CHAT_LINK_REDE_AMERICAS  = CANAL["REDE AMERICAS"] || CANAL["PADRAO"] || "";
+
+    const $ = (id) => document.getElementById(id);
+
+    let currentView = "vStart";
+    let docType = "CPF";
+    let currentDoc = "";
+    let sessionId = Date.now().toString();
+    let sessionToken = "";
+    let foundRecord = null;
+    let selectedCard = null;
+    let lastHumanChat = CHAT_LINK_AMIL_DEFAULT;
+    let identityAttemptCount = 0;
+    let resendCodeTimer = null;
+    let modoPreview = false;
+    const RESEND_CODE_WAIT_SECONDS = 60;
+
+    /* ===================== utilitários ===================================== */
+    function onlyDigits(str) { return String(str || "").replace(/\D/g, ""); }
+    function isCPF(d) { return d.length === 11; }
+    function isCNPJ(d) { return d.length === 14; }
+    function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim()); }
+    function isValidPhone(phone) { const d = onlyDigits(phone); return d.length === 10 || d.length === 11; }
+
+    function formatPhoneBR(value) {
+        const d = onlyDigits(value).slice(0, 11);
+        if (d.length <= 2) return d.length ? `(${d}` : "";
+        if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+        if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+        return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+    }
+    function norm(str) {
+        return String(str || "").toUpperCase().normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
+    }
+    function formatBRL(v) {
+        return Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
+    function maskCPF(digits) {
+        const d = digits.slice(0, 11); let out = d;
+        if (d.length > 3) out = d.slice(0, 3) + "." + d.slice(3);
+        if (d.length > 6) out = out.slice(0, 7) + "." + out.slice(7);
+        if (d.length > 9) out = out.slice(0, 11) + "-" + out.slice(11);
+        return out;
+    }
+    function maskCNPJ(digits) {
+        const d = digits.slice(0, 14); let out = d;
+        if (d.length > 2) out = d.slice(0, 2) + "." + d.slice(2);
+        if (d.length > 5) out = out.slice(0, 6) + "." + out.slice(6);
+        if (d.length > 8) out = out.slice(0, 10) + "/" + out.slice(10);
+        if (d.length > 12) out = out.slice(0, 15) + "-" + out.slice(15);
+        return out;
+    }
+    function maskCEP(value) {
+        const d = onlyDigits(value).slice(0, 8);
+        return d.length <= 5 ? d : `${d.slice(0, 5)}-${d.slice(5)}`;
+    }
+    function detectTypeFromDigits(d) { return d.length >= 12 ? "CNPJ" : "CPF"; }
+
+    function normalizarNomeInvisivel(str) {
+        const conectores = ["de", "da", "do", "dos", "das", "e", "em"];
+        return str.trim().toLowerCase().split(/\s+/).map((p, i) => {
+            if (!p) return "";
+            if (conectores.includes(p) && i > 0) return p;
+            return p.charAt(0).toUpperCase() + p.slice(1);
+        }).filter(Boolean).join(" ");
+    }
+    function normalizarCampoEndereco(id) {
+        const inp = $(id);
+        if (inp && inp.value.trim().length > 0) inp.value = normalizarNomeInvisivel(inp.value);
+    }
+    function mascararEmail(email) {
+        const e = String(email || "").trim();
+        const at = e.indexOf("@");
+        if (at < 1) return "o e-mail informado";
+        return e.slice(0, 2) + "•••••" + e.slice(at);
+    }
+
+    /* ===================== ícones e canais ================================= */
+    const ICO_WA = '<svg fill="currentColor" height="19" viewBox="0 0 24 24" width="19"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.06c-.24.68-1.42 1.3-1.96 1.35-.5.05-.96.23-3.3-.71-2.82-1.14-4.6-4.06-4.74-4.25-.14-.2-1.12-1.5-1.12-2.86 0-1.36.71-2.03.96-2.31.25-.28.55-.35.73-.35.18 0 .37 0 .53.01.17.01.4-.06.62.47.23.55.78 1.9.85 2.04.07.14.11.3.02.49-.09.19-.14.3-.28.47-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.17-.2.72-.84.91-1.13.19-.28.38-.23.64-.14.26.1 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.7-.17 1.38z"></path></svg>';
+    const ICO_TEL = '<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="18"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.2a2 2 0 012.1-.5c.8.3 1.7.6 2.6.7a2 2 0 011.7 2z"></path></svg>';
+    const SETA = '<svg class="seta" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"><path d="M9 18l6-6-6-6"></path></svg>';
+    const ICO_CHECK = '<svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewBox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg>';
+
+    /* Os canais existem em um lugar só. Trocar telefone ou horário no painel
+       reflete em todas as telas de uma vez.                                   */
+    window.montarCanais = function () {
+        const c = (window.PORTAL_CONFIG || {}).contato || {};
+        const lista = [
+            { ico: ICO_WA,  nome: c.whatsappRotulo || "WhatsApp", sub: c.whatsappHorario || "", acao: "whatsapp" },
+            { ico: ICO_TEL, nome: c.telefoneRotulo || c.telefone || "", sub: c.telefoneHorario || "", acao: "telefone" }
+        ].filter(x => x.nome);
+        const html = lista.map(x =>
+            '<button class="canal" type="button" data-acao="' + x.acao + '">' +
+            '<span class="canal-ico">' + x.ico + '</span><span class="canal-txt">' +
+            '<span class="canal-nome">' + x.nome + '</span>' +
+            '<span class="canal-sub">' + x.sub + '</span></span>' + SETA + '</button>').join("");
+        document.querySelectorAll('[data-canais]').forEach(box => { box.innerHTML = html; });
+    };
+    window.montarCanais();
+
+    document.addEventListener("click", (ev) => {
+        const b = ev.target.closest(".canal"); if (!b) return;
+        const c = (window.PORTAL_CONFIG || {}).contato || {};
+        if (b.dataset.acao === "telefone" && c.telefone) {
+            window.location.href = "tel:" + onlyDigits(c.telefone);
+            return;
+        }
+        openChat(lastHumanChat || c.whatsapp || CHAT_LINK_AMIL_DEFAULT);
+    });
+
+    /* ===================== navegação ====================================== */
+    function setProgress(viewId) {
+        const el = $(viewId); const pb = $("progressBar");
+        if (pb && el) pb.style.width = (el.dataset.prog || 15) + "%";
+    }
+
+    function setActiveView(viewId) {
+        document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+        const target = $(viewId);
+        if (target) target.classList.add("active");
+
+        const btnVoltar = $("btnVoltar");
+        if (btnVoltar) btnVoltar.style.visibility = (viewId === "vStart" || viewId === "vLoading") ? "hidden" : "visible";
+
+        const barra = $("barraAcao");
+        if (barra) barra.dataset.ver = (target && target.dataset.barra === "1") ? "1" : "0";
+
+        currentView = viewId;
+        setProgress(viewId);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(reportarAltura, 60);
+        setTimeout(reportarAltura, 400);
+    }
+
+    /* Voltar é contextual: das telas de pagamento volta para as pendências,
+       do resto reinicia a consulta.                                          */
+    function voltarContextual() {
+        if (currentView === "vNegotiate" || currentView === "vIraSchedule") return setActiveView("vNext");
+        goStart();
+    }
+
+    /* usada pelo painel de administração para pré-visualizar telas */
+    window.preverTela = function (tela) {
+        modoPreview = true;
+        if (tela === "vNext" && !$("cardsGrid").children.length) renderCards(cardsDemo());
+        if (tela === "vNegotiate" && !selectedCard) openNegotiation(cardsDemo()[0]);
+        if (tela === "vConfirmName" && !$("nameOptions").children.length) {
+            renderIdentityOptions([], "ANA PAULA SILVINO", "CPF");
+        }
+        setActiveView(tela);
+    };
+
+    function cardsDemo() {
+        return [{
+            tipo: "pendencia", credor: "AMIL OPERADORAS", credorNome: "Amil", numeroContrato: "3",
+            idContrato: "0", valorTotal: 3041.64, propostaQuitacao: 2129.15, exibirProposta: true,
+            podeNegociar: true, permiteParcelamento: true,
+            parcelamento: { parcelasDisponiveis: [2, 3, 4], valorNegociadoParcelado: 2798.31, percentualDescontoVista: 30 },
+            detalhes: [
+                { vencimentoFormatado: "12/05/2026", valor: 1240, valorFormatado: "R$ 1.240,00" },
+                { vencimentoFormatado: "12/06/2026", valor: 1240, valorFormatado: "R$ 1.240,00" }
+            ]
+        }];
+    }
+
+    function showText(id, message) {
+        const el = $(id); if (!el) return;
+        el.textContent = message; el.classList.remove("hidden");
+    }
+    function hideText(id) {
+        const el = $(id); if (!el) return;
+        el.textContent = ""; el.classList.add("hidden");
+    }
+
+    /* ===================== documento e formulário ========================= */
+    function applyMask() {
+        const input = $("docInput"); if (!input) return;
+        const digits = onlyDigits(input.value);
+        if (docType === "CPF") { input.value = maskCPF(digits); input.maxLength = 14; }
+        else { input.value = maskCNPJ(digits); input.maxLength = 18; }
+    }
+    function setDocType(type) { docType = type; applyMask(); }
+
+    function engineValidacaoFormulario() {
+        const docDigitos = onlyDigits($("docInput")?.value || "");
+        const phoneDigitos = onlyDigits($("phoneInput")?.value || "");
+        const docValido = (docDigitos.length === 11 || docDigitos.length === 14);
+        const nameValido = ($("nameInput")?.value.trim().length || 0) >= 3;
+        const phoneValido = (phoneDigitos.length === 10 || phoneDigitos.length === 11);
+        const emailValido = isValidEmail($("emailInput")?.value.trim());
+        const btn = $("btnConsultar"); if (!btn) return false;
+        const ok = docValido && nameValido && phoneValido && emailValido;
+        btn.disabled = !ok;
+        return ok;
+    }
+
+    function clearPortalForms() {
+        ["docInput", "nameInput", "phoneInput", "emailInput",
+         "iraStreet", "iraNumber", "iraDistrict", "iraZip", "iraCity",
+         "iraReference", "iraResponsible", "iraEmail", "iraWhatsapp"
+        ].forEach(id => { const el = $(id); if (el) el.value = ""; });
+        ["iraDate1", "iraTime1", "iraDate2", "iraTime2"].forEach(id => { const el = $(id); if (el) el.value = ""; });
+        limparCodigo();
+        hideText("startError"); hideText("validationCodeError");
+        hideText("negotiationError"); hideText("iraError");
+        engineValidacaoFormulario();
+    }
+
+    function goStart() {
+        currentDoc = ""; foundRecord = null; selectedCard = null;
+        identityAttemptCount = 0; sessionToken = "";
+        sessionId = Date.now().toString();
+        clearPortalForms(); setDocType("CPF"); setActiveView("vStart");
+    }
+
+    /* ===================== backend ======================================== */
+    async function callBackend(step, payload) {
+        const body = { step, sessionId, ...payload };
+        if (sessionToken) body.sessionToken = sessionToken;
+        const res = await fetch(CRM_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(`Falha backend: ${res.status}`);
+        const data = await res.json();
+        if (data && data.sessionToken) sessionToken = data.sessionToken;
+        return data;
+    }
+
+    function openChat(url) {
+        const alvo = url || CHAT_LINK_AMIL_DEFAULT;
+        if (!alvo) return;
+        window.open(alvo, "_blank", "noopener,noreferrer");
+    }
+
+    /* ===================== credor ========================================= */
+    /* O logo vem do PORTAL_CONFIG.logosCredor, com a chave igual ao nome do
+       credor como o CRM devolve. Sem logo cadastrado, fica só o nome — sem
+       placeholder, sem moldura.                                              */
+    function logoDoCredor(credorRaw) {
+        const mapa = (window.PORTAL_CONFIG || {}).logosCredor || {};
+        const c = norm(credorRaw);
+        for (const chave in mapa) {
+            if (c.includes(norm(chave))) return mapa[chave];
+        }
+        return "";
+    }
+
+    function getCredorPresentation(credorRaw, unidade) {
+        const c = norm(credorRaw);
+        const logo = logoDoCredor(credorRaw);
+        if (c.includes("AMIL OPERADORAS"))      return { nome: "Amil", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "NEGOCIAR" };
+        if (c.includes("SANTA HELENA"))         return { nome: "Santa Helena Saúde", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
+        if (c.includes("SASCAR_IRA"))           return { nome: "Michelin | Equipamentos", logo, chat: CHAT_LINK_IRA, tipoAcao: "AGENDAR" };
+        if (c.includes("SASCAR FIXA VARIAVEL")) return { nome: "Michelin Connect Fleet", logo, chat: CHAT_LINK_SASCAR, tipoAcao: "HUMANO" };
+        if (c.includes("REDE AMERICAS"))        return { nome: unidade || "Rede Américas", logo, chat: CHAT_LINK_REDE_AMERICAS, tipoAcao: "HUMANO" };
+        if (c.includes("AMIL HOSPITAIS"))       return { nome: unidade || "Amil Hospitais", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
+        return { nome: credorRaw || "Projeto", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
+    }
+
+    /* ===================== identidade ===================================== */
+    function shuffleArray(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+    function uniqueOptions(options) {
+        const seen = new Set();
+        return options.map(v => String(v || "").replace(/\s+/g, " ").trim().toUpperCase())
+            .filter(v => { if (!v || seen.has(v)) return false; seen.add(v); return true; });
+    }
+
+    function buildFallbackNameOptions(realName, typeUpper) {
+        const clean = String(realName || "").replace(/\s+/g, " ").trim().toUpperCase();
+        const isCompany = String(typeUpper || "").toUpperCase() === "CNPJ";
+
+        if (isCompany) {
+            const legalTerms = /\b(LTDA|L T D A|ME|EPP|SA|S\/A|EIRELI|S\.A\.|MEI|EI|EIRELLI)\b/g;
+            const connectorTerms = new Set(["DE", "DA", "DO", "DAS", "DOS", "E"]);
+            const words = clean.replace(legalTerms, "").split(/\s+/)
+                .map(w => w.replace(/[^\p{L}]/gu, "")).filter(w => w && !connectorTerms.has(w));
+            const base = `${words[0] || "EMPRESA"} ${words[1] || "BRASIL"}`.trim();
+            const lib = ["CONSULTORIA","SERVICOS","COMERCIO","SOLUCOES EMPRESARIAIS","GESTAO E NEGOCIOS",
+                         "TECNOLOGIA","ASSESSORIA","REPRESENTACOES","TRANSPORTES","EMPREENDIMENTOS",
+                         "PARTICIPACOES","LOGISTICA","COMERCIAL","ADMINISTRADORA","NEGOCIOS DIGITAIS"]
+                        .map(s => `${base} ${s}`);
+            return uniqueOptions([clean || `${base} SERVICOS`, ...shuffleArray(lib)]).slice(0, 4);
+        }
+
+        const parts = clean.split(/\s+/).filter(Boolean);
+        const prefix = `${parts[0] || "MARIA"} ${parts[1] || "HELENA"}`.trim();
+        const lib = ["LIMA","ALMEIDA","MARTINS","SOUZA","COSTA","PEREIRA","SANTOS","OLIVEIRA","RIBEIRO","FERREIRA"]
+                    .map(s => `${prefix} ${s}`);
+        return uniqueOptions([clean || `${prefix} COSTA`, ...shuffleArray(lib)]).slice(0, 4);
+    }
+
+    function prepareIdentityOptions(options, fullName, typeUpper) {
+        const type = String(typeUpper || "").toUpperCase() === "CNPJ" ? "CNPJ" : "CPF";
+        const real = String(fullName || "").replace(/\s+/g, " ").trim().toUpperCase();
+        let finalOptions = uniqueOptions([real, ...buildFallbackNameOptions(real, type)]).filter(Boolean);
+        while (finalOptions.length < 4) {
+            finalOptions = uniqueOptions([...finalOptions, ...buildFallbackNameOptions(finalOptions[0] || real, type)]);
+        }
+        return shuffleArray(finalOptions.slice(0, 4));
+    }
+
+    function showIdentityError() {
+        if (identityAttemptCount >= 3) return setActiveView("vBlocked");
+        const msg = $("identityAttemptMsg");
+        if (msg) {
+            const restam = 3 - identityAttemptCount;
+            msg.textContent = restam === 1
+                ? "Você tem mais 1 tentativa antes do bloqueio por segurança."
+                : `Você tem ${restam} tentativas.`;
+        }
+        setActiveView("vIdentityError");
+    }
+
+    function renderIdentityOptions(options, fullName, typeUpper) {
+        const wrap = $("nameOptions"); if (!wrap) return;
+        wrap.innerHTML = "";
+        const resolvedType = isCNPJ(currentDoc) ? "CNPJ" : "CPF";
+        const finalOptions = prepareIdentityOptions(options, fullName, resolvedType);
+
+        const subtitle = $("confirmSubtitle");
+        if (subtitle) {
+            subtitle.textContent = resolvedType === "CNPJ"
+                ? "Para seguir com segurança, confirme a razão social do titular do documento informado."
+                : "Para seguir com segurança, confirme o nome do titular do documento informado.";
+        }
+
+        finalOptions.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "opcao simples";
+            btn.setAttribute("aria-pressed", "false");
+            btn.innerHTML = '<span class="opcao-txt"><span class="opcao-nome"></span></span>';
+            btn.querySelector(".opcao-nome").textContent = opt;
+            btn.addEventListener("click", async () => {
+                if (modoPreview) return;
+                wrap.querySelectorAll(".opcao").forEach(o => o.setAttribute("aria-pressed", String(o === btn)));
+                setActiveView("vLoading");
+                try {
+                    const data = await callBackend("confirmar_identidade", {
+                        documento: currentDoc,
+                        opcaoSelecionada: opt,
+                        nomeInformado: $("nameInput")?.value?.trim() || "",
+                        telefoneInformado: $("phoneInput")?.value?.trim() || "",
+                        emailInformado: $("emailInput")?.value?.trim() || ""
+                    });
+                    foundRecord = { ...(foundRecord || {}), ...(data || {}) };
+
+                    if (data?.proximoStep === "identidade_incorreta") {
+                        identityAttemptCount += 1;
+                        return showIdentityError();
+                    }
+                    if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
+                    if (data?.proximoStep === "sem_pendencia") return telaSemPendencia();
+                    if (data?.proximoStep === "mostrar_acordo_ativo") return telaAcordoAtivo(data);
+                    if (data?.proximoStep === "mostrar_cards") { renderCards(data?.cards || []); return setActiveView("vNext"); }
+                    telaErro(data?.mensagem);
+                } catch (e) {
+                    telaErro();
+                }
+            });
+            wrap.appendChild(btn);
+        });
+    }
+
+    /* ===================== telas de estado ================================ */
+    function telaErro(msg) {
+        const el = $("errorMsg");
+        if (el) el.textContent = msg || "Estamos com uma instabilidade no nosso sistema. Tente novamente em alguns minutos ou fale com a gente pelos nossos canais de atendimento.";
+        setActiveView("vError");
+    }
+    function telaSessaoExpirada() {
+        const el = $("errorMsg");
+        if (el) el.textContent = "A consulta ficou muito tempo sem nenhuma ação e foi encerrada por segurança.";
+        const t = document.querySelector("#vError h1");
+        if (t) t.textContent = "Sua consulta expirou";
+        setActiveView("vError");
+    }
+    function telaSemPendencia() {
+        const nome = ($("nameInput")?.value || "").trim().split(" ")[0];
+        const t = $("noDebtTitle");
+        if (t) t.textContent = nome ? `${nome}, você está em dia` : "Você está em dia";
+        const agora = new Date();
+        const sub = $("noDebtSub");
+        if (sub) {
+            sub.innerHTML = "Na consulta realizada em <b>" +
+                agora.toLocaleDateString("pt-BR") + " às " +
+                String(agora.getHours()).padStart(2, "0") + "h" +
+                String(agora.getMinutes()).padStart(2, "0") +
+                "</b> não foi localizada nenhuma pendência em aberto.";
+        }
+        setActiveView("vNoDebt");
+    }
+
+    /* Acordo vigente. O portal mostra o que o CRM devolve hoje: uma linha com
+       vencimento e valor. Quando o backend passar a devolver o array de
+       parcelas em acordoAtivo.parcelas, a lista aparece sozinha.             */
+    function telaAcordoAtivo(data) {
+        const ac = data?.acordoAtivo || {};
+        const dl = $("activeAgreementDados");
+        const sub = $("activeAgreementSub");
+        const parcelas = Array.isArray(ac.parcelas) ? ac.parcelas : [];
+        const credor = ac.credorNome || getCredorPresentation(ac.credor || "", ac.unidade || "").nome;
+
+        if (parcelas.length > 1) {
+            const pagas = parcelas.filter(p => p.pago === true || /pag/i.test(String(p.status || ""))).length;
+            if (sub) sub.innerHTML = `<b>${credor}</b> · ${pagas} de ${parcelas.length} parcelas pagas`;
+            dl.innerHTML = parcelas.map((p, i) => {
+                const paga = p.pago === true || /pag/i.test(String(p.status || ""));
+                return `<li><dt>Parcela ${i + 1} · ${p.vencimentoFormatado || p.vencimento || "-"}</dt>` +
+                       `<dd class="${paga ? "paga" : ""}">${paga ? "Paga" : (p.valorFormatado || formatBRL(p.valor || 0))}</dd></li>`;
+            }).join("");
+        } else {
+            if (sub) sub.innerHTML = `<b>${credor}</b> · pagamento à vista, aguardando pagamento`;
+            dl.innerHTML = `<li><dt>Vencimento · <span id="activeAgreementDue">${ac.vencimentoFormatado || "--/--/----"}</span></dt>` +
+                           `<dd id="activeAgreementValue">${ac.valorFormatado || "R$ 0,00"}</dd></li>`;
+        }
+
+        const btn = $("btnAgreementHumano");
+        if (btn) {
+            const span = btn.querySelector("[data-txt]");
+            if (span) span.textContent = parcelas.length > 1 ? "Reenviar boleto da próxima parcela" : "Reenviar boleto do acordo";
+        }
+        lastHumanChat = data?.chatUrl || lastHumanChat;
+        setActiveView("vActiveAgreement");
+    }
+
+    /* ===================== valores ======================================== */
+    function parseMoneyLike(v) {
+        if (v === null || v === undefined || v === "") return 0;
+        if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+        const s = String(v).trim(); if (!s) return 0;
+        if (s.includes("R$") || s.includes(",")) {
+            const n = Number(s.replace(/\s/g, "").replace(/R\$/g, "").replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, ""));
+            return Number.isFinite(n) ? n : 0;
+        }
+        const digits = s.replace(/[^\d-]/g, "");
+        if (/^-?\d+$/.test(digits)) {
+            const intVal = Number(digits);
+            if (!Number.isFinite(intVal)) return 0;
+            if (Math.abs(intVal) >= 10000 && !s.includes(".")) return intVal / 100;
+            return intVal;
+        }
+        const fb = Number(s.replace(/[^\d.-]/g, ""));
+        return Number.isFinite(fb) ? fb : 0;
+    }
+
+    function normalizeInstallmentData(parcelamento) {
+        const parcelasDisponiveis = Array.isArray(parcelamento?.parcelasDisponiveis)
+            ? parcelamento.parcelasDisponiveis.map(Number).filter(q => Number.isFinite(q) && q >= 2) : [];
+        const valorNegociadoParcelado = parseMoneyLike(
+            parcelamento?.valorNegociadoParceladoFormatado || parcelamento?.valorNegociadoParcelado || 0);
+        return {
+            ...parcelamento, valorNegociadoParcelado,
+            valorNegociadoParceladoFormatado: parcelamento?.valorNegociadoParceladoFormatado || formatBRL(valorNegociadoParcelado),
+            parcelasDisponiveis,
+            valorMinimoParcela: Number(parcelamento?.valorMinimoParcela || 100),
+            percentualDescontoVista: Number(parcelamento?.percentualDescontoVista || 0),
+            percentualDescontoParcelado: Number(parcelamento?.percentualDescontoParcelado || 0)
+        };
+    }
+
+    function normalizeCards(cards) {
+        return (Array.isArray(cards) ? cards : []).map(c => {
+            const pres = getCredorPresentation(c?.credor || "", c?.unidade || "");
+            const tipo = String(c?.tipo || "pendencia").toLowerCase();
+            const detalhes = (Array.isArray(c?.detalhes) ? c.detalhes : []).map(row => {
+                if (tipo === "ira") {
+                    return {
+                        placa: row?.placa || row?.Placa || row?.numeroDocumento || "-",
+                        os: row?.os || row?.OS || row?.IraOS || "-",
+                        dataOS: row?.dataOS || row?.DataOS || row?.vencimentoFormatado || "-"
+                    };
+                }
+                const valorDetalhe = parseMoneyLike(row?.valorFormatado || row?.valor || 0);
+                return {
+                    numero: row?.numeroDocumento || row?.numero || row?.nota || "",
+                    vencimento: row?.vencimento || "",
+                    vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
+                    valor: valorDetalhe,
+                    valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe)
+                };
+            });
+            const valorTotal = parseMoneyLike(c?.valorTotalFormatado || c?.valorTotal || 0);
+            const propostaQuitacao = parseMoneyLike(c?.propostaQuitacaoFormatada || c?.propostaQuitacao || 0);
+            return {
+                tipo, credor: c?.credor || "", credorNome: c?.credorNome || pres.nome,
+                logo: c?.logo || pres.logo, chatUrl: c?.chatUrl || pres.chat,
+                numeroContrato: c?.numeroContrato || "-", idContrato: c?.idContrato || "",
+                unidade: c?.unidade || "",
+                valorTotal, valorTotalFormatado: c?.valorTotalFormatado || formatBRL(valorTotal),
+                propostaQuitacao, propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(propostaQuitacao),
+                valorOriginal: parseMoneyLike(c?.valorOriginal || 0),
+                diasAtraso: Number(c?.diasAtraso || 0),
+                exibirProposta: c?.exibirProposta === true,
+                tipoAcao: c?.tipoAcao || pres.tipoAcao,
+                podeNegociar: c?.podeNegociar === true,
+                permiteParcelamento: c?.permiteParcelamento === true,
+                permiteSegundaVia: c?.permiteSegundaVia === true || c?.segundaVia === true || c?.tipoAcao === "SEGUNDA_VIA",
+                maiorValor: c?.maiorValor === true,
+                parcelamento: normalizeInstallmentData(c?.parcelamento || {}),
+                detalhes
+            };
+        });
+    }
+
+    function isAmilOperadoras(c) { return norm(c).includes("AMIL OPERADORAS"); }
+    function borderBoxSH(c) { return norm(c).includes("SANTA HELENA"); }
+    function isCredorSegundaVia(c) { return isAmilOperadoras(c) || borderBoxSH(c); }
+
+    function shouldShowSecondCopy(card) {
+        if (String(card?.tipo || "").toLowerCase() === "acordo") return false;
+        const valorTotal = Number(card?.valorTotal || 0);
+        return isCredorSegundaVia(card?.credor || card?.credorNome || "")
+            && card?.podeNegociar !== true && valorTotal > 0 && valorTotal < 300;
+    }
+
+    function resolveCardActions(card) {
+        const isAgreement = String(card?.tipo || "").toLowerCase() === "acordo";
+        const pres = getCredorPresentation(card?.credor || "", card?.unidade || "");
+        if (isAgreement) return { canNegotiate: false, canSchedule: false, canHuman: true, chatUrl: card?.chatUrl || pres.chat };
+        const canNegotiate = card?.podeNegociar === true;
+        const canSchedule = !canNegotiate && (card?.tipoAcao || pres.tipoAcao) === "AGENDAR";
+        const canSecondCopy = !canNegotiate && !canSchedule && shouldShowSecondCopy(card);
+        return { canNegotiate, canSchedule, canSecondCopy, canHuman: true, chatUrl: card?.chatUrl || pres.chat };
+    }
+
+    /* ===================== datas ========================================== */
+    function getBusinessDates(count = 5) {
+        const dates = []; const cursor = new Date();
+        cursor.setHours(0, 0, 0, 0); cursor.setDate(cursor.getDate() + 1);
+        while (dates.length < count) {
+            const day = cursor.getDay();
+            if (day !== 0 && day !== 6) dates.push(new Date(cursor));
+            cursor.setDate(cursor.getDate() + 1);
+        }
+        return dates;
+    }
+    function formatDateInput(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    }
+    const DIAS_SEM = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+    const MESES = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+
+    /* O cliente não escolhe data livre: escolhe entre os 5 próximos dias
+       úteis. A trava da regra fica na própria tela.                          */
+    function setupNegotiationCalendar() {
+        const box = $("paymentDateOptions"); const hidden = $("paymentDateInput");
+        if (!box || !hidden) return;
+        const datas = getBusinessDates(5);
+        box.innerHTML = datas.map((d, i) =>
+            `<button aria-pressed="${i === 0}" class="opt" type="button" data-iso="${formatDateInput(d)}">` +
+            `<small>${DIAS_SEM[d.getDay()]}</small><b>${String(d.getDate()).padStart(2, "0")}</b>` +
+            `<i>${MESES[d.getMonth()]}</i></button>`).join("");
+        hidden.value = formatDateInput(datas[0]);
+    }
+
+    $("paymentDateOptions")?.addEventListener("click", (ev) => {
+        const b = ev.target.closest(".opt"); if (!b) return;
+        const box = $("paymentDateOptions");
+        box.querySelectorAll(".opt").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
+        $("paymentDateInput").value = b.dataset.iso;
+        hideText("negotiationError");
+    });
+
+    /* ===================== pendências (cards) ============================= */
+    function renderCards(cards) {
+        const grid = $("cardsGrid"); if (!grid) return;
+        grid.innerHTML = "";
+        const normalized = normalizeCards(cards);
+
+        const title = $("cardsTitle"); const subtitle = $("cardsSubtitle");
+        const abertos = normalized.filter(c => c.tipo !== "acordo").length;
+        if (title) title.textContent = "Suas pendências";
+        if (subtitle) {
+            subtitle.innerHTML = abertos
+                ? `Total: <b>${abertos} em aberto</b> · valores atualizados agora`
+                : "Valores atualizados nesta consulta.";
+        }
+
+        normalized.forEach(card => {
+            const isAgreement = card.tipo === "acordo";
+            const isLogistica = card.tipo === "ira";
+            const actions = resolveCardActions(card);
+            const isPremium = !isAgreement && !isLogistica && (
+                card.maiorValor === true || card.tipo === "premium" ||
+                card.tipoAcao === "HUMANO_PREMIUM" || Number(card.valorTotal || 0) >= 15000);
+            const showProposal = !isAgreement && card.exibirProposta === true && card.podeNegociar === true;
+
+            const art = document.createElement("article");
+            art.className = "pend";
+
+            /* topo: logo em linha própria (quando existir) e o nome do credor */
+            const topo = document.createElement("div");
+            topo.className = "pend-topo";
+            const id = document.createElement("div");
+            id.className = "pend-id";
+            if (card.logo) {
+                const img = document.createElement("img");
+                img.className = "logo-credor";
+                img.alt = card.credorNome;
+                img.src = card.logo;
+                img.onerror = () => img.remove();
+                id.appendChild(img);
+            }
+            const nome = document.createElement("div");
+            nome.className = "pend-credor";
+            nome.textContent = card.credorNome;
+            id.appendChild(nome);
+            topo.appendChild(id);
+
+            const seta = document.createElement("button");
+            seta.type = "button"; seta.className = "pend-abrir";
+            seta.setAttribute("aria-label", "Ver detalhes");
+            seta.innerHTML = '<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M9 18l6-6-6-6"></path></svg>';
+            topo.appendChild(seta);
+            art.appendChild(topo);
+
+            /* valor */
+            const bloco = document.createElement("div");
+            if (isLogistica) {
+                bloco.innerHTML = `<p class="de">Ordens de serviço</p>` +
+                    `<div class="por"><b>${(card.detalhes || []).length}</b><em>equipamentos aguardando retirada</em></div>`;
+            } else if (isAgreement) {
+                bloco.innerHTML = `<p class="de">Parcela atual</p>` +
+                    `<div class="por"><b>${card.valorTotalFormatado}</b></div>` +
+                    `<div class="linha-eco"><span class="mini">Vence em ${card.detalhes?.[0]?.vencimentoFormatado || "--/--/----"}</span></div>`;
+            } else if (showProposal) {
+                const eco = Math.max(0, card.valorTotal - card.propostaQuitacao);
+                const pct = card.valorTotal > 0 ? Math.round((eco / card.valorTotal) * 100) : 0;
+                bloco.innerHTML = `<p class="de">De <s>${card.valorTotalFormatado}</s> por</p>` +
+                    `<div class="por"><b>${card.propostaQuitacaoFormatada}</b><em>à vista</em></div>` +
+                    (eco > 0 ? `<div class="linha-eco"><span class="eco">Economize ${formatBRL(eco)}</span>` +
+                    (pct > 0 ? `<span class="pct"><svg fill="none" height="11" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6" viewBox="0 0 24 24" width="11"><path d="M12 5v14M5 12l7 7 7-7"></path></svg>${pct}%</span>` : "") +
+                    `</div>` : "");
+            } else {
+                bloco.innerHTML = `<p class="de">Valor atualizado</p>` +
+                    `<div class="por"><b>${card.valorTotalFormatado}</b></div>` +
+                    (isPremium ? `<div class="linha-eco"><span class="destaque-esp">Preparamos um atendimento especializado para você</span></div>` : "");
+            }
+            art.appendChild(bloco);
+
+            /* ação principal do cartão — cada cartão é sua própria decisão */
+            const btn = document.createElement("button");
+            btn.type = "button"; btn.className = "btn btn-1";
+            let irPara = null;
+
+            if (isPremium) {
+                btn.textContent = "Ver meu atendimento";
+                irPara = () => { abrirEspecialista(card); };
+            } else if (actions.canNegotiate) {
+                btn.textContent = "Negociar agora";
+                irPara = () => openNegotiation(card);
+            } else if (actions.canSchedule) {
+                btn.textContent = "Solicitar agendamento";
+                irPara = () => openIraSchedule(card);
+            } else if (actions.canSecondCopy) {
+                btn.textContent = "Emitir boleto";
+                irPara = () => openSecondCopyNegotiation(card);
+            } else if (isAgreement) {
+                btn.textContent = "Reenviar boleto";
+                irPara = () => openChat(actions.chatUrl);
+            } else {
+                btn.textContent = "Falar com o atendimento";
+                irPara = () => openChat(actions.chatUrl);
+            }
+            btn.addEventListener("click", () => { if (!modoPreview) irPara(); });
+            seta.addEventListener("click", () => { if (!modoPreview) irPara(); });
+            art.appendChild(btn);
+
+            grid.appendChild(art);
+        });
+    }
+
+    /* Cartão de valor alto: reaproveita a tela de negociação sem as opções de
+       pagamento, mostrando o detalhamento e os canais.                       */
+    function abrirEspecialista(card) {
+        selectedCard = card;
+        lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+        const t = $("negotiateTitle");
+        const s = $("negotiateSub");
+        if (t) t.textContent = "Um especialista já foi acionado";
+        if (s) s.innerHTML = "Você vai receber um contato para a elaboração da melhor condição para o seu caso.";
+        $("negotiationPaymentBlock")?.classList.add("hidden");
+        $("installmentBlock")?.classList.add("hidden");
+        $("rotuloVencimento")?.classList.add("hidden");
+        $("paymentDateOptions")?.classList.add("hidden");
+        montarDetalhes(card);
+        const barra = $("barraAcao"); if (barra) barra.dataset.ver = "0";
+        setActiveView("vNegotiate");
+        const alvo = document.querySelector("#vNegotiate .view-canais");
+        if (!alvo) {
+            const p = document.createElement("p");
+            p.className = "rotulo view-canais-rot";
+            p.textContent = "Prefere falar agora?";
+            const box = document.createElement("div");
+            box.className = "canais view-canais";
+            box.setAttribute("data-canais", "1");
+            $("vNegotiate").appendChild(p);
+            $("vNegotiate").appendChild(box);
+            window.montarCanais();
+        }
+    }
+
+    function limparEspecialista() {
+        document.querySelectorAll("#vNegotiate .view-canais, #vNegotiate .view-canais-rot").forEach(e => e.remove());
+        $("rotuloVencimento")?.classList.remove("hidden");
+        $("paymentDateOptions")?.classList.remove("hidden");
+    }
+
+    /* ===================== detalhes da dívida ============================= */
+    /* Mesmo bloco, mesma ordem, em todas as telas que o mostram.             */
+    function montarDetalhes(card) {
+        const dl = $("negotiationDetalhes"); if (!dl) return;
+        const linhas = [];
+        linhas.push(`<li><dt>Empresa</dt><dd>${card.credorNome || "-"}</dd></li>`);
+        linhas.push(`<li><dt>Contrato</dt><dd>${card.numeroContrato || "-"}</dd></li>`);
+        (card.detalhes || []).forEach((d, i) => {
+            const rot = d.numero ? `Nota ${d.numero}` : `Nota ${i + 1}`;
+            linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${d.valorFormatado || "-"}</dd></li>`);
+        });
+        const somaNotas = (card.detalhes || []).reduce((a, d) => a + Number(d.valor || 0), 0);
+        const original = card.valorOriginal > 0 ? card.valorOriginal : somaNotas;
+        if (original > 0) linhas.push(`<li class="total"><dt>Valor original</dt><dd>${formatBRL(original)}</dd></li>`);
+        linhas.push(`<li class="total"><dt>Valor atualizado</dt><dd>${card.valorTotalFormatado}</dd></li>`);
+        if (card.diasAtraso > 0) linhas.push(`<li><dt>Dias em atraso</dt><dd>${card.diasAtraso}</dd></li>`);
+        dl.innerHTML = linhas.join("");
+    }
+
+    document.addEventListener("click", (ev) => {
+        const b = ev.target.closest("[data-sanfona]"); if (!b) return;
+        const s = b.closest(".sanfona");
+        s.dataset.aberta = s.dataset.aberta === "1" ? "0" : "1";
+    });
+
+    /* ===================== pagamento ====================================== */
+    function getInstallmentAmount(total, count) {
+        const t = Number(total || 0), c = Number(count || 0);
+        if (!Number.isFinite(t) || !Number.isFinite(c) || c <= 0) return 0;
+        return t / c;
+    }
+
+    function marcarSelecionado(container, chaveDataset, valor) {
+        const box = $(container); if (!box) return;
+        box.querySelectorAll("button").forEach(b => {
+            b.setAttribute("aria-pressed", String(b.dataset[chaveDataset] === String(valor)));
+        });
+    }
+
+    function setPaymentMode(mode) {
+        const modeInput = $("paymentModeInput"); if (!modeInput) return;
+        modeInput.value = mode;
+        const box = $("negotiationPaymentBlock");
+        if (box) box.querySelectorAll(".opcao").forEach(b => {
+            b.setAttribute("aria-pressed", String(b.dataset.mode === mode));
+        });
+        atualizarRotuloVencimento();
+        updateInstallmentUI();
+    }
+
+    /* Rótulo do vencimento acompanha a escolha: à vista é um boleto, parcelado
+       é o primeiro de vários.                                                */
+    function atualizarRotuloVencimento() {
+        const el = $("rotuloVencimento"); if (!el) return;
+        const parcelado = ($("paymentModeInput")?.value || "vista") === "parcelado";
+        const txts = (window.PORTAL_CONFIG || {}).textos || {};
+        el.textContent = parcelado
+            ? (txts["rotulo.vencimentoParcelado"] || "Vencimento do primeiro boleto")
+            : (txts["rotulo.vencimento"] || "Vencimento do boleto");
+    }
+
+    function setInstallmentCount(qtd) {
+        const countInput = $("installmentCountInput"); if (!countInput) return;
+        countInput.value = String(qtd);
+        marcarSelecionado("installmentButtons", "qtd", qtd);
+        updateInstallmentUI();
+    }
+
+    function updateInstallmentUI() {
+        const mode = $("paymentModeInput")?.value || "vista";
+        const countInput = $("installmentCountInput");
+        const block = $("installmentBlock");
+        const isSecondVia = selectedCard?.tipoPagamentoOperacao === "segunda_via";
+        const canParcel = selectedCard?.permiteParcelamento === true
+            && Array.isArray(selectedCard?.parcelamento?.parcelasDisponiveis)
+            && selectedCard.parcelamento.parcelasDisponiveis.length > 0;
+
+        if (block) block.classList.toggle("hidden", !(canParcel && mode === "parcelado"));
+
+        /* a barra fixa é o resumo: total sempre visível */
+        const rot = $("barraRot"), num = $("barraNum"), eco = $("barraEco");
+        if (!rot || !num || !eco) return;
+        rot.textContent = "Total";
+
+        if (isSecondVia) {
+            num.textContent = selectedCard?.valorTotalFormatado || formatBRL(selectedCard?.valorTotal || 0);
+            eco.classList.add("hidden");
+            return;
+        }
+
+        if (canParcel && mode === "parcelado") {
+            const qtd = Number(countInput?.value || 0);
+            const totalParcelado = Number(selectedCard?.parcelamento?.valorNegociadoParcelado || 0);
+            num.textContent = qtd ? `${qtd}x ${formatBRL(getInstallmentAmount(totalParcelado, qtd))}` : formatBRL(totalParcelado);
+            const economia = Math.max(0, Number(selectedCard?.valorTotal || 0) - totalParcelado);
+            if (economia > 0) { eco.textContent = "Economize " + formatBRL(economia); eco.classList.remove("hidden"); }
+            else eco.classList.add("hidden");
+        } else {
+            const proposta = Number(selectedCard?.propostaQuitacao || 0);
+            num.textContent = selectedCard?.propostaQuitacaoFormatada || formatBRL(proposta);
+            const economia = Math.max(0, Number(selectedCard?.valorTotal || 0) - proposta);
+            if (economia > 0) { eco.textContent = "Economize " + formatBRL(economia); eco.classList.remove("hidden"); }
+            else eco.classList.add("hidden");
+        }
+    }
+
+    function setupPaymentOptions(card) {
+        const block = $("negotiationPaymentBlock");
+        const countInput = $("installmentCountInput");
+        const instBlock = $("installmentBlock");
+        const instButtons = $("installmentButtons");
+        const parcelas = Array.isArray(card?.parcelamento?.parcelasDisponiveis) ? card.parcelamento.parcelasDisponiveis : [];
+        const canParcel = card?.permiteParcelamento === true && parcelas.length > 0;
+        if (!block || !countInput) return;
+
+        const propostaFmt = card?.propostaQuitacaoFormatada || formatBRL(card?.propostaQuitacao || 0);
+        if ($("optVistaSub")) $("optVistaSub").textContent = propostaFmt;
+        const ecoVista = Math.max(0, Number(card?.valorTotal || 0) - Number(card?.propostaQuitacao || 0));
+        const elEcoVista = $("optVistaEco");
+        if (elEcoVista) {
+            if (ecoVista > 0) { elEcoVista.textContent = "− " + formatBRL(ecoVista); elEcoVista.classList.remove("hidden"); }
+            else elEcoVista.classList.add("hidden");
+        }
+
+        /* Sem parcelamento a tela não mostra uma escolha morta. */
+        if (!canParcel) {
+            block.classList.add("hidden");
+            if (instBlock) instBlock.classList.add("hidden");
+            if (instButtons) instButtons.innerHTML = "";
+            countInput.value = "";
+            setPaymentMode("vista");
+            return;
+        }
+
+        block.classList.remove("hidden");
+        const maxParcelas = Math.max.apply(null, parcelas);
+        if ($("optParceladoSub")) $("optParceladoSub").textContent = "Em até " + maxParcelas + " vezes";
+        const totalParcelado = Number(card.parcelamento.valorNegociadoParcelado || 0);
+        if ($("optParceladoValor")) {
+            $("optParceladoValor").textContent = maxParcelas + "x " + formatBRL(getInstallmentAmount(totalParcelado, maxParcelas));
+        }
+
+        if (instButtons) {
+            instButtons.innerHTML = parcelas.map(qtd =>
+                '<button type="button" class="opt" data-qtd="' + qtd + '" aria-pressed="false">' +
+                '<b>' + qtd + 'x</b><i>' + formatBRL(getInstallmentAmount(totalParcelado, qtd)) + '</i></button>').join("");
+        }
+        countInput.value = String(parcelas[0] || "");
+        marcarSelecionado("installmentButtons", "qtd", countInput.value);
+        setPaymentMode("vista");
+    }
+
+    function openSecondCopyNegotiation(card) {
+        const secondCard = {
+            ...card, tipoPagamentoOperacao: "segunda_via",
+            propostaQuitacao: Number(card?.valorTotal || 0),
+            propostaQuitacaoFormatada: card?.valorTotalFormatado || formatBRL(card?.valorTotal || 0),
+            permiteParcelamento: false, parcelamento: {}
+        };
+        openNegotiation(secondCard, "segunda_via");
+    }
+
+    function openNegotiation(card, modoOperacao = "negociacao") {
+        limparEspecialista();
+        selectedCard = {
+            ...card,
+            tipoPagamentoOperacao: modoOperacao === "segunda_via" ? "segunda_via" : (card?.tipoPagamentoOperacao || "negociacao")
+        };
+        const isSecondVia = selectedCard.tipoPagamentoOperacao === "segunda_via";
+        lastHumanChat = selectedCard?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+        hideText("negotiationError");
+
+        const txts = (window.PORTAL_CONFIG || {}).textos || {};
+        const title = $("negotiateTitle"); const sub = $("negotiateSub");
+        const confirmSpan = $("btnConfirmNegotiation")?.querySelector("[data-txt]");
+
+        if (title) title.textContent = isSecondVia ? "Emitir boleto" : (txts["titulo.vNegotiate"] || "Escolha a forma de pagamento");
+        if (sub) {
+            sub.innerHTML = isSecondVia
+                ? "Escolha a data de vencimento para emissão do boleto."
+                : `<b id="negotiationCreditor">${selectedCard?.credorNome || "-"}</b>`;
+        }
+        if (confirmSpan) confirmSpan.textContent = isSecondVia ? "Emitir boleto" : (txts["botao.btnConfirmNegotiation"] || "Confirmar negociação");
+
+        if (isSecondVia) {
+            $("negotiationPaymentBlock")?.classList.add("hidden");
+            $("installmentBlock")?.classList.add("hidden");
+            if ($("paymentModeInput")) $("paymentModeInput").value = "vista";
+            if ($("rotuloVencimento")) $("rotuloVencimento").textContent = "Vencimento do boleto";
+        } else {
+            setupPaymentOptions(selectedCard);
+        }
+
+        montarDetalhes(selectedCard);
+        setupNegotiationCalendar();
+        updateInstallmentUI();
+        setActiveView("vNegotiate");
+    }
+
+    $("negotiationPaymentBlock")?.addEventListener("click", (ev) => {
+        const b = ev.target.closest(".opcao[data-mode]"); if (!b) return;
+        setPaymentMode(b.dataset.mode);
+    });
+    $("installmentButtons")?.addEventListener("click", (ev) => {
+        const b = ev.target.closest("button[data-qtd]"); if (!b) return;
+        setInstallmentCount(Number(b.dataset.qtd));
+    });
+
+    /* ===================== agendamento IRA ================================ */
+    function getIraBusinessDatesWithinDays(days = 15) {
+        const dates = []; const today = new Date(); today.setHours(0, 0, 0, 0);
+        const cursor = new Date(today); cursor.setDate(cursor.getDate() + 1);
+        const limit = new Date(today); limit.setDate(limit.getDate() + days); limit.setHours(0, 0, 0, 0);
+        while (cursor <= limit) {
+            if (cursor.getDay() !== 0 && cursor.getDay() !== 6) dates.push(new Date(cursor));
+            cursor.setDate(cursor.getDate() + 1);
+        }
+        return dates;
+    }
+    function getIraTimeSlots() { return ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"]; }
+
+    function setupIraDateOptions() {
+        const dates = getIraBusinessDatesWithinDays(15);
+        const options = '<option value="">Selecione a data</option>' + dates.map(dt =>
+            `<option value="${formatDateInput(dt)}">${dt.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit" })}</option>`).join("");
+        [$("iraDate1"), $("iraDate2")].forEach(el => { if (el) { el.innerHTML = options; el.value = ""; } });
+        updateIraSecondOptionConstraints();
+    }
+    function setupIraTimeOptions() {
+        const options = ['<option value="">Selecione o horário</option>']
+            .concat(getIraTimeSlots().map(v => `<option value="${v}">${v}</option>`)).join("");
+        [$("iraTime1"), $("iraTime2")].forEach(el => { if (el) { el.innerHTML = options; el.value = ""; } });
+        updateIraSecondOptionConstraints();
+    }
+    function iraTimeToMinutes(value) {
+        const p = String(value || "").split(":"); if (p.length < 2) return NaN;
+        const hh = Number(p[0]), mm = Number(p[1]);
+        if (!Number.isFinite(hh) || !Number.isFinite(mm)) return NaN;
+        return hh * 60 + mm;
+    }
+    function getIraDateTimeMinutes(dateValue, timeValue) {
+        if (!dateValue || !timeValue) return NaN;
+        const dt = new Date(String(dateValue) + "T00:00:00");
+        if (Number.isNaN(dt.getTime())) return NaN;
+        return dt.getTime() / 60000 + iraTimeToMinutes(timeValue);
+    }
+    function updateIraSecondOptionConstraints() {
+        const date1 = $("iraDate1"), time1 = $("iraTime1"), date2 = $("iraDate2"), time2 = $("iraTime2");
+        if (!date1 || !time1 || !date2 || !time2) return;
+        const first = getIraDateTimeMinutes(date1.value, time1.value);
+        const minSecond = Number.isFinite(first) ? first + 120 : NaN;
+        Array.from(date2.options).forEach(o => {
+            if (!o.value || !Number.isFinite(minSecond)) { o.disabled = false; return; }
+            o.disabled = !getIraTimeSlots().some(slot => {
+                const c = getIraDateTimeMinutes(o.value, slot);
+                return Number.isFinite(c) && c >= minSecond;
+            });
+        });
+        if (date2.value) {
+            const sel = Array.from(date2.options).find(o => o.value === date2.value);
+            if (sel?.disabled) { date2.value = ""; time2.value = ""; }
+        }
+        const prev = time2.value;
+        time2.innerHTML = ['<option value="">Selecione o horário</option>'].concat(
+            getIraTimeSlots().map(slot => {
+                let disabled = false;
+                if (date2.value && Number.isFinite(minSecond)) {
+                    const c = getIraDateTimeMinutes(date2.value, slot);
+                    disabled = !Number.isFinite(c) || c < minSecond;
+                }
+                return `<option value="${slot}"${disabled ? " disabled" : ""}>${slot}</option>`;
+            })).join("");
+        const stillValid = Array.from(time2.options).some(o => o.value === prev && !o.disabled);
+        time2.value = stillValid ? prev : "";
+    }
+
+    function openIraSchedule(card) {
+        selectedCard = card;
+        lastHumanChat = card?.chatUrl || CHAT_LINK_IRA;
+        hideText("iraError");
+        ["iraResponsible", "iraEmail", "iraWhatsapp"].forEach(id => { if ($(id)) $(id).value = ""; });
+        setupIraDateOptions(); setupIraTimeOptions();
+        setActiveView("vIraSchedule");
+    }
+
+    /* ===================== código de 6 dígitos ============================ */
+    const caixasCodigo = [...document.querySelectorAll("#codigoCaixa input")];
+    function lerCodigo() { return caixasCodigo.map(c => c.value).join(""); }
+    function sincronizaCodigo() {
+        const v = lerCodigo();
+        if ($("validationCodeInput")) $("validationCodeInput").value = v;
+        if ($("btnValidateCode")) $("btnValidateCode").disabled = v.length !== 6;
+    }
+    function limparCodigo() {
+        caixasCodigo.forEach(c => c.value = "");
+        $("codigoCaixa")?.classList.remove("erro-cod");
+        sincronizaCodigo();
+    }
+    caixasCodigo.forEach((c, i) => {
+        c.addEventListener("input", () => {
+            c.value = c.value.replace(/\D/g, "").slice(0, 1);
+            $("codigoCaixa")?.classList.remove("erro-cod");
+            hideText("validationCodeError");
+            if (c.value && caixasCodigo[i + 1]) caixasCodigo[i + 1].focus();
+            sincronizaCodigo();
+        });
+        c.addEventListener("keydown", ev => {
+            if (ev.key === "Backspace" && !c.value && caixasCodigo[i - 1]) caixasCodigo[i - 1].focus();
+        });
+        c.addEventListener("paste", ev => {
+            const t = (ev.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6);
+            if (!t) return;
+            ev.preventDefault();
+            t.split("").forEach((d, k) => { if (caixasCodigo[k]) caixasCodigo[k].value = d; });
+            caixasCodigo[Math.min(t.length, 5)].focus();
+            sincronizaCodigo();
+        });
+    });
+
+    /* O botão de reenvio aparece sempre, mas só fica clicável depois de 60s.
+       Sem contagem visível — o cliente não precisa vigiar um cronômetro.     */
+    function startResendCodeCooldown(seconds = RESEND_CODE_WAIT_SECONDS) {
+        const btn = $("btnResendCode"); if (!btn) return;
+        if (resendCodeTimer) clearTimeout(resendCodeTimer);
+        btn.disabled = true;
+        resendCodeTimer = setTimeout(() => { btn.disabled = false; resendCodeTimer = null; }, (Number(seconds) || 60) * 1000);
+    }
+
+    function abrirTelaCodigo(isResend) {
+        const txt = $("validateCodeText");
+        if (txt) {
+            txt.textContent = isResend
+                ? "Enviamos um novo código de 6 dígitos para o e-mail que você informou."
+                : ((window.PORTAL_CONFIG || {}).textos || {})["texto.vValidateCode.1"]
+                  || "Enviamos um código de 6 dígitos para o e-mail que você informou.";
+        }
+        const dest = $("codigoDestino");
+        if (dest) dest.textContent = mascararEmail($("emailInput")?.value || "");
+        limparCodigo();
+        hideText("validationCodeError");
+        setActiveView("vValidateCode");
+        startResendCodeCooldown();
+        caixasCodigo[0]?.focus();
+    }
+
+    /* ===================== eventos de formulário ========================== */
+    function on(id, eventName, handler) {
+        const el = $(id); if (el) el.addEventListener(eventName, handler);
+    }
+
+    on("docInput", "input", (e) => {
+        const digits = onlyDigits(e.target.value);
+        const inferred = detectTypeFromDigits(digits);
+        if (inferred !== docType) setDocType(inferred);
+        applyMask();
+        const badge = $("docBadge");
+        if (badge) {
+            if (digits.length === 11) { badge.textContent = "CPF"; badge.classList.remove("opacity-0"); }
+            else if (digits.length === 14) { badge.textContent = "CNPJ"; badge.classList.remove("opacity-0"); }
+            else badge.classList.add("opacity-0");
+        }
+        hideText("startError");
+        engineValidacaoFormulario();
+    });
+
+    on("nameInput", "input", () => { hideText("startError"); engineValidacaoFormulario(); });
+    on("nameInput", "blur", () => {
+        const inp = $("nameInput");
+        if (inp && inp.value.trim().length > 0) { inp.value = normalizarNomeInvisivel(inp.value); engineValidacaoFormulario(); }
+    });
+    on("phoneInput", "input", (e) => { e.target.value = formatPhoneBR(e.target.value); hideText("startError"); engineValidacaoFormulario(); });
+    on("emailInput", "input", () => { hideText("startError"); engineValidacaoFormulario(); });
+    on("emailInput", "blur", () => {
+        const em = $("emailInput")?.value.trim();
+        if (em && !isValidEmail(em)) showText("startError", "Confira o e-mail digitado.");
+        else hideText("startError");
+        engineValidacaoFormulario();
+    });
+
+    on("iraResponsible", "blur", () => {
+        const inp = $("iraResponsible");
+        if (inp && inp.value.trim().length > 0) inp.value = normalizarNomeInvisivel(inp.value);
+    });
+    on("iraEmail", "input", () => hideText("iraError"));
+    on("iraEmail", "blur", () => {
+        const em = $("iraEmail")?.value.trim();
+        if (em && !isValidEmail(em)) showText("iraError", "Informe um e-mail válido.");
+        else hideText("iraError");
+    });
+    on("iraWhatsapp", "input", (e) => { e.target.value = formatPhoneBR(e.target.value); hideText("iraError"); });
+    on("iraZip", "input", (e) => { e.target.value = maskCEP(e.target.value); hideText("iraError"); });
+    on("iraCity", "blur", () => normalizarCampoEndereco("iraCity"));
+    on("iraStreet", "blur", () => normalizarCampoEndereco("iraStreet"));
+    on("iraDistrict", "blur", () => normalizarCampoEndereco("iraDistrict"));
+    on("iraReference", "blur", () => normalizarCampoEndereco("iraReference"));
+    on("iraDate1", "change", updateIraSecondOptionConstraints);
+    on("iraTime1", "change", updateIraSecondOptionConstraints);
+    on("iraDate2", "change", updateIraSecondOptionConstraints);
+
+    on("btnVoltar", "click", voltarContextual);
+    on("btnNovaConsultaNoRecord", "click", goStart);
+    on("btnNovaConsultaNoDebt", "click", goStart);
+    on("btnNovaConsultaErr", "click", goStart);
+    on("btnNovaConsultaSucesso", "click", goStart);
+    on("btnNovaConsultaSegundaVia", "click", goStart);
+    on("btnNovaConsultaIra", "click", goStart);
+    on("btnIdentityTryAgain", "click", () => setActiveView("vConfirmName"));
+    on("btnAgreementHumano", "click", () => openChat(lastHumanChat));
+
+    /* ===================== fluxo com o backend ============================ */
+    on("btnConsultar", "click", async () => {
+        if (!engineValidacaoFormulario()) return;
+        hideText("startError");
+
+        const documento = onlyDigits($("docInput")?.value || "");
+        const nome = $("nameInput")?.value.trim() || "";
+        const telefone = onlyDigits($("phoneInput")?.value || "");
+        const email = $("emailInput")?.value.trim() || "";
+
+        currentDoc = documento;
+        sessionId = Date.now().toString();
+        sessionToken = "";
+        setActiveView("vLoading");
+
+        try {
+            const data = await callBackend("consulta_inicial", {
+                documento, nomeInformado: nome, telefoneInformado: telefone, emailInformado: email
+            });
+            foundRecord = data || {};
+
+            if (data?.proximoStep === "nao_localizado") return setActiveView("vNoRecord");
+            if (data?.proximoStep === "bloqueado") {
+                lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                return setActiveView("vBlocked");
+            }
+            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(false);
+            if (data?.proximoStep === "validar_identidade") {
+                renderIdentityOptions(data?.options || [], data?.fullName || nome, data?.type || "CPF");
+                return setActiveView("vConfirmName");
+            }
+            if (data?.proximoStep === "sem_pendencia") return telaSemPendencia();
+            if (data?.proximoStep === "mostrar_acordo_ativo") return telaAcordoAtivo(data);
+            if (data?.proximoStep === "mostrar_cards") {
+                renderCards(data?.cards || []);
+                return setActiveView("vNext");
+            }
+            telaErro(data?.mensagem);
+        } catch (e) {
+            telaErro();
+        }
+    });
+
+    on("btnValidateCode", "click", async () => {
+        hideText("validationCodeError");
+        const codigo = onlyDigits(lerCodigo());
+        if (codigo.length !== 6) return showText("validationCodeError", "Informe o código de 6 dígitos.");
+        setActiveView("vLoading");
+        try {
+            const data = await callBackend("validar_codigo_contato", {
+                documento: currentDoc, codigoValidacao: codigo,
+                nomeInformado: $("nameInput")?.value.trim() || "",
+                telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                emailInformado: $("emailInput")?.value.trim() || ""
+            });
+            foundRecord = { ...(foundRecord || {}), ...(data || {}) };
+
+            if (data?.proximoStep === "codigo_invalido") {
+                setActiveView("vValidateCode");
+                $("codigoCaixa")?.classList.add("erro-cod");
+                const restam = Number(data?.tentativasRestantes);
+                showText("validationCodeError", Number.isFinite(restam) && restam > 0
+                    ? (restam === 1 ? "Código incorreto. Você tem mais 1 tentativa." : `Código incorreto. Você tem ${restam} tentativas.`)
+                    : (data?.mensagem || "Código incorreto. Confira e tente novamente."));
+                caixasCodigo.forEach(c => c.value = "");
+                sincronizaCodigo();
+                caixasCodigo[0]?.focus();
+                return;
+            }
+            if (data?.proximoStep === "bloqueado") {
+                lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                return setActiveView("vBlocked");
+            }
+            if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
+            if (data?.proximoStep === "validar_identidade") {
+                renderIdentityOptions(data?.options || [], data?.fullName || ($("nameInput")?.value.trim() || ""), data?.type || "CPF");
+                return setActiveView("vConfirmName");
+            }
+            if (data?.proximoStep === "sem_pendencia") return telaSemPendencia();
+            if (data?.proximoStep === "mostrar_acordo_ativo") return telaAcordoAtivo(data);
+            if (data?.proximoStep === "mostrar_cards") { renderCards(data?.cards || []); return setActiveView("vNext"); }
+            telaErro(data?.mensagem);
+        } catch (e) {
+            telaErro();
+        }
+    });
+
+    on("btnResendCode", "click", async () => {
+        if ($("btnResendCode")?.disabled) return;
+        hideText("validationCodeError");
+        setActiveView("vLoading");
+        try {
+            const data = await callBackend("reenviar_codigo_contato", {
+                documento: currentDoc,
+                nomeInformado: $("nameInput")?.value.trim() || "",
+                telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                emailInformado: $("emailInput")?.value.trim() || ""
+            });
+            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(true);
+            if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
+            telaErro(data?.mensagem);
+        } catch (e) {
+            telaErro();
+        }
+    });
+
+    function validatePaymentDate(dateStr) {
+        if (!dateStr) return { ok: false, message: "Selecione a data de vencimento." };
+        const allowed = getBusinessDates(5).map(formatDateInput);
+        if (!allowed.includes(String(dateStr))) return { ok: false, message: "Selecione uma das datas disponíveis." };
+        return { ok: true, message: "" };
+    }
+
+    function validateIraForm() {
+        const a = {
+            data1: $("iraDate1")?.value || "", hora1: $("iraTime1")?.value || "",
+            data2: $("iraDate2")?.value || "", hora2: $("iraTime2")?.value || "",
+            logradouro: $("iraStreet")?.value.trim() || "", numero: $("iraNumber")?.value.trim() || "",
+            bairro: $("iraDistrict")?.value.trim() || "", cep: onlyDigits($("iraZip")?.value || ""),
+            cidade: $("iraCity")?.value.trim() || "", referencia: $("iraReference")?.value.trim() || "",
+            responsavel: $("iraResponsible")?.value.trim() || "", email: $("iraEmail")?.value.trim() || "",
+            whatsapp: onlyDigits($("iraWhatsapp")?.value || "")
+        };
+        const obrig = [a.data1, a.hora1, a.data2, a.hora2, a.logradouro, a.numero, a.bairro,
+                       a.cep, a.cidade, a.referencia, a.responsavel, a.email, a.whatsapp];
+        if (obrig.some(v => !String(v || "").trim())) return { ok: false, message: "Preencha todos os campos do agendamento.", data: a };
+        if (a.responsavel.length < 3) return { ok: false, message: "Informe o nome completo do responsável.", data: a };
+        const datasValidas = getIraBusinessDatesWithinDays(15).map(formatDateInput);
+        if (!datasValidas.includes(a.data1) || !datasValidas.includes(a.data2)) return { ok: false, message: "Selecione datas dentro do período disponível.", data: a };
+        const horarios = getIraTimeSlots();
+        if (!horarios.includes(a.hora1) || !horarios.includes(a.hora2)) return { ok: false, message: "Selecione horários entre 08h e 18h.", data: a };
+        const p1 = getIraDateTimeMinutes(a.data1, a.hora1), p2 = getIraDateTimeMinutes(a.data2, a.hora2);
+        if (!Number.isFinite(p1) || !Number.isFinite(p2) || p2 < p1 + 120) return { ok: false, message: "A segunda opção deve ser pelo menos 2 horas após a primeira.", data: a };
+        if (!isValidEmail(a.email)) return { ok: false, message: "Informe um e-mail válido.", data: a };
+        if (!isValidPhone(a.whatsapp)) return { ok: false, message: "Informe um telefone válido.", data: a };
+        return { ok: true, message: "", data: a };
+    }
+
+    on("btnConfirmNegotiation", "click", async () => {
+        hideText("negotiationError");
+        if (!selectedCard) return showText("negotiationError", "Selecione um contrato para negociar.");
+
+        const paymentDate = $("paymentDateInput")?.value || "";
+        const paymentMode = $("paymentModeInput")?.value || "vista";
+        const installmentCount = Number($("installmentCountInput")?.value || 0);
+        const isSecondVia = selectedCard?.tipoPagamentoOperacao === "segunda_via";
+        const isParcelado = !isSecondVia && paymentMode === "parcelado" && selectedCard?.permiteParcelamento === true;
+
+        const val = validatePaymentDate(paymentDate);
+        if (!val.ok) return showText("negotiationError", val.message);
+        if (isParcelado && (!installmentCount || installmentCount < 2)) return showText("negotiationError", "Selecione a quantidade de parcelas.");
+
+        const valorNegociado = isSecondVia
+            ? Number(selectedCard?.valorTotal || 0)
+            : (isParcelado ? Number(selectedCard?.parcelamento?.valorNegociadoParcelado || 0) : Number(selectedCard?.propostaQuitacao || 0));
+        const valorParcela = isParcelado ? getInstallmentAmount(valorNegociado, installmentCount) : valorNegociado;
+
+        setActiveView("vLoading");
+        try {
+            const data = await callBackend("confirmar_negociacao", {
+                documento: currentDoc,
+                nomeInformado: $("nameInput")?.value.trim() || "",
+                telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                emailInformado: $("emailInput")?.value.trim() || "",
+                credor: selectedCard.credor, idContrato: selectedCard.idContrato,
+                numeroContrato: selectedCard.numeroContrato, valorTotal: selectedCard.valorTotal,
+                propostaQuitacao: isSecondVia ? selectedCard.valorTotal : selectedCard.propostaQuitacao,
+                dataPagamento: paymentDate,
+                tipoPagamento: isSecondVia ? "segunda_via" : (isParcelado ? "parcelado" : "avista"),
+                quantidadeParcelas: isParcelado ? installmentCount : 1,
+                valorNegociado, valorNegociadoFormatado: formatBRL(valorNegociado),
+                valorParcela, valorParcelaFormatado: formatBRL(valorParcela),
+                parcelamento: selectedCard.parcelamento || {}
+            });
+
+            /* CRM não formalizou: tela própria, nunca confirmação de negociação */
+            if (data?.proximoStep === "falha_negociacao" || data?.formalizado === false) {
+                if (data?.mensagem && $("negotiationFailedMsg")) $("negotiationFailedMsg").textContent = data.mensagem;
+                lastHumanChat = selectedCard?.chatUrl || lastHumanChat || CHAT_LINK_AMIL_DEFAULT;
+                return setActiveView("vNegotiationFailed");
+            }
+
+            if (data?.proximoStep === "sucesso_negociacao" || data?.status === "ok") {
+                const dataFmt = new Date(paymentDate + "T00:00:00").toLocaleDateString("pt-BR");
+
+                if (isSecondVia) {
+                    const sub = $("secondCopySub");
+                    if (sub) sub.innerHTML = `Seu boleto da <b>${selectedCard.credorNome}</b> está registrado.`;
+                    const v = $("secondCopyVenc");
+                    if (v) v.innerHTML = `Vencimento em <b>${dataFmt}</b> — <b>${formatBRL(valorNegociado)}</b>`;
+                    return setActiveView("vSecondCopySuccess");
+                }
+
+                const sub = $("negotiationSuccessSub");
+                if (sub) sub.innerHTML = `Seu acordo com a <b>${selectedCard.credorNome}</b> está registrado.`;
+
+                /* Um boleto à vista, um por parcela quando parcelado. E sempre
+                   "será enviado" — o envio não é imediato.                     */
+                const qtdBoletos = isParcelado ? Math.max(1, installmentCount) : 1;
+                const alvo = $("negotiationSuccessBoleto");
+                if (alvo) {
+                    alvo.innerHTML = qtdBoletos > 1
+                        ? `Os <b>${qtdBoletos} boletos</b> serão enviados para o seu e-mail e WhatsApp`
+                        : "O boleto será enviado para o seu e-mail e WhatsApp";
+                }
+                const venc = $("negotiationSuccessVenc");
+                if (venc) {
+                    venc.innerHTML = (qtdBoletos > 1 ? "Primeiro vencimento em " : "Vencimento em ") +
+                        `<b>${dataFmt}</b> — <b>${formatBRL(valorParcela)}</b>`;
+                }
+                return setActiveView("vNegotiationSuccess");
+            }
+
+            telaErro(data?.mensagem);
+        } catch (e) {
+            telaErro();
+        }
+    });
+
+    on("btnSubmitIra", "click", async () => {
+        hideText("iraError");
+        if (!selectedCard) return showText("iraError", "Selecione um contrato para agendamento.");
+        const validation = validateIraForm();
+        if (!validation.ok) return showText("iraError", validation.message);
+        setActiveView("vLoading");
+        try {
+            const data = await callBackend("confirmar_agendamento_ira", {
+                documento: currentDoc,
+                nomeInformado: $("nameInput")?.value.trim() || "",
+                telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
+                emailInformado: $("emailInput")?.value.trim() || "",
+                credor: selectedCard.credor, idContrato: selectedCard.idContrato,
+                numeroContrato: selectedCard.numeroContrato, agendamento: validation.data
+            });
+            if (data?.proximoStep === "sucesso_agendamento" || data?.status === "ok") return setActiveView("vIraSuccess");
+            telaErro(data?.mensagem);
+        } catch (e) {
+            telaErro();
+        }
+    });
+
+
+    /* ===================== altura para a página que embute ================= */
+    /* Quando o portal roda dentro de um iframe, ele mesmo informa a altura do
+       conteúdo. Assim a página hospedeira ajusta o quadro e o cliente nunca vê
+       barra de rolagem dentro do portal.                                      */
+    let ultimaAltura = 0;
+    function reportarAltura() {
+        if (window.parent === window) return;
+        /* Mede o conteúdo real. Usar scrollHeight do documento não funciona:
+           ele nunca fica menor que o quadro, então a altura só cresceria.     */
+        const portal = document.querySelector(".portal");
+        const rodape = document.querySelector(".rodape");
+        let h = 0;
+        if (portal) {
+            const r = portal.getBoundingClientRect();
+            h = r.height;
+        }
+        if (rodape) h = Math.max(h, rodape.getBoundingClientRect().bottom);
+        h = Math.ceil(h) + 8;
+        if (!h || Math.abs(h - ultimaAltura) < 4) return;
+        ultimaAltura = h;
+        window.parent.postMessage({ tipo: "portal-altura", altura: h }, "*");
+    }
+    window.reportarAltura = reportarAltura;
+    window.addEventListener("resize", reportarAltura);
+    if (typeof ResizeObserver === "function") {
+        try { new ResizeObserver(reportarAltura).observe(document.body); } catch (e) {}
+    }
+    setInterval(reportarAltura, 1200);
+
+    /* ===================== arranque ======================================= */
+    setDocType("CPF");
+    engineValidacaoFormulario();
+    setProgress("vStart");
+    if (typeof window.aplicarPortalConfig === "function") window.aplicarPortalConfig();
+    reportarAltura();
+});
+<\/script>
+</body>
+</html>
+
+</script>
+
+<div class="topbar"></div>
+
+<!-- ================================ LOGIN ================================== -->
+<div class="porta" id="porta">
+  <div class="porta-caixa">
+    <div class="porta-centro">
+      <div class="porta-logo" id="portaLogo"></div>
+      <span class="porta-selo">
+        <svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="12"><rect height="10" rx="2" width="16" x="4" y="11"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg>
+        Área restrita
+      </span>
+      <h1>Administração do portal</h1>
+      <p class="porta-apoio">Aqui você personaliza o Portal de Autoatendimento para cada projeto e gera a versão do cliente.</p>
+    </div>
+
+    <div class="porta-form">
+      <div class="campo">
+        <label for="senha">Senha de acesso</label>
+        <div class="porta-senha">
+          <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="16"><rect height="10" rx="2" width="16" x="4" y="11"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg>
+          <input autocomplete="current-password" id="senha" placeholder="••••••••" type="password"/>
+          <button aria-label="Mostrar senha" class="porta-olho" id="btnOlho" type="button">
+            <svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="17"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>
+          </button>
+        </div>
+        <p class="ajuda hidden" id="senhaErro" style="color:var(--falha);font-weight:600">Senha incorreta. Confira e tente novamente.</p>
+      </div>
+      <button class="btn btn-1" id="btnEntrar" type="button">Entrar</button>
+    </div>
+
+    <p class="porta-nota">
+      <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M12 3l7.5 3.5v5c0 4.6-3.1 8.8-7.5 10-4.4-1.2-7.5-5.4-7.5-10v-5L12 3z"></path><path d="M9 12l2 2 4-4"></path></svg>
+      Ambiente interno da Quatro C. As alterações feitas aqui não afetam o portal publicado até você gerar e subir a nova versão.
+    </p>
+    <p class="porta-rodape">Quatro C · Desenvolvimento e Inovação</p>
+  </div>
+</div>
+
+<!-- ================================= APP =================================== -->
+<div class="app hidden" id="app">
+
+  <nav class="nav">
+    <div class="nav-marca">
+      <span class="nav-logo" id="navLogo"></span>
+      <div><b>Autoatendimento</b><span>Administração</span></div>
+    </div>
+
+    <button aria-current="true" class="nav-item" data-secao="marca" type="button">
+      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><circle cx="13.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="14" r="2.5"></circle><circle cx="8.5" cy="7.5" r="2.5"></circle><circle cx="6.5" cy="14.5" r="2.5"></circle><path d="M12 22c4.4 0 8-1.8 8-4s-3.6-4-8-4-8 1.8-8 4 3.6 4 8 4z"></path></svg>
+      Marca</button>
+    <button class="nav-item" data-secao="credores" type="button">
+      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M9 8h6M9 12h6M9 16h3"></path></svg>
+      Logos dos credores</button>
+    <button class="nav-item" data-secao="canais" type="button">
+      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.2a2 2 0 012.1-.5c.8.3 1.7.6 2.6.7a2 2 0 011.7 2z"></path></svg>
+      Canais e rodapé</button>
+    <button class="nav-item" data-secao="textos" type="button">
+      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
+      Textos e botões</button>
+    <button class="nav-item" data-secao="integracao" type="button">
+      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.8 1.7"></path><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7L12.3 19"></path></svg>
+      Integração</button>
+
+    <div class="nav-rodape">
+      <button class="destaque" id="btnBaixarApp" type="button">
+        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M12 3v12M7 11l5 5 5-5M4 21h16"></path></svg>
+        Baixar aplicação</button>
+      <button id="btnSalvarCfg" type="button">
+        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path><path d="M17 21v-8H7v8M7 3v5h8"></path></svg>
+        Salvar configuração</button>
+      <button id="btnCarregarCfg" type="button">
+        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg>
+        Carregar configuração</button>
+      <button id="btnRestaurar" type="button">
+        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.7 3M3 4v5h5"></path></svg>
+        Voltar ao padrão</button>
+    </div>
+  </nav>
+
+  <main class="edicao" id="edicao"></main>
+
+  <aside class="previa" id="previa">
+    <div class="previa-topo">
+      <b>Pré-visualização</b>
+      <select id="seletorTela"></select>
+      <button class="previa-fechar" onclick="document.getElementById('previa').classList.remove('aberta')" type="button">
+        <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+    </div>
+    <div class="previa-palco">
+      <iframe id="palco" title="Pré-visualização do portal"></iframe>
+    </div>
+  </aside>
+</div>
+
+<div class="aviso" data-ver="0" id="aviso"></div>
+<input accept="application/json" class="hidden" id="inputCfg" type="file"/>
+<input accept="image/*" class="hidden" id="inputLogo" type="file"/>
+
+<script>
+/* ===========================================================================
+   PAINEL — estado e utilidades
+   =========================================================================== */
+const SENHA = 'portal2026';
+
+/* Logo da Quatro C usado no login e na navegação. Troque por um arquivo
+   hospedado junto com o painel (ex.: 'logo-quatroc.png'); se a imagem não
+   carregar, o painel mostra o nome em texto e continua funcionando. */
+const LOGO_QUATROC = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaBEI-qyRmYw_D0waBvLPcxsHtI0AbVj8kX3eyla0WmQ&s=10';
+
+function pintarLogo(alvo, textoFallback) {
+  const el = document.getElementById(alvo);
+  if (!el) return;
+  const img = document.createElement('img');
+  img.src = LOGO_QUATROC;
+  img.alt = 'Quatro C';
+  img.referrerPolicy = 'no-referrer';
+  img.onerror = () => { el.innerHTML = '<b>' + textoFallback + '</b>'; };
+  el.appendChild(img);
+}
+pintarLogo('portaLogo', 'Quatro C');
+pintarLogo('navLogo', '4C');
+
+document.getElementById('btnOlho').addEventListener('click', () => {
+  const i = document.getElementById('senha');
+  i.type = i.type === 'password' ? 'text' : 'password';
+  i.focus();
+});
+/* O portal vem embutido nesta própria página: a prévia e o arquivo entregue
+   ao cliente saem do mesmo texto, sem depender de nenhum arquivo ao lado. */
+const PORTAL_FONTE = lerFontePortal();
+
+/* Telas do portal, na ordem da jornada. Rótulo é o que aparece no seletor. */
+const TELAS = [
+  ['vStart', '1. Identificação'],
+  ['vValidateCode', '2. Código por e-mail'],
+  ['vConfirmName', '3. Confirmar identidade'],
+  ['vIdentityError', 'Nome não confere'],
+  ['vBlocked', 'Acesso restrito'],
+  ['vNext', '4. Suas pendências'],
+  ['vNegotiate', '5. Pagamento'],
+  ['vNegotiationSuccess', '6. Negociação fechada'],
+  ['vNegotiationFailed', 'Não concluída'],
+  ['vSecondCopySuccess', 'Boleto emitido'],
+  ['vActiveAgreement', 'Acordo vigente'],
+  ['vNoRecord', 'Não localizado'],
+  ['vNoDebt', 'Em dia'],
+  ['vError', 'Indisponível'],
+  ['vIraSchedule', 'Agendamento'],
+  ['vIraSuccess', 'Agendamento registrado'],
+  ['vLoading', 'Carregando']
+];
+const NOME_TELA = Object.fromEntries(TELAS);
+
+const FONTES = ['Inter','Roboto','Open Sans','Lato','Montserrat','Nunito Sans','Source Sans 3','Work Sans','Poppins','Public Sans'];
+
+let CFG = null;      // configuração em edição
+let PADRAO = null;   // configuração original do portal
+let MAPA = {};       // mapa de textos que o portal devolveu
+let secaoAtual = 'marca';
+let filtroTexto = '';
+let abertos = {};    // blocos abertos/fechados por tela
+
+const $ = (id) => document.getElementById(id);
+const clone = (o) => JSON.parse(JSON.stringify(o));
+
+function avisar(msg, erro) {
+  const el = $('aviso');
+  el.textContent = msg;
+  el.classList.toggle('erro', !!erro);
+  el.dataset.ver = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.dataset.ver = '0'; }, 3200);
+}
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/* --------------------------------- login ---------------------------------- */
+$('btnEntrar').addEventListener('click', entrar);
+$('senha').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+function entrar() {
+  if ($('senha').value !== SENHA) {
+    $('senhaErro').classList.remove('hidden');
+    return;
+  }
+  $('porta').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  montarSeletorTelas();
+  $('palco').srcdoc = PORTAL_FONTE;   // só monta a prévia depois de entrar
+}
+
+/* ===========================================================================
+   Conversa com o portal (iframe)
+   =========================================================================== */
+const palco = () => $('palco').contentWindow;
+
+window.addEventListener('message', (ev) => {
+  if (!ev.data) return;
+
+  if (ev.data.tipo === 'portal-pronto') {
+    /* pega a configuração de fábrica direto do portal e pede o mapa de textos */
+    try {
+      PADRAO = clone($('palco').contentWindow.PORTAL_CONFIG || {});
+    } catch (e) { PADRAO = {}; }
+    if (!CFG) CFG = clone(PADRAO);
+    palco().postMessage({ tipo: 'portal-pedir-mapa' }, '*');
+    return;
+  }
+
+  if (ev.data.tipo === 'portal-mapa') {
+    MAPA = ev.data.mapa || {};
+    render();
+    aplicar();
+    return;
+  }
+});
+
+function aplicar() {
+  if (!CFG) return;
+  try { palco().postMessage({ tipo: 'portal-config', config: clone(CFG) }, '*'); } catch (e) {}
+}
+
+function verTela(tela) {
+  try { palco().postMessage({ tipo: 'portal-ver-tela', tela: tela }, '*'); } catch (e) {}
+}
+
+function montarSeletorTelas() {
+  const sel = $('seletorTela');
+  sel.innerHTML = TELAS.map(([id, nome]) => `<option value="${id}">${nome}</option>`).join('');
+  sel.addEventListener('change', () => verTela(sel.value));
+}
+
+/* ===========================================================================
+   Navegação
+   =========================================================================== */
+document.querySelectorAll('.nav-item').forEach(b => {
+  b.addEventListener('click', () => {
+    secaoAtual = b.dataset.secao;
+    document.querySelectorAll('.nav-item').forEach(o =>
+      o.setAttribute('aria-current', String(o === b)));
+    render();
+  });
+});
+
+/* ===========================================================================
+   Render das seções
+   =========================================================================== */
+function render() {
+  if (!CFG) return;
+  const box = $('edicao');
+  const cabeca = {
+    marca:      ['Marca', 'Logo, cores e fonte do portal. A cor primária controla o botão de ação, a barra de progresso, os links e a seleção.'],
+    credores:   ['Logos dos credores', 'Cada credor é uma chave com o nome exato como o CRM devolve. Sem logo cadastrado, o portal mostra só o nome — sem placeholder.'],
+    canais:     ['Canais e rodapé', 'Estes canais aparecem em todas as telas que oferecem atendimento. Alterar aqui reflete no portal inteiro.'],
+    textos:     ['Textos e botões', 'Todo texto editável do portal, agrupado pela tela onde aparece. A estrutura das telas é fixa.'],
+    integracao: ['Integração', 'Endereço do backend e link de chat por credor. Mexa aqui só com o time técnico.']
+  }[secaoAtual];
+
+  box.innerHTML =
+    `<div class="edicao-topo">
+       <div><h2>${cabeca[0]}</h2><p>${cabeca[1]}</p></div>
+       <button class="btn-previa" type="button" onclick="document.getElementById('previa').classList.add('aberta')">Ver prévia</button>
+     </div>
+     <div id="secao"></div>`;
+
+  const alvo = $('secao');
+  if (secaoAtual === 'marca') renderMarca(alvo);
+  if (secaoAtual === 'credores') renderCredores(alvo);
+  if (secaoAtual === 'canais') renderCanais(alvo);
+  if (secaoAtual === 'textos') renderTextos(alvo);
+  if (secaoAtual === 'integracao') renderIntegracao(alvo);
+}
+
+/* --------------------------------- marca ---------------------------------- */
+function renderMarca(alvo) {
+  const m = CFG.marca || (CFG.marca = {});
+  const c = CFG.cores || (CFG.cores = {});
+
+  alvo.innerHTML = `
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Identidade</h3></div>
+      <div class="bloco-corpo">
+        <div class="campo">
+          <label for="mNome">Nome do projeto</label>
+          <input id="mNome" type="text" value="${esc(m.nome)}"/>
+          <p class="ajuda">Aparece no topo quando não há logo, e no título da aba.</p>
+        </div>
+        <div class="campo">
+          <label>Logo do projeto</label>
+          <div class="logo-area">
+            <div class="logo-previa" id="mLogoPrevia">
+              ${m.logoUrl ? `<img src="${esc(m.logoUrl)}" alt=""/>` : '<span>sem logo</span>'}
+            </div>
+            <div class="logo-acoes">
+              <button class="btn btn-2" id="mLogoEnviar" type="button">Enviar imagem</button>
+              <button class="btn btn-2" id="mLogoLimpar" type="button">Remover</button>
+            </div>
+          </div>
+          <p class="ajuda">PNG ou SVG com fundo transparente, altura mínima 48px, sem margem interna. Sem logo, o portal mostra o nome do projeto.</p>
+        </div>
+        <div class="campo">
+          <label for="mAltura">Altura do logo no topo (px)</label>
+          <input id="mAltura" type="text" value="${esc(m.logoAltura || 24)}"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Cores</h3></div>
+      <div class="bloco-corpo">
+        <div class="grade2">
+          <div class="campo">
+            <label for="cPrim">Cor primária</label>
+            <div class="cor">
+              <input id="cPrimPicker" type="color" value="${esc(c.primaria || '#CE2E3C')}"/>
+              <input id="cPrim" type="text" value="${esc(c.primaria || '#CE2E3C')}"/>
+            </div>
+            <p class="ajuda">Botão de ação, progresso, links e seleção.</p>
+          </div>
+          <div class="campo">
+            <label for="cEsc">Cor primária escura</label>
+            <div class="cor">
+              <input id="cEscPicker" type="color" value="${esc(c.primariaEscura || '#A3222E')}"/>
+              <input id="cEsc" type="text" value="${esc(c.primariaEscura || '#A3222E')}"/>
+            </div>
+            <p class="ajuda">Usada no hover do botão. <button class="txt-reset" id="cGerar" type="button">gerar a partir da primária</button></p>
+          </div>
+        </div>
+        <p class="ajuda" style="margin-top:4px">As cores de estado — verde de economia, vermelho de erro, cinzas de texto — são fixas. É o que garante a leitura da tela em qualquer marca.</p>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Fonte</h3></div>
+      <div class="bloco-corpo">
+        <div class="campo">
+          <label for="mFonte">Família tipográfica</label>
+          <select id="mFonte">
+            ${FONTES.map(f => `<option value="${f}"${(m.fonte || 'Inter') === f ? ' selected' : ''}>${f}</option>`).join('')}
+          </select>
+          <p class="ajuda">Fontes do Google Fonts. A escala de tamanhos e os pesos são fixos.</p>
+        </div>
+      </div>
+    </div>`;
+
+  const setCor = (chave, txt, picker) => {
+    const aplica = (v) => {
+      if (!/^#[0-9a-fA-F]{3,6}$/.test(v)) return;
+      CFG.cores[chave] = v;
+      $(txt).value = v; $(picker).value = v;
+      aplicar();
+    };
+    $(txt).addEventListener('input', e => aplica(e.target.value.trim()));
+    $(picker).addEventListener('input', e => aplica(e.target.value));
+  };
+  setCor('primaria', 'cPrim', 'cPrimPicker');
+  setCor('primariaEscura', 'cEsc', 'cEscPicker');
+
+  $('cGerar').addEventListener('click', () => {
+    const v = escurecer(CFG.cores.primaria || '#CE2E3C', 0.22);
+    CFG.cores.primariaEscura = v;
+    $('cEsc').value = v; $('cEscPicker').value = v;
+    aplicar();
+    avisar('Tom escuro gerado.');
+  });
+
+  $('mNome').addEventListener('input', e => { CFG.marca.nome = e.target.value; aplicar(); });
+  $('mAltura').addEventListener('input', e => {
+    const n = parseInt(e.target.value, 10);
+    CFG.marca.logoAltura = Number.isFinite(n) ? n : 24;
+    aplicar();
+  });
+  $('mFonte').addEventListener('change', e => {
+    CFG.marca.fonte = e.target.value;
+    carregarFonteNaPrevia(e.target.value);
+    aplicar();
+  });
+
+  $('mLogoEnviar').addEventListener('click', () => pedirImagem(dataUrl => {
+    CFG.marca.logoUrl = dataUrl;
+    render(); aplicar();
+  }));
+  $('mLogoLimpar').addEventListener('click', () => {
+    CFG.marca.logoUrl = '';
+    render(); aplicar();
+  });
+}
+
+function escurecer(hex, fator) {
+  const s = hex.replace('#', '');
+  const c = s.length === 3 ? s.split('').map(x => x + x).join('') : s;
+  const n = parseInt(c, 16);
+  const r = Math.max(0, Math.round(((n >> 16) & 255) * (1 - fator)));
+  const g = Math.max(0, Math.round(((n >> 8) & 255) * (1 - fator)));
+  const b = Math.max(0, Math.round((n & 255) * (1 - fator)));
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+/* A fonte precisa existir dentro do iframe para a prévia mudar de verdade. */
+function carregarFonteNaPrevia(nome) {
+  try {
+    const doc = $('palco').contentDocument;
+    const id = 'fonte-admin';
+    let link = doc.getElementById(id);
+    if (!link) {
+      link = doc.createElement('link');
+      link.id = id; link.rel = 'stylesheet';
+      doc.head.appendChild(link);
+    }
+    link.href = 'https://fonts.googleapis.com/css2?family=' +
+      encodeURIComponent(nome).replace(/%20/g, '+') + ':wght@400;500;600;700&display=swap';
+  } catch (e) {}
+}
+
+/* -------------------------------- credores -------------------------------- */
+function renderCredores(alvo) {
+  const mapa = CFG.logosCredor || (CFG.logosCredor = {});
+  const chaves = Object.keys(mapa);
+
+  alvo.innerHTML = `
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Credores cadastrados</h3><span class="cont">${chaves.length}</span></div>
+      <div class="bloco-corpo" id="listaCredores">
+        ${chaves.length ? '' : '<p class="vazio">Nenhum credor cadastrado. O portal mostra só o nome que vem do CRM.</p>'}
+      </div>
+    </div>
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Adicionar credor</h3></div>
+      <div class="bloco-corpo">
+        <div class="campo">
+          <label for="novoCredor">Nome do credor como vem do CRM</label>
+          <input id="novoCredor" placeholder="AMIL OPERADORAS" type="text"/>
+          <p class="ajuda">O portal casa este nome com o que a ficha devolve. Pode ser parte do nome — "AMIL OPERADORAS" casa com "AMIL OPERADORAS SP".</p>
+        </div>
+        <button class="btn btn-1" id="btnAddCredor" type="button">Adicionar</button>
+      </div>
+    </div>`;
+
+  const lista = $('listaCredores');
+  chaves.forEach(chave => {
+    const row = document.createElement('div');
+    row.className = 'credor';
+    row.innerHTML = `
+      <div class="campo" style="margin:0">
+        <label>Nome no CRM</label>
+        <input type="text" value="${esc(chave)}" data-chave="${esc(chave)}"/>
+      </div>
+      <div class="campo" style="margin:0">
+        <label>Logo</label>
+        <div class="logo-previa">${mapa[chave] ? `<img src="${esc(mapa[chave])}" alt=""/>` : '<span>sem logo</span>'}</div>
+      </div>
+      <button class="lixeira" title="Remover" type="button">
+        <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="15"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"></path></svg>
+      </button>`;
+
+    /* renomear a chave preservando o logo */
+    row.querySelector('input').addEventListener('change', e => {
+      const nova = e.target.value.trim().toUpperCase();
+      if (!nova || nova === chave) return;
+      const url = mapa[chave];
+      delete mapa[chave];
+      mapa[nova] = url;
+      render(); aplicar();
+    });
+
+    row.querySelector('.logo-previa').addEventListener('click', () => pedirImagem(dataUrl => {
+      mapa[chave] = dataUrl;
+      render(); aplicar();
+      avisar('Logo de ' + chave + ' atualizado.');
+    }));
+    row.querySelector('.logo-previa').style.cursor = 'pointer';
+    row.querySelector('.logo-previa').title = 'Clique para enviar uma imagem';
+
+    row.querySelector('.lixeira').addEventListener('click', () => {
+      delete mapa[chave];
+      render(); aplicar();
+    });
+
+    lista.appendChild(row);
+  });
+
+  $('btnAddCredor').addEventListener('click', () => {
+    const nome = $('novoCredor').value.trim().toUpperCase();
+    if (!nome) return avisar('Informe o nome do credor.', true);
+    if (mapa[nome] !== undefined) return avisar('Este credor já está cadastrado.', true);
+    mapa[nome] = '';
+    render(); aplicar();
+    avisar('Credor adicionado. Clique na área do logo para enviar a imagem.');
+  });
+}
+
+/* --------------------------------- canais --------------------------------- */
+function renderCanais(alvo) {
+  const c = CFG.contato || (CFG.contato = {});
+  const linha = (id, rot, val, ajuda) => `
+    <div class="campo">
+      <label for="${id}">${rot}</label>
+      <input id="${id}" type="text" value="${esc(val)}"/>
+      ${ajuda ? `<p class="ajuda">${ajuda}</p>` : ''}
+    </div>`;
+
+  alvo.innerHTML = `
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>WhatsApp</h3></div>
+      <div class="bloco-corpo">
+        ${linha('ctWaRotulo', 'Nome exibido', c.whatsappRotulo || 'WhatsApp')}
+        ${linha('ctWaHorario', 'Horário exibido', c.whatsappHorario || '', 'Aparece abaixo do nome. Ex.: Seg a sex, 8h às 18h.')}
+        ${linha('ctWa', 'Link', c.whatsapp || '', 'Link wa.me ou o endereço do chat que o cliente deve abrir.')}
+      </div>
+    </div>
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Telefone</h3></div>
+      <div class="bloco-corpo">
+        ${linha('ctTelRotulo', 'Nome exibido', c.telefoneRotulo || c.telefone || '')}
+        ${linha('ctTelHorario', 'Horário exibido', c.telefoneHorario || '')}
+        ${linha('ctTel', 'Número para discagem', c.telefone || '', 'Só os números são usados no clique. Deixe em branco para não oferecer telefone.')}
+      </div>
+    </div>
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Rodapé legal</h3></div>
+      <div class="bloco-corpo">
+        ${linha('ctRazao', 'Razão social', c.razaoSocial || '')}
+        ${linha('ctCnpj', 'CNPJ', c.cnpj || '')}
+        <p class="ajuda">O rodapé é montado assim: <b>Canal oficial de negociação · &lt;razão social&gt;</b> na primeira linha, <b>CNPJ &lt;cnpj&gt; · Dados protegidos pela LGPD</b> na segunda.</p>
+      </div>
+    </div>`;
+
+  const liga = (id, chave) => $(id).addEventListener('input', e => { CFG.contato[chave] = e.target.value; aplicar(); });
+  liga('ctWaRotulo', 'whatsappRotulo'); liga('ctWaHorario', 'whatsappHorario'); liga('ctWa', 'whatsapp');
+  liga('ctTelRotulo', 'telefoneRotulo'); liga('ctTelHorario', 'telefoneHorario'); liga('ctTel', 'telefone');
+  liga('ctRazao', 'razaoSocial'); liga('ctCnpj', 'cnpj');
+}
+
+/* --------------------------------- textos --------------------------------- */
+function renderTextos(alvo) {
+  CFG.textos = CFG.textos || {};
+  const chaves = Object.keys(MAPA);
+
+  if (!chaves.length) {
+    alvo.innerHTML = '<div class="bloco"><p class="vazio">Aguardando o portal responder o mapa de textos…</p></div>';
+    return;
+  }
+
+  /* agrupa por tela, na ordem da jornada */
+  const grupos = {};
+  chaves.forEach(k => {
+    const tela = MAPA[k].tela || 'global';
+    (grupos[tela] = grupos[tela] || []).push(k);
+  });
+  const ordem = TELAS.map(t => t[0]).filter(t => grupos[t]);
+  if (grupos.global) ordem.unshift('global');
+
+  const filtro = filtroTexto.trim().toLowerCase();
+  const combina = (k) => !filtro
+    || k.toLowerCase().includes(filtro)
+    || String(valorAtual(k)).toLowerCase().includes(filtro)
+    || String(MAPA[k].padrao || '').toLowerCase().includes(filtro);
+
+  let html = `
+    <div class="busca">
+      <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="15"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4.3-4.3"></path></svg>
+      <input id="buscaTxt" placeholder="Buscar por texto ou chave..." type="text" value="${esc(filtroTexto)}"/>
+    </div>`;
+
+  let achou = 0;
+  ordem.forEach(tela => {
+    const itens = grupos[tela].filter(combina).sort();
+    if (!itens.length) return;
+    achou += itens.length;
+    const fechado = abertos[tela] === false ? ' fechado' : '';
+    html += `
+      <div class="bloco${fechado}" data-tela="${tela}">
+        <div class="bloco-cabeca" role="button" data-toggle="${tela}">
+          <svg class="giro" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="14"><path d="M6 9l6 6 6-6"></path></svg>
+          <h3>${tela === 'global' ? 'Cabeçalho e botões gerais' : (NOME_TELA[tela] || tela)}</h3>
+          <span class="cont">${itens.length}</span>
+        </div>
+        <div class="bloco-corpo">
+          ${itens.map(k => itemTexto(k)).join('')}
+        </div>
+      </div>`;
+  });
+
+  if (!achou) html += '<div class="bloco"><p class="vazio">Nenhum texto encontrado para essa busca.</p></div>';
+  alvo.innerHTML = html;
+
+  const busca = $('buscaTxt');
+  busca.addEventListener('input', e => {
+    filtroTexto = e.target.value;
+    const pos = e.target.selectionStart;
+    renderTextos(alvo);
+    const novo = $('buscaTxt');
+    novo.focus(); novo.setSelectionRange(pos, pos);
+  });
+
+  alvo.querySelectorAll('[data-toggle]').forEach(h => {
+    h.addEventListener('click', () => {
+      const tela = h.dataset.toggle;
+      abertos[tela] = abertos[tela] === false ? true : false;
+      h.closest('.bloco').classList.toggle('fechado');
+    });
+  });
+
+  alvo.querySelectorAll('textarea[data-chave]').forEach(ta => {
+    ta.addEventListener('input', () => {
+      const k = ta.dataset.chave;
+      CFG.textos[k] = ta.value;
+      ta.closest('.txt-item').classList.toggle('alterado', ta.value !== MAPA[k].padrao);
+      const reset = ta.closest('.txt-item').querySelector('.txt-reset');
+      if (reset) reset.disabled = ta.value === MAPA[k].padrao;
+      aplicar();
+    });
+  });
+
+  alvo.querySelectorAll('.txt-reset[data-reset]').forEach(b => {
+    b.addEventListener('click', () => {
+      const k = b.dataset.reset;
+      CFG.textos[k] = MAPA[k].padrao;
+      const ta = alvo.querySelector(`textarea[data-chave="${k}"]`);
+      if (ta) ta.value = MAPA[k].padrao;
+      b.closest('.txt-item').classList.remove('alterado');
+      b.disabled = true;
+      aplicar();
+    });
+  });
+}
+
+function valorAtual(k) {
+  const v = (CFG.textos || {})[k];
+  return v === undefined ? (MAPA[k].padrao || '') : v;
+}
+
+function itemTexto(k) {
+  const info = MAPA[k];
+  const valor = valorAtual(k);
+  const alterado = valor !== info.padrao;
+  const tipo = info.tipo === 'botao' ? 'botao' : (info.tipo === 'titulo' ? 'titulo' : 'texto');
+  const rotuloTipo = { botao: 'botão', titulo: 'título', texto: 'texto', rotulo: 'rótulo' }[info.tipo] || 'texto';
+  return `
+    <div class="txt-item${alterado ? ' alterado' : ''}">
+      <div class="txt-topo">
+        <span class="selo ${tipo}">${rotuloTipo}</span>
+        <span class="txt-chave">${esc(k)}</span>
+        <button class="txt-reset" data-reset="${esc(k)}" type="button"${alterado ? '' : ' disabled'}>voltar ao padrão</button>
+      </div>
+      <textarea data-chave="${esc(k)}" rows="${valor.length > 90 ? 3 : 1}">${esc(valor)}</textarea>
+    </div>`;
+}
+
+/* ------------------------------- integração ------------------------------- */
+function renderIntegracao(alvo) {
+  const i = CFG.integracao || (CFG.integracao = {});
+  const canais = i.canaisPorCredor || (i.canaisPorCredor = {});
+  alvo.innerHTML = `
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Backend</h3></div>
+      <div class="bloco-corpo">
+        <div class="campo">
+          <label for="inEndpoint">Endereço do worker</label>
+          <input id="inEndpoint" type="text" value="${esc(i.endpoint || '')}"/>
+          <p class="ajuda">Todas as etapas do portal chamam este endereço. Só altere junto com o time técnico.</p>
+        </div>
+      </div>
+    </div>
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Link de chat por credor</h3><span class="cont">${Object.keys(canais).length}</span></div>
+      <div class="bloco-corpo">
+        ${Object.keys(canais).map(k => `
+          <div class="campo">
+            <label>${esc(k)}</label>
+            <input data-canal="${esc(k)}" type="text" value="${esc(canais[k])}"/>
+          </div>`).join('')}
+        <p class="ajuda">A chave <b>PADRAO</b> é usada quando o credor não tem link próprio.</p>
+      </div>
+    </div>`;
+
+  $('inEndpoint').addEventListener('input', e => { CFG.integracao.endpoint = e.target.value.trim(); aplicar(); });
+  alvo.querySelectorAll('[data-canal]').forEach(inp => {
+    inp.addEventListener('input', e => {
+      CFG.integracao.canaisPorCredor[inp.dataset.canal] = e.target.value.trim();
+      aplicar();
+    });
+  });
+}
+
+/* ===========================================================================
+   Imagem, arquivos e publicação
+   =========================================================================== */
+let aoEscolherImagem = null;
+function pedirImagem(cb) { aoEscolherImagem = cb; $('inputLogo').click(); }
+$('inputLogo').addEventListener('change', (ev) => {
+  const f = ev.target.files && ev.target.files[0];
+  ev.target.value = '';
+  if (!f || !aoEscolherImagem) return;
+  if (f.size > 400 * 1024) return avisar('Imagem muito grande. Use um arquivo de até 400 KB.', true);
+  const fr = new FileReader();
+  fr.onload = () => { aoEscolherImagem(fr.result); aoEscolherImagem = null; };
+  fr.readAsDataURL(f);
+});
+
+function baixar(nome, conteudo, tipo) {
+  const blob = new Blob([conteudo], { type: tipo });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nome;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function nomeArquivo() {
+  const n = ((CFG.marca || {}).nome || 'portal').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return n || 'portal';
+}
+
+$('btnSalvarCfg').addEventListener('click', () => {
+  baixar('config-' + nomeArquivo() + '.json', JSON.stringify(CFG, null, 2), 'application/json');
+  avisar('Configuração salva.');
+});
+
+$('btnCarregarCfg').addEventListener('click', () => $('inputCfg').click());
+$('inputCfg').addEventListener('change', (ev) => {
+  const f = ev.target.files && ev.target.files[0];
+  ev.target.value = '';
+  if (!f) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      CFG = JSON.parse(fr.result);
+      render(); aplicar();
+      if (CFG.marca && CFG.marca.fonte) carregarFonteNaPrevia(CFG.marca.fonte);
+      avisar('Configuração carregada.');
+    } catch (e) { avisar('Arquivo inválido.', true); }
+  };
+  fr.readAsText(f);
+});
+
+$('btnRestaurar').addEventListener('click', () => {
+  if (!PADRAO) return;
+  CFG = clone(PADRAO);
+  render(); aplicar();
+  avisar('Configuração restaurada para o padrão.');
+});
+
+/* Baixar aplicação: lê o portal, troca o bloco de configuração e entrega um
+   arquivo único, pronto para o cliente publicar. */
+$('btnBaixarApp').addEventListener('click', () => {
+  try {
+    const bloco = '<script id="portal-config">\nwindow.PORTAL_CONFIG = ' +
+      JSON.stringify(CFG, null, 2) + ';\n<' + '/script>';
+
+    const re = /<script id="portal-config">[\s\S]*?<\/script>/;
+    if (!re.test(PORTAL_FONTE)) throw new Error('bloco-nao-encontrado');
+
+    const saida = PORTAL_FONTE.replace(re, bloco);
+    baixar('autoatendimento-' + nomeArquivo() + '.html', saida, 'text/html;charset=utf-8');
+    avisar('Aplicação gerada. Um arquivo único, pronto para publicar.');
+  } catch (e) {
+    avisar('Não consegui gerar o arquivo. Recarregue a página e tente de novo.', true);
+  }
+});
+</script>
+</body>
+</html>
