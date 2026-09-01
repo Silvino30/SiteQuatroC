@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Quatro C | Administração do Portal</title>
+<title>Quatro C | Administração Autoatendimento</title>
 <meta content="#CE2E3C" name="theme-color"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -2730,8 +2730,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="12"><rect height="10" rx="2" width="16" x="4" y="11"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg>
         Área restrita
       </span>
-      <h1>Administração do portal</h1>
-      <p class="porta-apoio">Aqui você personaliza o Portal de Autoatendimento para cada projeto e gera a versão do cliente.</p>
+      <h1>Administração do Autoatendimento</h1>
     </div>
 
     <div class="porta-form">
