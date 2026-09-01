@@ -1,249 +1,1679 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Quatro C | Administração do Portal</title>
 <meta content="#CE2E3C" name="theme-color"/>
+<meta content="Portal oficial de autoatendimento da Quatro C para consulta segura e negociação digital." name="description"/>
+<title>Quatro C | Portal de Autoatendimento</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
 <style>
-/* ===========================================================================
-   PAINEL DE ADMINISTRAÇÃO
-   Três áreas: navegação (esquerda), edição (centro), pré-visualização (direita).
-   O painel não conhece as telas: ele pergunta ao portal quais textos existem
-   e se monta a partir da resposta. Tela nova no portal aparece aqui sozinha.
-   =========================================================================== */
-:root{
-  --tinta:#15151B; --tinta-2:#5C5C6A; --tinta-3:#8A8A98;
-  --linha:#E6E6EC; --linha-2:#D5D5DE;
-  --papel:#fff; --fundo:#F5F5F8;
-  --escuro:#1D1D24; --escuro-2:#26262F;
-  /* identidade Quatro C */
-  --acento:#CE2E3C; --acento-escuro:#A3222E; --acento-fraco:#FBECEE;
-  --ouro:#EB9B3C; --verde:#2C8A61;
-  --ok:#0A7346; --alerta:#8A5D0C; --falha:#B02A22;
-  --r:8px; --r-p:6px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;font-family:'Roboto',Arial,sans-serif;
-  background:var(--fundo);color:var(--tinta);font-size:14px;line-height:1.5;
-  letter-spacing:-.005em;-webkit-font-smoothing:antialiased;
-}
-button{font:inherit;cursor:pointer;color:inherit}
-input,select,textarea{font:inherit}
-svg{display:block;flex:0 0 auto}
-.hidden{display:none !important}
+    :root {
+      --red: #CE2E3C;
+      --red-dark: #A3222E;
+      --red-soft: #F8E8EA;
+      --gold: #EB9B3C;
+      --green: #2C8A61;
+      --graphite: #4F4F4F;
+      --gray: #ACABB1;
+      --gray-2: #E8E8EC;
+      --gray-3: #F6F6F8;
+      --white: #FFFFFF;
+      --shadow-lg: 0 28px 70px rgba(36, 36, 40, 0.14);
+      --shadow-md: 0 18px 36px rgba(36, 36, 40, 0.08);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --container: 1240px;
+      --anchor-offset: 122px;
+    }
 
-/* --------------------------- faixa da marca ------------------------------- */
-.topbar{
-  height:5px;
-  background:linear-gradient(90deg,var(--acento) 0 70%,var(--ouro) 70% 86%,var(--verde) 86% 100%);
+    * { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+    }
+
+    #inicio,
+    #como-funciona,
+    #portal,
+    #canais {
+      scroll-margin-top: 24px;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Roboto", Arial, sans-serif;
+      color: var(--graphite);
+      background:
+        radial-gradient(circle at top left, rgba(206, 46, 60, 0.06), transparent 34%),
+        linear-gradient(180deg, #FFFFFF 0%, #FCFCFD 42%, #F6F6F8 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--container));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      height: 5px;
+      background: linear-gradient(90deg, var(--red) 0 70%, var(--gold) 70% 86%, var(--green) 86% 100%);
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(232, 232, 236, 0.95);
+    }
+
+    .header-inner {
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-logo-wrap {
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(232,232,236,0.95);
+      box-shadow: 0 10px 30px rgba(36,36,40,0.05);
+    }
+
+    .brand-logo {
+      display: block;
+      width: auto;
+      height: 76px;
+      max-width: 330px;
+      object-fit: contain;
+    }
+
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #5F5F68;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--red);
+      background: rgba(206, 46, 60, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 46px;
+      height: 46px;
+      padding: 0;
+      border: 1px solid rgba(206, 46, 60, 0.16);
+      border-radius: 14px;
+      background: var(--white);
+      color: #4F4F58;
+      box-shadow: 0 10px 24px rgba(36, 36, 40, 0.07);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease;
+    }
+
+    .menu-toggle:hover {
+      color: var(--red);
+      border-color: rgba(206, 46, 60, 0.30);
+      background: #FFF7F8;
+      transform: translateY(-1px);
+    }
+
+    .menu-toggle-lines,
+    .menu-toggle-lines::before,
+    .menu-toggle-lines::after {
+      width: 20px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      display: block;
+      transition: transform .22s ease, opacity .22s ease;
+    }
+
+    .menu-toggle-lines {
+      position: relative;
+    }
+
+    .menu-toggle-lines::before,
+    .menu-toggle-lines::after {
+      content: "";
+      position: absolute;
+      left: 0;
+    }
+
+    .menu-toggle-lines::before { top: -6px; }
+    .menu-toggle-lines::after { top: 6px; }
+
+    .menu-toggle[aria-expanded="true"] .menu-toggle-lines {
+      background: transparent;
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-toggle-lines::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] .menu-toggle-lines::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: var(--white);
+      border: 1px solid rgba(206, 46, 60, 0.14);
+      box-shadow: 0 12px 28px rgba(36, 36, 40, 0.06);
+      font-size: 12px;
+      font-weight: 700;
+      color: #65656E;
+      white-space: nowrap;
+    }
+
+    .header-badge svg {
+      flex: 0 0 auto;
+      color: var(--green);
+    }
+
+    .hero {
+      padding: 48px 0 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.14fr) minmax(360px, 0.86fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(206, 46, 60, 0.08);
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 18px 0 0;
+      max-width: 690px;
+      font-size: clamp(34px, 4.35vw, 60px);
+      line-height: 1.06;
+      letter-spacing: -0.05em;
+      color: #303038;
+      text-wrap: balance;
+    }
+
+    .hero h1 span { color: var(--red); }
+
+    .hero p {
+      margin: 20px 0 0;
+      max-width: 660px;
+      font-size: clamp(16px, 1.45vw, 20px);
+      line-height: 1.72;
+      color: #6B6B74;
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 14px;
+    }
+
+    .btn {
+      min-height: 54px;
+      padding: 0 24px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+      border: 0;
+      box-shadow: 0 18px 34px rgba(206, 46, 60, 0.28);
+    }
+
+    .btn-secondary {
+      color: #3D3D45;
+      background: var(--white);
+      border: 1px solid rgba(79,79,79,0.12);
+      box-shadow: 0 12px 28px rgba(36, 36, 40, 0.07);
+    }
+
+    .hero-points {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 12px;
+      max-width: 780px;
+    }
+
+    .point-card {
+      height: 100%;
+      padding: 16px 16px 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(232, 232, 236, 0.95);
+      box-shadow: 0 12px 26px rgba(36,36,40,0.05);
+    }
+
+    .point-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+
+    .point-card p {
+      margin: 10px 0 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #66666F;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: auto;
+      display: grid;
+      align-items: start;
+      align-self: start;
+      padding: 4px 0 0 8px;
+    }
+
+    .triangle-accent {
+      position: absolute;
+      pointer-events: none;
+      fill: none;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      z-index: 0;
+      opacity: 1;
+    }
+
+    .triangle-accent path { vector-effect: non-scaling-stroke; }
+
+    .triangle-gold {
+      width: 180px;
+      top: -8px;
+      right: 8px;
+      color: rgba(235, 155, 60, 0.82);
+      transform: rotate(10deg);
+    }
+
+    .triangle-green {
+      width: 170px;
+      left: -8px;
+      bottom: 14px;
+      color: rgba(44, 138, 97, 0.78);
+      transform: rotate(-16deg);
+    }
+
+    .hero-panel {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      margin-top: 0;
+      padding: 30px;
+      border-radius: var(--radius-xl);
+      color: var(--white);
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.14), transparent 24%),
+        linear-gradient(140deg, #D43241 0%, #BF2937 40%, #A3222E 100%);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: auto -30px -46px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-panel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .hero-panel h2 {
+      margin: 18px 0 10px;
+      font-size: 28px;
+      line-height: 1.16;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .hero-panel p {
+      margin: 0;
+      max-width: 500px;
+      color: rgba(255,255,255,0.82);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .journey-list {
+      margin-top: 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .journey-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 13px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(6px);
+    }
+
+    .journey-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.16);
+    }
+
+    .journey-item strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .journey-item span {
+      display: block;
+      color: rgba(255,255,255,0.82);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .hero-meta {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .meta-chip {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.11);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .steps {
+      padding: 20px 0 10px;
+    }
+
+    .section-head {
+      max-width: 840px;
+      margin-bottom: 22px;
+    }
+
+    .section-head span {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      color: #303038;
+    }
+
+    .section-head p {
+      margin: 14px 0 0;
+      max-width: 760px;
+      font-size: 17px;
+      line-height: 1.65;
+      color: #71717A;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .step-card {
+      position: relative;
+      padding: 26px 24px 22px;
+      overflow: hidden;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(232,232,236,0.95);
+      box-shadow: var(--shadow-md);
+    }
+
+    .step-no {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--red-soft);
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .step-card h4 {
+      margin: 18px 0 10px;
+      font-size: 21px;
+      line-height: 1.2;
+      color: #303038;
+    }
+
+    .step-card p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #71717A;
+    }
+
+    .portal-section {
+      padding: 26px 0 80px;
+      position: relative;
+    }
+
+    .portal-shell {
+      overflow: hidden;
+      border-radius: 30px;
+      border: 1px solid rgba(232,232,236,0.95);
+      background: rgba(255,255,255,0.98);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .portal-intro {
+      padding: 22px 24px 0;
+    }
+
+    .portal-bar {
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(232,232,236,0.95);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FCFCFD 100%);
+    }
+
+    .bar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #FFF7F8;
+      color: #66666F;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(206, 46, 60, 0.10);
+    }
+
+    .bar-chip svg { color: var(--red); }
+
+    .portal-toolbar {
+      min-height: 76px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid rgba(232,232,236,0.95);
+      background: linear-gradient(180deg, #FFFFFF 0%, #FBFBFC 100%);
+    }
+
+    .portal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .portal-icon {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: var(--red);
+      background: rgba(206, 46, 60, 0.08);
+    }
+
+    .portal-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 900;
+      color: #303038;
+    }
+
+    .portal-caption {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #81818A;
+    }
+
+    .portal-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--white);
+      border: 1px solid rgba(232,232,236,0.95);
+      color: #676770;
+      cursor: pointer;
+      transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      color: var(--red);
+      border-color: rgba(206,46,60,0.22);
+      background: #FFF7F8;
+    }
+
+    .portal-stage {
+      position: relative;
+      min-height: 760px;
+      background: #F8F8FA;
+    }
+
+    .portal-frame {
+      width: 100%;
+      height: 760px;
+      border: 0;
+      display: block;
+      background: var(--white);
+    }
+
+    .loading-layer,
+    .placeholder-layer {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      text-align: center;
+      background: #F8F8FA;
+    }
+
+    .loading-layer { z-index: 3; }
+    .placeholder-layer { z-index: 2; }
+    .hidden { display: none !important; }
+
+    .loader {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 16px;
+      border: 4px solid rgba(206, 46, 60, 0.14);
+      border-top-color: var(--red);
+      border-radius: 999px;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .placeholder-card {
+      max-width: 620px;
+      padding: 40px;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.98);
+      border: 1px dashed #D9D9DF;
+      box-shadow: 0 18px 42px rgba(36,36,40,0.08);
+    }
+
+    .placeholder-card svg { color: var(--red); }
+
+    .placeholder-card h4 {
+      margin: 20px 0 10px;
+      font-size: 26px;
+      color: #303038;
+      letter-spacing: -0.03em;
+    }
+
+    .placeholder-card p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.65;
+      color: #72727B;
+    }
+
+    .config-code {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      overflow-x: auto;
+      text-align: left;
+      color: #F7F7F7;
+      background: #2C2C31;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .support-card {
+      margin-top: 18px;
+      padding: 22px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(232,232,236,0.95);
+      box-shadow: var(--shadow-md);
+    }
+
+    .support-card svg {
+      flex: 0 0 auto;
+      color: var(--red);
+    }
+
+    .support-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #303038;
+      font-size: 15px;
+    }
+
+    .support-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #70707A;
+    }
+
+
+    .support-actions {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .support-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: #FFF7F8;
+      border: 1px solid rgba(206, 46, 60, 0.12);
+      color: var(--red);
+      font-size: 12px;
+      font-weight: 800;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .support-link:hover {
+      transform: translateY(-1px);
+      background: #FFEFF2;
+      border-color: rgba(206, 46, 60, 0.24);
+    }
+    .footer {
+      padding: 28px 0 36px;
+      border-top: 1px solid rgba(232,232,236,0.95);
+      background: rgba(255,255,255,0.80);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      color: #81818A;
+      font-size: 12px;
+    }
+
+    .footer strong { color: #303038; }
+
+    @media (max-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.96fr);
+        gap: 36px;
+      }
+
+      .hero h1 {
+        max-width: 620px;
+        font-size: clamp(34px, 4vw, 52px);
+      }
+
+      .hero-panel {
+        padding: 26px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      :root { --anchor-offset: 132px; }
+      .hero-grid,
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-points {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .hero-visual {
+        min-height: auto;
+        padding: 10px 0 0;
+      }
+
+      .triangle-gold {
+        width: 150px;
+        top: -2px;
+        right: 8px;
+      }
+
+      .triangle-green {
+        width: 140px;
+        left: 0;
+        bottom: 10px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      :root { --anchor-offset: 156px; }
+      .container { width: min(calc(100% - 24px), var(--container)); }
+      .header-inner {
+        position: relative;
+        min-height: 78px;
+        gap: 12px;
+      }
+
+      .brand-logo {
+        height: 54px;
+        max-width: 220px;
+      }
+
+      .brand-logo-wrap {
+        padding: 5px 9px;
+        border-radius: 15px;
+      }
+
+      .header-right {
+        width: auto;
+        margin-left: auto;
+        flex-wrap: nowrap;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+        flex: 0 0 auto;
+      }
+
+      .header-nav {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        right: 0;
+        width: 100%;
+        padding: 10px;
+        display: grid;
+        gap: 6px;
+        overflow: visible;
+        border: 1px solid rgba(232, 232, 236, 0.98);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 24px 54px rgba(36, 36, 40, 0.16);
+        backdrop-filter: blur(18px);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-8px) scale(0.98);
+        transform-origin: top right;
+        transition: opacity .20s ease, transform .20s ease, visibility .20s ease;
+        z-index: 80;
+      }
+
+      .header-nav.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+
+      .nav-link {
+        width: 100%;
+        min-height: 48px;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        border-radius: 14px;
+        white-space: normal;
+        font-size: 13px;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus-visible {
+        background: rgba(206, 46, 60, 0.08);
+      }
+
+      .header-badge { display: none; }
+
+      body.menu-open {
+        overflow: hidden;
+      }
+      .hero { padding-top: 32px; }
+      .hero h1 {
+        max-width: 100%;
+        font-size: 36px;
+        line-height: 1.08;
+      }
+      .hero p {
+        max-width: 100%;
+        font-size: 16px;
+      }
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .btn { width: 100%; }
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+      .point-card {
+        padding: 16px;
+      }
+      .hero-visual {
+        padding-top: 8px;
+      }
+      .triangle-gold {
+        width: 120px;
+        top: -2px;
+        right: 0;
+      }
+      .triangle-green {
+        width: 112px;
+        left: 2px;
+        bottom: 6px;
+      }
+      .hero-panel { padding: 24px; border-radius: 24px; }
+      .hero-panel h2 { font-size: 25px; }
+      .journey-item {
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+      }
+      .journey-icon {
+        width: 40px;
+        height: 40px;
+      }
+      .steps { padding-top: 12px; }
+      .portal-intro { padding: 18px 18px 0; }
+      .portal-shell { border-radius: 22px; }
+      .portal-bar,
+      .portal-toolbar {
+        padding: 14px 14px;
+      }
+
+      .portal-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .portal-actions { width: 100%; }
+      .portal-stage,
+      .portal-frame {
+        min-height: 680px;
+        height: 680px;
+      }
+
+      .placeholder-card {
+        padding: 28px 20px;
+      }
+
+      .support-card {
+        padding: 18px;
+      }
+
+      .support-actions {
+        flex-direction: column;
+      }
+
+      .support-link {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 540px) {
+      :root { --anchor-offset: 148px; }
+
+      .brand-logo {
+        height: 48px;
+        max-width: 185px;
+      }
+
+      .menu-toggle {
+        width: 44px;
+        height: 44px;
+      }
+      .hero {
+        padding-top: 24px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.1em;
+      }
+
+      .btn {
+        min-height: 50px;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+      }
+
+      .hero-panel {
+        padding: 22px 18px;
+      }
+
+      .hero-panel-badge,
+      .meta-chip {
+        font-size: 10px;
+      }
+
+      .journey-item {
+        padding: 12px;
+      }
+
+      .portal-stage,
+      .portal-frame {
+        min-height: 620px;
+        height: 620px;
+      }
+    }
+
+  
+
+    /* Ajustes de alinhamento e consistência visual — versão 2 */
+    .section-head {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .section-head p {
+      margin-left: auto;
+      margin-right: auto;
+      text-wrap: balance;
+    }
+
+    .portal-bar {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .portal-toolbar {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .portal-title-wrap {
+      justify-content: center;
+    }
+
+    .portal-caption {
+      max-width: 620px;
+      line-height: 1.55;
+      text-wrap: balance;
+    }
+
+    .support-card {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .support-card > div {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .support-card p {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      text-wrap: balance;
+    }
+
+    .support-actions {
+      justify-content: center;
+    }
+
+    @media (max-width: 720px) {
+      .portal-title-wrap {
+        flex-direction: column;
+      }
+
+      .support-card {
+        flex-direction: column;
+      }
+    }
+
+    /* Refinamentos visuais — versão 3 */
+    .steps .section-head,
+    .portal-intro {
+      margin-bottom: 28px;
+    }
+
+    .support-title-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .support-title-row strong {
+      margin: 0;
+    }
+
+    .support-icon {
+      width: 34px;
+      height: 34px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 11px;
+      color: var(--red);
+      background: rgba(206, 46, 60, 0.07);
+      border: 1px solid rgba(206, 46, 60, 0.13);
+    }
+
+    .support-icon svg {
+      color: inherit;
+    }
+
+    .premium-message {
+      width: min(100%, 860px);
+      color: #687181;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.65;
+      letter-spacing: 0;
+    }
+
+    .premium-message span {
+      display: block;
+    }
+
+    .premium-message span + span {
+      margin-top: 5px;
+    }
+
+    @media (max-width: 720px) {
+      .support-title-row {
+        gap: 8px;
+      }
+
+      .premium-message {
+        font-size: 12.5px;
+        line-height: 1.6;
+      }
+    }
+
+  </style>
+<style>
+
+/* Integração visual com a landing page oficial */
+.portal-stage { min-height: 0 !important; padding: 22px; background: #F8F8FA; }
+.embedded-autoapp { width: 100%; max-width: 980px; margin: 0 auto; }
+@media (max-width: 760px) {
+  .portal-stage { padding: 10px; }
 }
 
-/* ------------------------------- porta ------------------------------------ */
-.porta{
-  min-height:100vh;display:grid;place-items:center;padding:32px 24px;
-  background:
-    radial-gradient(circle at top left, rgba(206,46,60,.07), transparent 36%),
-    linear-gradient(180deg,#FFFFFF 0%,#FCFCFD 44%,#F5F5F8 100%);
-}
-.porta-caixa{
-  width:100%;max-width:404px;background:var(--papel);border:1px solid var(--linha);
-  border-radius:22px;padding:38px 34px 32px;box-shadow:0 28px 66px rgba(36,36,40,.12);
-}
-.porta-logo{display:flex;justify-content:center;margin-bottom:22px}
-.porta-logo img{height:64px;width:auto;max-width:190px;object-fit:contain}
-.porta-logo b{font-size:22px;font-weight:900;color:var(--acento);letter-spacing:-.02em}
-.porta-selo{
-  display:inline-flex;align-items:center;gap:7px;margin:0 auto 16px;padding:7px 13px;
-  border-radius:999px;background:var(--acento-fraco);border:1px solid rgba(206,46,60,.14);
-  color:var(--acento);font-size:10.5px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
-}
-.porta-caixa h1{margin:0 0 7px;font-size:22px;font-weight:700;letter-spacing:-.028em;color:#303038}
-.porta-caixa p.porta-apoio{margin:0 0 26px;font-size:13.5px;line-height:1.6;color:#71717A}
-.porta-centro{display:flex;flex-direction:column;align-items:center;text-align:center}
-.porta-form{width:100%;text-align:left}
-.porta-senha{position:relative;display:flex;align-items:center}
-.porta-senha > svg{position:absolute;left:13px;color:var(--tinta-3);pointer-events:none}
-.porta-senha input{
-  width:100%;padding:12px 44px 12px 40px;border:1px solid var(--linha-2);border-radius:10px;
-  font-size:14.5px;color:var(--tinta);background:var(--papel);
-}
-.porta-senha input:focus{outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12)}
-.porta-olho{
-  position:absolute;right:6px;width:32px;height:32px;display:grid;place-items:center;
-  background:none;border:0;border-radius:8px;color:var(--tinta-3);
-}
-.porta-olho:hover{color:var(--acento);background:var(--acento-fraco)}
-.porta-caixa .btn-1{margin-top:18px;min-height:46px;font-size:14px;border-radius:10px}
-.porta-nota{
-  margin:22px 0 0;padding-top:18px;border-top:1px solid var(--linha);
-  display:flex;align-items:flex-start;gap:9px;font-size:11.5px;line-height:1.55;color:var(--tinta-3);
-}
-.porta-nota svg{flex:0 0 auto;margin-top:1px;color:var(--verde)}
-.porta-rodape{margin:20px 0 0;text-align:center;font-size:11px;color:#9A9AA6}
 
-/* ------------------------------- estrutura -------------------------------- */
-.app{display:grid;grid-template-columns:206px minmax(360px,1fr) minmax(420px,600px);height:100vh}
-@media (max-width:1180px){
-  .app{grid-template-columns:186px 1fr;height:auto}
-  .previa{display:none}
-  .previa.aberta{display:flex;position:fixed;inset:0;z-index:80;background:var(--papel)}
+/* Refinamentos finais — versão 4 */
+/* Logo mais leve e proporcional à barra superior */
+.header-inner {
+  min-height: 82px;
 }
 
-/* nav */
-.nav{background:var(--escuro);color:#fff;padding:18px 14px;overflow-y:auto;display:flex;flex-direction:column}
-.nav-marca{display:flex;align-items:center;gap:9px;padding:0 6px 18px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:14px}
-.nav-logo{flex:0 0 auto;display:grid;place-items:center;height:38px;width:52px}
-.nav-logo img{max-height:38px;max-width:52px;object-fit:contain}
-.nav-logo b{font-size:12px;font-weight:900;color:#fff;letter-spacing:-.01em}
-.nav-marca b{font-size:13px;font-weight:700;letter-spacing:-.01em}
-.nav-marca span{display:block;font-size:10px;color:rgba(255,255,255,.45);font-weight:500}
-.nav-item{
-  width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;margin-bottom:2px;
-  background:none;border:0;border-radius:var(--r-p);text-align:left;
-  font-size:13px;font-weight:500;color:rgba(255,255,255,.7);
-}
-.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
-.nav-item[aria-current="true"]{background:rgba(255,255,255,.13);color:#fff;font-weight:600}
-.nav-rodape{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:grid;gap:6px}
-.nav-rodape button{
-  width:100%;padding:9px 10px;border-radius:var(--r-p);border:1px solid rgba(255,255,255,.18);
-  background:none;color:rgba(255,255,255,.8);font-size:12px;font-weight:600;text-align:left;
-  display:flex;align-items:center;gap:8px;
-}
-.nav-rodape button:hover{background:rgba(255,255,255,.08);color:#fff}
-.nav-rodape button.destaque{background:#fff;color:var(--escuro);border-color:#fff}
-.nav-rodape button.destaque:hover{background:rgba(255,255,255,.88)}
-
-/* edição */
-.edicao{overflow-y:auto;padding:26px 28px 60px;background:var(--fundo)}
-.edicao-topo{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
-.edicao-topo h2{margin:0 0 3px;font-size:19px;letter-spacing:-.024em}
-.edicao-topo p{margin:0;font-size:13px;color:var(--tinta-3);max-width:52ch}
-.btn-previa{
-  margin-left:auto;flex:0 0 auto;padding:8px 12px;border-radius:var(--r-p);
-  border:1px solid var(--linha-2);background:var(--papel);font-size:12.5px;font-weight:600;
-}
-@media (min-width:1181px){.btn-previa{display:none}}
-
-.bloco{background:var(--papel);border:1px solid var(--linha);border-radius:12px;margin-bottom:16px;overflow:hidden}
-.bloco-cabeca{padding:14px 18px;border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:10px}
-.bloco-cabeca h3{margin:0;font-size:13.5px;font-weight:600}
-.bloco-cabeca .cont{margin-left:auto;font-size:11.5px;color:var(--tinta-3);font-weight:500}
-.bloco-corpo{padding:18px}
-.bloco.fechado .bloco-corpo{display:none}
-.bloco-cabeca[role="button"]{cursor:pointer}
-.bloco-cabeca .giro{transition:transform .2s;color:var(--tinta-3)}
-.bloco.fechado .bloco-cabeca .giro{transform:rotate(-90deg)}
-
-.campo{margin-bottom:14px}
-.campo:last-child{margin-bottom:0}
-.campo label{display:block;margin-bottom:5px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
-.campo .ajuda{margin:4px 0 0;font-size:11.5px;color:var(--tinta-3)}
-.campo input[type=text],.campo input[type=url],.campo select,.campo textarea{
-  width:100%;padding:9px 11px;border:1px solid var(--linha-2);border-radius:var(--r-p);
-  font-size:13.5px;color:var(--tinta);background:var(--papel);
-}
-.campo textarea{resize:vertical;min-height:60px;line-height:1.45}
-.campo input:focus,.campo select:focus,.campo textarea:focus{
-  outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12);
-}
-.grade2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:620px){.grade2{grid-template-columns:1fr}}
-
-/* cor */
-.cor{display:flex;align-items:center;gap:10px}
-.cor input[type=color]{
-  width:42px;height:38px;padding:0;border:1px solid var(--linha-2);border-radius:var(--r-p);
-  background:none;cursor:pointer;
-}
-.cor input[type=text]{flex:1;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
-
-/* logo */
-.logo-area{display:flex;align-items:center;gap:14px}
-.logo-previa{
-  width:112px;height:52px;flex:0 0 112px;border:1px dashed var(--linha-2);border-radius:var(--r-p);
-  display:grid;place-items:center;background:#FAFAFC;overflow:hidden;
-}
-.logo-previa img{max-width:100%;max-height:100%;object-fit:contain}
-.logo-previa span{font-size:10.5px;color:var(--tinta-3);text-align:center;padding:0 6px}
-.logo-acoes{display:grid;gap:6px}
-
-/* credores */
-.credor{display:grid;grid-template-columns:1fr 130px 34px;gap:10px;align-items:end;padding:12px 0;border-bottom:1px solid var(--linha)}
-.credor:last-of-type{border-bottom:0}
-@media (max-width:620px){.credor{grid-template-columns:1fr 34px}}
-.credor .logo-previa{width:100%;height:40px;flex:none}
-.lixeira{
-  width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--linha-2);
-  border-radius:var(--r-p);background:var(--papel);color:var(--tinta-3);
-}
-.lixeira:hover{border-color:var(--falha);color:var(--falha)}
-
-/* textos */
-.busca{position:relative;margin-bottom:14px}
-.busca svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--tinta-3)}
-.busca input{width:100%;padding:9px 11px 9px 34px;border:1px solid var(--linha-2);border-radius:var(--r-p);font-size:13.5px}
-.busca input:focus{outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12)}
-
-.txt-item{padding:12px 0;border-bottom:1px solid var(--linha)}
-.txt-item:last-child{border-bottom:0}
-.txt-topo{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.txt-chave{font-size:11px;color:var(--tinta-3);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-.selo{
-  padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.03em;
-  text-transform:uppercase;background:#F1F1F6;color:var(--tinta-2);
-}
-.selo.botao{background:var(--acento-fraco);color:var(--acento)}
-.selo.titulo{background:#F3EEFB;color:#6B3FA0}
-.txt-reset{margin-left:auto;background:none;border:0;padding:2px 4px;font-size:11.5px;font-weight:600;color:var(--acento)}
-.txt-reset:hover{text-decoration:underline}
-.txt-reset[disabled]{color:var(--tinta-3);cursor:default;text-decoration:none}
-.txt-item textarea{
-  width:100%;padding:8px 10px;border:1px solid var(--linha-2);border-radius:var(--r-p);
-  font-size:13.5px;resize:vertical;min-height:38px;line-height:1.45;
-}
-.txt-item textarea:focus{outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12)}
-.txt-item.alterado textarea{border-color:var(--acento)}
-
-.vazio{padding:26px;text-align:center;font-size:13px;color:var(--tinta-3)}
-
-/* prévia */
-.previa{background:var(--papel);border-left:1px solid var(--linha);display:flex;flex-direction:column}
-.previa-topo{padding:12px 16px;border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:10px}
-.previa-topo b{font-size:12.5px;font-weight:600}
-.previa-topo select{
-  margin-left:auto;padding:7px 10px;border:1px solid var(--linha-2);border-radius:var(--r-p);
-  font-size:12.5px;max-width:230px;background:var(--papel);
-}
-.previa-fechar{background:none;border:0;color:var(--tinta-3);padding:4px}
-@media (min-width:1181px){.previa-fechar{display:none}}
-.previa-palco{flex:1;background:var(--fundo);padding:16px;overflow:auto;display:flex;justify-content:center}
-.previa-palco iframe{
-  width:100%;max-width:420px;height:100%;min-height:640px;border:1px solid var(--linha);
-  border-radius:12px;background:#fff;box-shadow:0 8px 30px rgba(16,16,26,.07);
+.brand {
+  flex: 0 0 auto;
 }
 
-/* aviso */
-.aviso{
-  position:fixed;left:50%;bottom:22px;transform:translate(-50%,240%);z-index:200;
-  padding:11px 18px;border-radius:10px;background:var(--escuro);color:#fff;
-  font-size:13px;font-weight:500;box-shadow:0 12px 34px rgba(0,0,0,.25);
-  transition:transform .28s cubic-bezier(.4,0,.2,1), visibility .28s;max-width:88vw;
-  visibility:hidden;
+.brand-logo-wrap {
+  width: 96px;
+  height: 68px;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(232, 232, 236, 0.72);
+  box-shadow: none;
 }
-.aviso[data-ver="1"]{transform:translate(-50%,0);visibility:visible}
-.aviso.erro{background:var(--falha)}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:var(--r-p);border:0;transition:.14s}
-.btn-1{padding:10px 16px;background:var(--acento);color:#fff;font-size:13.5px;font-weight:600;width:100%}
-.btn-1:hover{background:var(--acento-escuro)}
-.btn-2{padding:8px 13px;background:var(--papel);border:1px solid var(--linha-2);font-size:12.5px;font-weight:600;color:var(--tinta-2)}
-.btn-2:hover{border-color:var(--tinta-3);color:var(--tinta)}
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  max-width: 82px;
+  max-height: 56px;
+  object-fit: contain;
+}
+
+/* Ícone e título do portal passam a funcionar como um único conjunto */
+.portal-toolbar {
+  justify-content: center;
+}
+
+.portal-title-wrap {
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.portal-title-wrap > div {
+  width: auto;
+  flex: 0 1 auto;
+  text-align: left;
+}
+
+.portal-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 15px;
+  border: 1px solid rgba(206, 46, 60, 0.10);
+  background: rgba(206, 46, 60, 0.08);
+}
+
+@media (max-width: 720px) {
+  .header-inner {
+    min-height: 72px;
+  }
+
+  .brand-logo-wrap {
+    width: 78px;
+    height: 58px;
+    padding: 4px 7px;
+    border-radius: 14px;
+  }
+
+  .brand-logo {
+    max-width: 68px;
+    max-height: 48px;
+  }
+
+  .portal-title-wrap {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .portal-title-wrap > div {
+    text-align: left;
+  }
+
+  .portal-icon {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-title-wrap {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .portal-title-wrap > div {
+    text-align: center;
+  }
+}
+
+
+/* Refinamentos finais — versão 5 */
+/* Logo integrado à barra, sem moldura e com proporção mais natural */
+.header-inner {
+  min-height: 92px;
+}
+
+.brand {
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.brand-logo-wrap {
+  width: 112px;
+  height: 78px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.brand-logo {
+  width: 112px;
+  height: 78px;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  display: block;
+}
+
+/* Ícone do portal alinhado de verdade ao bloco de título */
+.portal-toolbar {
+  justify-content: center;
+}
+
+.portal-title-wrap {
+  width: max-content;
+  max-width: calc(100% - 40px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 48px auto;
+  align-items: center;
+  justify-content: center;
+  column-gap: 14px;
+}
+
+.portal-title-wrap > div {
+  width: auto;
+  min-width: 0;
+  flex: none;
+  text-align: left;
+}
+
+.portal-icon {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  margin: 0;
+  align-self: center;
+}
+
+@media (max-width: 720px) {
+  .header-inner { min-height: 80px; }
+  .brand { margin-left: 2px; }
+  .brand-logo-wrap,
+  .brand-logo {
+    width: 92px;
+    height: 64px;
+  }
+
+  .portal-title-wrap {
+    grid-template-columns: 44px minmax(0, auto);
+    column-gap: 12px;
+    max-width: calc(100% - 24px);
+  }
+
+  .portal-icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-title-wrap {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    column-gap: 10px;
+    width: 100%;
+  }
+
+  .portal-title-wrap > div {
+    text-align: left;
+  }
+}
+</style>
+
+<style id="ajustes-responsivos-finais-v3">
+/* Responsividade final: preserva o layout aprovado e corrige apenas escala e enquadramento. */
+html {
+  width: 100%;
+  max-width: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  font-family: "Roboto", Arial, sans-serif !important;
+}
+img, svg, video, canvas { max-width: 100%; }
+
+/* O círculo amarelo era apenas um elemento decorativo da LP. */
+.triangle-accent { display: none !important; }
+
+/* Recupera os pesos tipográficos da LP original, afetados pelo reset do Tailwind. */
+.hero h1 { font-weight: 700 !important; }
+.hero-panel h2,
+.section-head h3 { font-weight: 700 !important; }
+.step-card h4,
+.portal-title,
+.journey-item strong { font-weight: 700 !important; }
+
+/* Desktop: conteúdo contido, com respiro e sem ocupar a tela inteira. */
+.container {
+  width: min(calc(100% - 48px), 1240px);
+  margin-inline: auto;
+}
+.hero {
+  padding: 44px 0 26px;
+}
+.hero-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr);
+  gap: clamp(38px, 4vw, 62px);
+  align-items: start;
+}
+.hero-grid > div:first-child {
+  max-width: 700px;
+}
+.hero h1 {
+  max-width: 700px;
+  font-size: clamp(40px, 3.55vw, 56px);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+.hero p {
+  max-width: 680px;
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.66;
+}
+.hero-points { max-width: 700px; }
+.hero-panel {
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  padding: 28px;
+  border-radius: 30px;
+}
+.hero-panel h2 {
+  font-size: 27px;
+  line-height: 1.18;
+}
+.hero-panel p {
+  font-size: 15px;
+  line-height: 1.62;
+}
+.journey-item { padding: 12px; }
+.steps-grid,
+.portal-shell { width: 100%; }
+.portal-shell {
+  max-width: 1180px;
+  margin-inline: auto;
+}
+.portal-stage {
+  min-height: 0 !important;
+  height: auto !important;
+}
+.embedded-autoapp {
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+@media (max-width: 1180px) {
+  .container { width: min(calc(100% - 40px), 1080px); }
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .86fr);
+    gap: 34px;
+  }
+  .hero h1 { font-size: clamp(38px, 4vw, 50px); }
+  .hero-panel { max-width: 500px; padding: 25px; }
+}
+
+/* Tablet horizontal e vertical. */
+@media (max-width: 980px) {
+  .container { width: min(calc(100% - 36px), 760px); }
+  .hero { padding: 34px 0 22px; }
+  .hero-grid, .steps-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-grid { gap: 28px; }
+  .hero-grid > div:first-child {
+    width: 100%;
+    max-width: 700px;
+    margin-inline: auto;
+  }
+  .hero h1 {
+    max-width: 660px;
+    font-size: clamp(34px, 5vw, 44px);
+  }
+  .hero p { max-width: 660px; font-size: 16px; }
+  .hero-points { max-width: 700px; }
+  .hero-visual { padding: 0; }
+  .hero-panel {
+    max-width: 610px;
+    padding: 24px;
+    border-radius: 26px;
+  }
+  .hero-panel h2 { font-size: 25px; }
+  .steps-grid { max-width: 680px; margin-inline: auto; }
+  .portal-shell { max-width: 760px; }
+  .portal-stage { padding: 14px !important; }
+  .embedded-autoapp { max-width: 700px; }
+}
+
+/* Android, iPhone e tablets compactos. */
+@media (max-width: 720px) {
+  :root { --anchor-offset: 132px; }
+  .container { width: min(calc(100% - 28px), 620px); }
+  .header-inner { min-height: 72px; }
+  .brand-logo-wrap, .brand-logo { width: 84px; height: 58px; }
+  .hero { padding: 26px 0 18px; }
+  .eyebrow { font-size: 9px; padding: 7px 11px; }
+  .hero h1 {
+    margin-top: 14px;
+    font-size: clamp(29px, 8vw, 36px);
+    line-height: 1.1;
+  }
+  .hero p {
+    margin-top: 15px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .hero-actions { margin-top: 22px; }
+  .btn { min-height: 50px; padding-inline: 18px; }
+  .hero-points { gap: 10px; }
+  .point-card { padding: 14px; }
+  .hero-panel {
+    max-width: 560px;
+    padding: 21px 18px;
+    border-radius: 22px;
+  }
+  .hero-panel-badge {
+    padding: 8px 10px;
+    font-size: 9px;
+    letter-spacing: .085em;
+  }
+  .hero-panel h2 { margin-top: 15px; font-size: 23px; }
+  .hero-panel p { font-size: 14px; line-height: 1.56; }
+  .journey-list { margin-top: 17px; gap: 8px; }
+  .journey-item {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+    border-radius: 15px;
+  }
+  .journey-icon { width: 38px; height: 38px; border-radius: 12px; }
+  .journey-item strong { font-size: 12px; }
+  .journey-item span { font-size: 11px; line-height: 1.42; }
+  .section-head h3 { font-size: clamp(27px, 7.2vw, 34px); }
+  .step-card { padding: 20px 18px; border-radius: 20px; }
+  .portal-intro { padding: 16px 14px 0; }
+  .portal-shell { border-radius: 20px; }
+  .portal-bar, .portal-toolbar { padding: 12px; }
+  .portal-stage { padding: 10px !important; }
+  .embedded-autoapp { width: 100%; max-width: 100%; }
+  .support-card { padding: 18px 14px; }
+}
+
+@media (max-width: 540px) {
+  .container { width: min(calc(100% - 24px), 480px); }
+  .hero h1 { font-size: clamp(28px, 8.6vw, 33px); }
+  .hero-panel { padding: 19px 15px; border-radius: 20px; }
+  .hero-panel h2 { font-size: 21px; }
+  .hero-panel p { font-size: 13.5px; }
+  .journey-item { grid-template-columns: 36px minmax(0, 1fr); padding: 9px; }
+  .journey-icon { width: 36px; height: 36px; }
+  .portal-stage { padding: 8px !important; }
+}
+
+@media (max-width: 390px) {
+  .container { width: calc(100% - 20px); }
+  .hero-panel { padding: 17px 13px; }
+}
+</style>
+
+
+<style id="portal-embutido">
+/* ---------------------------------------------------------------------------
+   Quadro da aplicação de autoatendimento dentro da página.
+   A altura é definida por JavaScript, com o valor que o próprio portal informa.
+   --------------------------------------------------------------------------- */
+.portal-stage{
+  padding: clamp(10px, 2vw, 22px) !important;
+  min-height: 0 !important;
+  height: auto !important;
+  background: #F8F8FA;
+}
+.embedded-autoapp{
+  width: 100%;
+  max-width: 620px;
+  margin-inline: auto;
+}
+.portal-frame-app{
+  display: block;
+  width: 100%;
+  height: 760px;
+  border: 1px solid rgba(232, 232, 236, .98);
+  border-radius: 24px;
+  background: #FFFFFF;
+  box-shadow: 0 20px 48px rgba(36, 36, 40, .09);
+  transition: height .25s ease;
+}
+@media (max-width: 720px){
+  .portal-frame-app{ border-radius: 18px; }
+}
 </style>
 <script>
 /* Lê o portal guardado na página e devolve o HTML original. */
@@ -368,6 +1798,15 @@ window.PORTAL_CONFIG = {
 
     "titulo.vActiveAgreement": "Seu acordo está em dia",
     "botao.btnReenviarBoleto": "Reenviar boleto",
+
+    "titulo.vReenviado": "Boleto reenviado",
+    "texto.vReenviado.1": "Boleto sem alteração de valor ou de vencimento.",
+    "botao.btnVoltarAcordo": "Voltar ao meu acordo",
+
+    "titulo.vAtendimento.especialista": "Um especialista já foi acionado",
+    "texto.vAtendimento.especialista": "Você vai receber um contato para a elaboração da melhor condição para o seu caso.",
+    "titulo.vAtendimento.equipe": "Atendimento com a nossa equipe",
+    "texto.vAtendimento.equipe": "A condição deste contrato é montada junto com um atendente.",
 
     "titulo.vNoRecord": "Nada em aberto para este documento",
     "texto.vNoRecord.1": "Não localizamos nenhuma pendência registrada na nossa base para o documento informado.",
@@ -865,6 +2304,46 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
   <div class="acoes">
     <button class="btn btn-1" id="btnAgreementHumano" type="button"><span data-txt="botao.btnReenviarBoleto">Reenviar boleto</span></button>
   </div>
+
+  <div class="sanfona" data-aberta="0">
+    <button class="sanfona-cabeca" data-sanfona="1" type="button"><span data-txt="rotulo.detalhes">Detalhes da dívida</span>
+      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg></button>
+    <div class="sanfona-corpo"><dl class="dados" id="acordoDetalhes"></dl></div>
+  </div>
+</section>
+
+<!-- ==================== BOLETO REENVIADO (acordo vigente) ================== -->
+<section class="view" data-prog="100" id="vReenviado">
+  <h1 data-txt="titulo.vReenviado">Boleto reenviado</h1>
+  <p class="sub" data-txt="texto.vReenviado.1" id="reenviadoSub">Boleto sem alteração de valor ou de vencimento.</p>
+  <ul class="fatos">
+    <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <span>O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+    <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
+      <span id="reenviadoVenc">Vencimento a confirmar</span></li>
+  </ul>
+  <div class="acoes acoes-centro">
+    <button class="btn btn-2" id="btnVoltarAcordo" type="button"><span data-txt="botao.btnVoltarAcordo">Voltar ao meu acordo</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.duvida" style="margin-top:30px">Se ainda tiver dúvida</p>
+  <div class="canais discretos" data-canais="1"></div>
+</section>
+
+<!-- ============ ATENDIMENTO (especialista e tratativa com a equipe) ======== -->
+<!-- Tela própria, sem barra de ação. Antes isso reaproveitava a tela de
+     negociação, o que deixava um botão "Confirmar negociação" no lugar errado. -->
+<section class="view" data-prog="70" id="vAtendimento">
+  <h1 id="atendimentoTitulo">Um especialista já foi acionado</h1>
+  <p class="sub" id="atendimentoSub">Você vai receber um contato para a elaboração da melhor condição para o seu caso.</p>
+
+  <div class="sanfona" data-aberta="0" style="margin-top:0">
+    <button class="sanfona-cabeca" data-sanfona="1" type="button"><span data-txt="rotulo.detalhes">Detalhes da dívida</span>
+      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg></button>
+    <div class="sanfona-corpo"><dl class="dados" id="atendimentoDetalhes"></dl></div>
+  </div>
+
+  <p class="rotulo" data-txt="rotulo.canais.falarAgora">Prefere falar agora?</p>
+  <div class="canais" data-canais="1"></div>
 </section>
 
 <!-- ============================= NÃO LOCALIZADO ============================ -->
@@ -996,6 +2475,17 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
     if (alvo) alvo.textContent = valor; else el.appendChild(document.createTextNode(valor));
   }
 
+  /* Textos que só o JavaScript usa (não estão presos a um elemento na tela).
+     Declarados aqui para o painel de administração conseguir editá-los. */
+  window.PORTAL_TEXTOS_EXTRA = {
+    'rotulo.vencimento':               { tela: 'vNegotiate',   padrao: 'Vencimento do boleto' },
+    'rotulo.vencimentoParcelado':      { tela: 'vNegotiate',   padrao: 'Vencimento do primeiro boleto' },
+    'titulo.vAtendimento.especialista':{ tela: 'vAtendimento', padrao: 'Um especialista já foi acionado' },
+    'texto.vAtendimento.especialista': { tela: 'vAtendimento', padrao: 'Você vai receber um contato para a elaboração da melhor condição para o seu caso.' },
+    'titulo.vAtendimento.equipe':      { tela: 'vAtendimento', padrao: 'Atendimento com a nossa equipe' },
+    'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' }
+  };
+
   window.aplicarPortalConfig = function (cfg) {
     cfg = cfg || window.PORTAL_CONFIG || {};
     const raiz = document.documentElement.style;
@@ -1061,6 +2551,12 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
           tipo: chave.split('.')[0],
           padrao: (el.textContent || '').replace(/\s+/g, ' ').trim()
         };
+      });
+      /* soma os textos que vivem só no JavaScript */
+      const extra = window.PORTAL_TEXTOS_EXTRA || {};
+      Object.keys(extra).forEach(chave => {
+        if (mapa[chave]) return;
+        mapa[chave] = { tela: extra[chave].tela, tipo: chave.split('.')[0], padrao: extra[chave].padrao };
       });
       const alvo = ev.source || window.parent;
       if (alvo) alvo.postMessage({ tipo: 'portal-mapa', mapa: mapa }, '*');
@@ -1242,6 +2738,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (tela === "vNegotiate" && !selectedCard) openNegotiation(cardsDemo()[0]);
         if (tela === "vConfirmName" && !$("nameOptions").children.length) {
             renderIdentityOptions([], "ANA PAULA SILVINO", "CPF");
+        }
+        if (tela === "vAtendimento" && !$("atendimentoDetalhes").children.length) {
+            abrirAtendimento(cardsDemo()[0], "especialista");
+        }
+        if (tela === "vActiveAgreement" && !$("acordoDetalhes").children.length) {
+            abrirAcordo(normalizeCards(cardsDemo())[0]);
         }
         setActiveView(tela);
     };
@@ -1489,37 +2991,24 @@ document.addEventListener("DOMContentLoaded", () => {
         setActiveView("vNoDebt");
     }
 
-    /* Acordo vigente. O portal mostra o que o CRM devolve hoje: uma linha com
-       vencimento e valor. Quando o backend passar a devolver o array de
-       parcelas em acordoAtivo.parcelas, a lista aparece sozinha.             */
+    /* Passo "mostrar_acordo_ativo" do backend: normaliza e usa a mesma tela. */
     function telaAcordoAtivo(data) {
         const ac = data?.acordoAtivo || {};
-        const dl = $("activeAgreementDados");
-        const sub = $("activeAgreementSub");
-        const parcelas = Array.isArray(ac.parcelas) ? ac.parcelas : [];
-        const credor = ac.credorNome || getCredorPresentation(ac.credor || "", ac.unidade || "").nome;
-
-        if (parcelas.length > 1) {
-            const pagas = parcelas.filter(p => p.pago === true || /pag/i.test(String(p.status || ""))).length;
-            if (sub) sub.innerHTML = `<b>${credor}</b> · ${pagas} de ${parcelas.length} parcelas pagas`;
-            dl.innerHTML = parcelas.map((p, i) => {
-                const paga = p.pago === true || /pag/i.test(String(p.status || ""));
-                return `<li><dt>Parcela ${i + 1} · ${p.vencimentoFormatado || p.vencimento || "-"}</dt>` +
-                       `<dd class="${paga ? "paga" : ""}">${paga ? "Paga" : (p.valorFormatado || formatBRL(p.valor || 0))}</dd></li>`;
-            }).join("");
-        } else {
-            if (sub) sub.innerHTML = `<b>${credor}</b> · pagamento à vista, aguardando pagamento`;
-            dl.innerHTML = `<li><dt>Vencimento · <span id="activeAgreementDue">${ac.vencimentoFormatado || "--/--/----"}</span></dt>` +
-                           `<dd id="activeAgreementValue">${ac.valorFormatado || "R$ 0,00"}</dd></li>`;
-        }
-
-        const btn = $("btnAgreementHumano");
-        if (btn) {
-            const span = btn.querySelector("[data-txt]");
-            if (span) span.textContent = parcelas.length > 1 ? "Reenviar boleto da próxima parcela" : "Reenviar boleto do acordo";
-        }
-        lastHumanChat = data?.chatUrl || lastHumanChat;
-        setActiveView("vActiveAgreement");
+        const pres = getCredorPresentation(ac.credor || "", ac.unidade || "");
+        abrirAcordo({
+            credorNome: ac.credorNome || pres.nome,
+            numeroContrato: ac.numeroContrato || "-",
+            valorTotal: parseMoneyLike(ac.valorFormatado || ac.valor || 0),
+            valorTotalFormatado: ac.valorFormatado || formatBRL(parseMoneyLike(ac.valor || 0)),
+            chatUrl: data?.chatUrl || ac.chatUrl || "",
+            parcelas: Array.isArray(ac.parcelas) ? ac.parcelas : [],
+            detalhes: Array.isArray(ac.parcelas) && ac.parcelas.length ? ac.parcelas : [{
+                vencimentoFormatado: ac.vencimentoFormatado || "--/--/----",
+                valorFormatado: ac.valorFormatado || "R$ 0,00",
+                valor: parseMoneyLike(ac.valor || 0)
+            }],
+            valorOriginal: 0, diasAtraso: 0
+        });
     }
 
     /* ===================== valores ======================================== */
@@ -1575,13 +3064,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     vencimento: row?.vencimento || "",
                     vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
                     valor: valorDetalhe,
-                    valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe)
+                    valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
+                    /* status de pagamento: o acordo vigente precisa saber quais
+                       parcelas já foram pagas para calcular o saldo restante. */
+                    pago: row?.pago === true || /pag/i.test(String(row?.status || "")),
+                    status: row?.status || ""
                 };
             });
             const valorTotal = parseMoneyLike(c?.valorTotalFormatado || c?.valorTotal || 0);
             const propostaQuitacao = parseMoneyLike(c?.propostaQuitacaoFormatada || c?.propostaQuitacao || 0);
+            /* Se o backend só repete o nome cru do credor ("AMIL OPERADORAS"),
+               usa o nome de apresentação ("Amil"). O cliente não deve ver a
+               nomenclatura interna do CRM.                                    */
+            const nomeCru = norm(c?.credorNome || "");
+            const nomeBom = (!nomeCru || nomeCru === norm(c?.credor || ""))
+                ? pres.nome : c.credorNome;
             return {
-                tipo, credor: c?.credor || "", credorNome: c?.credorNome || pres.nome,
+                tipo, credor: c?.credor || "", credorNome: nomeBom,
                 logo: c?.logo || pres.logo, chatUrl: c?.chatUrl || pres.chat,
                 numeroContrato: c?.numeroContrato || "-", idContrato: c?.idContrato || "",
                 unidade: c?.unidade || "",
@@ -1742,9 +3241,14 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.type = "button"; btn.className = "btn btn-1";
             let irPara = null;
 
-            if (isPremium) {
+            /* Regra: nenhum cartão abre link externo direto. Todo cartão leva
+               a uma tela do portal, onde ficam o detalhamento e os canais.    */
+            if (isAgreement) {
+                btn.textContent = "Ver meu acordo";
+                irPara = () => abrirAcordo(card);
+            } else if (isPremium) {
                 btn.textContent = "Ver meu atendimento";
-                irPara = () => { abrirEspecialista(card); };
+                irPara = () => abrirAtendimento(card, "especialista");
             } else if (actions.canNegotiate) {
                 btn.textContent = "Negociar agora";
                 irPara = () => openNegotiation(card);
@@ -1754,12 +3258,9 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (actions.canSecondCopy) {
                 btn.textContent = "Emitir boleto";
                 irPara = () => openSecondCopyNegotiation(card);
-            } else if (isAgreement) {
-                btn.textContent = "Reenviar boleto";
-                irPara = () => openChat(actions.chatUrl);
             } else {
-                btn.textContent = "Falar com o atendimento";
-                irPara = () => openChat(actions.chatUrl);
+                btn.textContent = "Ver meu atendimento";
+                irPara = () => abrirAtendimento(card, "equipe");
             }
             btn.addEventListener("click", () => { if (!modoPreview) irPara(); });
             seta.addEventListener("click", () => { if (!modoPreview) irPara(); });
@@ -1769,58 +3270,108 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* Cartão de valor alto: reaproveita a tela de negociação sem as opções de
-       pagamento, mostrando o detalhamento e os canais.                       */
-    function abrirEspecialista(card) {
+    /* ===================== atendimento (tela própria) ===================== */
+    /* Duas variantes na mesma tela: valor alto (especialista já acionado) e
+       carteira tratada pela equipe. Nenhuma das duas tem barra de ação — é
+       tela de informação e canais, não de decisão de pagamento.               */
+    function abrirAtendimento(card, variante) {
         selectedCard = card;
         lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
-        const t = $("negotiateTitle");
-        const s = $("negotiateSub");
-        if (t) t.textContent = "Um especialista já foi acionado";
-        if (s) s.innerHTML = "Você vai receber um contato para a elaboração da melhor condição para o seu caso.";
-        $("negotiationPaymentBlock")?.classList.add("hidden");
-        $("installmentBlock")?.classList.add("hidden");
-        $("rotuloVencimento")?.classList.add("hidden");
-        $("paymentDateOptions")?.classList.add("hidden");
-        montarDetalhes(card);
-        const barra = $("barraAcao"); if (barra) barra.dataset.ver = "0";
-        setActiveView("vNegotiate");
-        const alvo = document.querySelector("#vNegotiate .view-canais");
-        if (!alvo) {
-            const p = document.createElement("p");
-            p.className = "rotulo view-canais-rot";
-            p.textContent = "Prefere falar agora?";
-            const box = document.createElement("div");
-            box.className = "canais view-canais";
-            box.setAttribute("data-canais", "1");
-            $("vNegotiate").appendChild(p);
-            $("vNegotiate").appendChild(box);
-            window.montarCanais();
-        }
+        const txts = (window.PORTAL_CONFIG || {}).textos || {};
+        const esp = variante === "especialista";
+        const t = $("atendimentoTitulo");
+        const sub = $("atendimentoSub");
+        if (t) t.textContent = esp
+            ? (txts["titulo.vAtendimento.especialista"] || "Um especialista já foi acionado")
+            : (txts["titulo.vAtendimento.equipe"] || "Atendimento com a nossa equipe");
+        if (sub) sub.textContent = esp
+            ? (txts["texto.vAtendimento.especialista"] || "Você vai receber um contato para a elaboração da melhor condição para o seu caso.")
+            : (txts["texto.vAtendimento.equipe"] || "A condição deste contrato é montada junto com um atendente.");
+        montarDetalhes(card, "atendimentoDetalhes");
+        setActiveView("vAtendimento");
     }
 
-    function limparEspecialista() {
-        document.querySelectorAll("#vNegotiate .view-canais, #vNegotiate .view-canais-rot").forEach(e => e.remove());
-        $("rotuloVencimento")?.classList.remove("hidden");
-        $("paymentDateOptions")?.classList.remove("hidden");
+    /* ===================== acordo vigente ================================= */
+    /* Monta a tela a partir do cartão ou do payload de acordo ativo. O botão
+       de 2ª via leva a uma tela de confirmação dentro do portal — antes ele
+       abria o chat externo, o que fugia do fluxo combinado.                   */
+    function abrirAcordo(origem) {
+        const parcelas = Array.isArray(origem.parcelas) && origem.parcelas.length
+            ? origem.parcelas
+            : (Array.isArray(origem.detalhes) ? origem.detalhes : []);
+        const credor = origem.credorNome || "-";
+        const sub = $("activeAgreementSub");
+        const dl = $("activeAgreementDados");
+        const btn = $("btnAgreementHumano");
+        const rotuloBtn = btn ? btn.querySelector("[data-txt]") : null;
+
+        const ehPaga = (p) => p.pago === true || /pag/i.test(String(p.status || ""));
+        const proxima = parcelas.find(p => !ehPaga(p)) || parcelas[0] || {};
+
+        if (parcelas.length > 1) {
+            const pagas = parcelas.filter(ehPaga).length;
+            if (sub) sub.innerHTML = "<b>" + credor + "</b> · " + pagas + " de " + parcelas.length + " parcelas pagas";
+            const restante = parcelas.filter(p => !ehPaga(p))
+                .reduce((a, p) => a + Number(p.valor || 0), 0);
+            dl.innerHTML = parcelas.map((p, i) =>
+                "<li><dt>Parcela " + (i + 1) + " · " + (p.vencimentoFormatado || p.vencimento || "-") + "</dt>" +
+                "<dd class=\"" + (ehPaga(p) ? "paga" : "") + "\">" +
+                (ehPaga(p) ? "Paga" : (p.valorFormatado || formatBRL(p.valor || 0))) + "</dd></li>").join("") +
+                (restante > 0 ? "<li class=\"total\"><dt>Saldo restante</dt><dd>" + formatBRL(restante) + "</dd></li>" : "");
+            if (rotuloBtn) rotuloBtn.textContent = "Reenviar boleto da próxima parcela";
+        } else {
+            if (sub) sub.innerHTML = "<b>" + credor + "</b> · pagamento à vista, aguardando pagamento";
+            dl.innerHTML = "<li><dt>Vencimento · " + (proxima.vencimentoFormatado || proxima.vencimento || "--/--/----") +
+                "</dt><dd>" + (proxima.valorFormatado || formatBRL(proxima.valor || origem.valorTotal || 0)) + "</dd></li>";
+            if (rotuloBtn) rotuloBtn.textContent = "Reenviar boleto do acordo";
+        }
+
+        /* alimenta a tela de confirmação do reenvio */
+        const rSub = $("reenviadoSub");
+        if (rSub) rSub.textContent = "Boleto da " + credor + ", sem alteração de valor ou de vencimento.";
+        const rVenc = $("reenviadoVenc");
+        if (rVenc) {
+            rVenc.innerHTML = "Vencimento em <b>" + (proxima.vencimentoFormatado || proxima.vencimento || "--/--/----") +
+                "</b> — <b>" + (proxima.valorFormatado || formatBRL(proxima.valor || origem.valorTotal || 0)) + "</b>";
+        }
+
+        montarDetalhes(origem, "acordoDetalhes", "acordo");
+        lastHumanChat = origem.chatUrl || lastHumanChat;
+        setActiveView("vActiveAgreement");
     }
 
     /* ===================== detalhes da dívida ============================= */
     /* Mesmo bloco, mesma ordem, em todas as telas que o mostram.             */
-    function montarDetalhes(card) {
-        const dl = $("negotiationDetalhes"); if (!dl) return;
+    function montarDetalhes(card, alvoId, modo) {
+        const dl = $(alvoId || "negotiationDetalhes"); if (!dl) return;
+        const ehAcordo = modo === "acordo";
         const linhas = [];
         linhas.push(`<li><dt>Empresa</dt><dd>${card.credorNome || "-"}</dd></li>`);
-        linhas.push(`<li><dt>Contrato</dt><dd>${card.numeroContrato || "-"}</dd></li>`);
+        linhas.push(`<li><dt>${ehAcordo ? "Acordo" : "Contrato"}</dt><dd>${card.numeroContrato || "-"}</dd></li>`);
+
         (card.detalhes || []).forEach((d, i) => {
+            if (ehAcordo) {
+                /* No acordo as linhas são parcelas, não notas em atraso. */
+                const situacao = d.pago ? "paga" : ("vence " + (d.vencimentoFormatado || "-"));
+                linhas.push(`<li><dt>Parcela ${i + 1}</dt><dd class="livre">${situacao} · ${d.valorFormatado || "-"}</dd></li>`);
+                return;
+            }
             const rot = d.numero ? `Nota ${d.numero}` : `Nota ${i + 1}`;
             linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${d.valorFormatado || "-"}</dd></li>`);
         });
-        const somaNotas = (card.detalhes || []).reduce((a, d) => a + Number(d.valor || 0), 0);
-        const original = card.valorOriginal > 0 ? card.valorOriginal : somaNotas;
-        if (original > 0) linhas.push(`<li class="total"><dt>Valor original</dt><dd>${formatBRL(original)}</dd></li>`);
-        linhas.push(`<li class="total"><dt>Valor atualizado</dt><dd>${card.valorTotalFormatado}</dd></li>`);
-        if (card.diasAtraso > 0) linhas.push(`<li><dt>Dias em atraso</dt><dd>${card.diasAtraso}</dd></li>`);
+
+        const soma = (card.detalhes || []).reduce((a, d) => a + Number(d.valor || 0), 0);
+        if (ehAcordo) {
+            const total = Number(card.valorTotal || 0) || soma;
+            if (total > 0) linhas.push(`<li class="total"><dt>Valor negociado</dt><dd>${formatBRL(total)}</dd></li>`);
+            const pago = (card.detalhes || []).filter(d => d.pago).reduce((a, d) => a + Number(d.valor || 0), 0);
+            if (pago > 0) linhas.push(`<li class="total"><dt>Já pago</dt><dd>${formatBRL(pago)}</dd></li>`);
+        } else {
+            const original = card.valorOriginal > 0 ? card.valorOriginal : soma;
+            if (original > 0) linhas.push(`<li class="total"><dt>Valor original</dt><dd>${formatBRL(original)}</dd></li>`);
+            linhas.push(`<li class="total"><dt>Valor atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(card.valorTotal || 0)}</dd></li>`);
+            if (card.diasAtraso > 0) linhas.push(`<li><dt>Dias em atraso</dt><dd>${card.diasAtraso}</dd></li>`);
+        }
         dl.innerHTML = linhas.join("");
     }
 
@@ -1968,7 +3519,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function openNegotiation(card, modoOperacao = "negociacao") {
-        limparEspecialista();
         selectedCard = {
             ...card,
             tipoPagamentoOperacao: modoOperacao === "segunda_via" ? "segunda_via" : (card?.tipoPagamentoOperacao || "negociacao")
@@ -2212,7 +3762,8 @@ document.addEventListener("DOMContentLoaded", () => {
     on("btnNovaConsultaSegundaVia", "click", goStart);
     on("btnNovaConsultaIra", "click", goStart);
     on("btnIdentityTryAgain", "click", () => setActiveView("vConfirmName"));
-    on("btnAgreementHumano", "click", () => openChat(lastHumanChat));
+    on("btnAgreementHumano", "click", () => setActiveView("vReenviado"));
+    on("btnVoltarAcordo", "click", () => setActiveView("vActiveAgreement"));
 
     /* ===================== fluxo com o backend ============================ */
     on("btnConsultar", "click", async () => {
@@ -2499,770 +4050,291 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <div class="topbar"></div>
-
-<!-- ================================ LOGIN ================================== -->
-<div class="porta" id="porta">
-  <div class="porta-caixa">
-    <div class="porta-centro">
-      <div class="porta-logo" id="portaLogo"></div>
-      <span class="porta-selo">
-        <svg fill="none" height="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="12"><rect height="10" rx="2" width="16" x="4" y="11"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg>
-        Área restrita
-      </span>
-      <h1>Administração do portal</h1>
-      <p class="porta-apoio">Aqui você personaliza o Portal de Autoatendimento para cada projeto e gera a versão do cliente.</p>
-    </div>
-
-    <div class="porta-form">
-      <div class="campo">
-        <label for="senha">Senha de acesso</label>
-        <div class="porta-senha">
-          <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="16"><rect height="10" rx="2" width="16" x="4" y="11"></rect><path d="M8 11V7a4 4 0 018 0v4"></path></svg>
-          <input autocomplete="current-password" id="senha" placeholder="••••••••" type="password"/>
-          <button aria-label="Mostrar senha" class="porta-olho" id="btnOlho" type="button">
-            <svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="17"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>
-          </button>
+<header class="header">
+<div class="container header-inner">
+<a aria-label="Quatro C - início" class="brand" href="#inicio">
+<div class="brand-logo-wrap">
+<img alt="Quatro C" class="brand-logo" referrerpolicy="no-referrer" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaBEI-qyRmYw_D0waBvLPcxsHtI0AbVj8kX3eyla0WmQ&amp;s=10"/>
+</div>
+</a>
+<div class="header-right">
+<button aria-controls="main-navigation" aria-expanded="false" aria-label="Abrir menu de navegação" class="menu-toggle" type="button">
+<span aria-hidden="true" class="menu-toggle-lines"></span>
+</button>
+<nav aria-label="Navegação principal" class="header-nav" id="main-navigation">
+<a class="nav-link" href="#inicio">Início</a>
+<a class="nav-link" href="#como-funciona">Como funciona</a>
+<a class="nav-link" href="#portal">Autoatendimento</a>
+<a class="nav-link" href="#canais">Canais de apoio</a>
+</nav>
+<div class="header-badge">
+<svg aria-hidden="true" fill="none" height="16" viewbox="0 0 24 24" width="16">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M9 12L11 14L15 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Portal oficial • disponível 24 horas
         </div>
-        <p class="ajuda hidden" id="senhaErro" style="color:var(--falha);font-weight:600">Senha incorreta. Confira e tente novamente.</p>
-      </div>
-      <button class="btn btn-1" id="btnEntrar" type="button">Entrar</button>
-    </div>
+</div>
+</div>
+</header>
+<main id="inicio">
+<section class="hero">
+<div class="container hero-grid">
+<div>
+<div class="eyebrow">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M4 12H20" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<path d="M12 4L20 12L12 20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Atendimento digital com acolhimento
+          </div>
+<h1>A Quatro C criou um espaço para ajudar você a seguir <span>com mais clareza, privacidade e tranquilidade.</span></h1>
+<p>
+            Se você chegou até aqui, a ideia é simples: facilitar. Neste ambiente, você consulta suas informações com segurança, entende as possibilidades disponíveis e escolhe o melhor caminho para seguir no seu tempo, com autonomia e sem ruído.
+          </p>
+<div class="hero-actions">
+<a class="btn btn-primary" href="#portal">
+              Acessar meu atendimento
+              <svg aria-hidden="true" fill="none" height="18" viewbox="0 0 24 24" width="18">
+<path d="M5 12H19M14 7L19 12L14 17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</a>
+<a class="btn btn-secondary" href="#como-funciona">
+              Entender como funciona
+            </a>
+</div>
+<div class="hero-points">
+<div class="point-card">
+<div class="point-kicker">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"></circle>
+<path d="M12 8V12L15 14" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+                No seu ritmo
+              </div>
+<p>Você acessa quando quiser e conduz o atendimento com mais liberdade.</p>
+</div>
+<div class="point-card">
+<div class="point-kicker">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Com segurança
+              </div>
+<p>Suas informações são consultadas em um ambiente reservado e orientado.</p>
+</div>
+<div class="point-card">
+<div class="point-kicker">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M4 12H20" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<path d="M12 4L20 12L12 20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Com objetividade
+              </div>
+<p>Menos burocracia, mais clareza para entender o que está disponível.</p>
+</div>
+</div>
+</div>
+<div aria-label="Resumo da experiência de autoatendimento" class="hero-visual">
+<svg aria-hidden="true" class="triangle-accent triangle-gold" viewbox="0 0 100 92">
+<path d="M50 5C55 5 59 8 62 13L96 73C101 82 95 88 86 88H14C5 88-1 82 4 73L38 13C41 8 45 5 50 5Z" stroke="currentColor" stroke-width="3.2"></path>
+</svg>
+<svg aria-hidden="true" class="triangle-accent triangle-green" viewbox="0 0 100 92">
+<path d="M50 5C55 5 59 8 62 13L96 73C101 82 95 88 86 88H14C5 88-1 82 4 73L38 13C41 8 45 5 50 5Z" stroke="currentColor" stroke-width="3.2"></path>
+</svg>
+<aside class="hero-panel">
+<div class="hero-panel-badge">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Portal oficial de autoatendimento
+            </div>
+<h2>Uma jornada mais leve, do início ao fim.</h2>
+<p>
+              O portal foi pensado para acolher, orientar e simplificar. Tudo acontece em poucos passos, com uma experiência clara e intuitiva para que você siga com mais confiança.
+            </p>
+<div class="journey-list">
+<div class="journey-item">
+<div class="journey-icon">
+<svg aria-hidden="true" fill="none" height="22" viewbox="0 0 24 24" width="22">
+<circle cx="11" cy="11" r="6" stroke="white" stroke-width="2"></circle>
+<path d="M20 20L16.5 16.5" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<strong>Consulte com clareza</strong>
+<span>Visualize suas informações de forma direta, sem complicação e com privacidade.</span>
+</div>
+</div>
+<div class="journey-item">
+<div class="journey-icon">
+<svg aria-hidden="true" fill="none" height="22" viewbox="0 0 24 24" width="22">
+<path d="M6 8H18" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+<path d="M6 12H18" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+<path d="M6 16H13" stroke="white" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<strong>Entenda suas opções</strong>
+<span>O atendimento mostra os caminhos disponíveis para que você escolha com tranquilidade.</span>
+</div>
+</div>
+<div class="journey-item">
+<div class="journey-icon">
+<svg aria-hidden="true" fill="none" height="22" viewbox="0 0 24 24" width="22">
+<path d="M5 12L10 17L19 7" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<strong>Conclua com autonomia</strong>
+<span>Você segue em frente em um processo digital simples, objetivo e disponível 24 horas.</span>
+</div>
+</div>
+</div>
+<div class="hero-meta">
+<span class="meta-chip">Privacidade em primeiro lugar</span>
+<span class="meta-chip">Experiência digital orientada</span>
+<span class="meta-chip">Disponível 24/7</span>
+</div>
+</aside>
+</div>
+</div>
+</section>
+<section class="steps" id="como-funciona">
+<div class="container">
+<div class="section-head">
+<span>Como funciona</span>
+<h3>Uma experiência desenhada para ser simples, intuitiva e respeitosa.</h3>
 
-    <p class="porta-nota">
-      <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M12 3l7.5 3.5v5c0 4.6-3.1 8.8-7.5 10-4.4-1.2-7.5-5.4-7.5-10v-5L12 3z"></path><path d="M9 12l2 2 4-4"></path></svg>
-      Ambiente interno da Quatro C. As alterações feitas aqui não afetam o portal publicado até você gerar e subir a nova versão.
-    </p>
-    <p class="porta-rodape">Quatro C · Desenvolvimento e Inovação</p>
-  </div>
+</div>
+<div class="steps-grid">
+<article class="step-card">
+<div class="step-no">01</div>
+<h4>Identifique-se com segurança</h4>
+<p>O acesso ao portal começa de forma simples, em um ambiente digital preparado para orientar cada etapa.</p>
+</article>
+<article class="step-card">
+<div class="step-no">02</div>
+<h4>Visualize e compreenda</h4>
+<p>As informações são apresentadas com mais clareza, ajudando você a entender o cenário sem ruído ou excesso de complexidade.</p>
+</article>
+<article class="step-card">
+<div class="step-no">03</div>
+<h4>Siga com autonomia</h4>
+<p>Depois, você escolhe o melhor caminho para continuar de forma prática, segura e no momento que fizer mais sentido.</p>
+</article>
+</div>
+</div>
+</section>
+<section class="portal-section" id="portal">
+<div class="container">
+<div class="section-head portal-intro">
+<span>Seu atendimento começa aqui</span>
+<h3>Um ambiente único para consultar, entender e seguir em frente.</h3>
+
+</div>
+<div class="portal-shell">
+<div class="portal-bar">
+<span class="bar-chip">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M12 3L19 6V11C19 15.8 16.2 19.2 12 21C7.8 19.2 5 15.8 5 11V6L12 3Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Navegação protegida
+            </span>
+<span class="bar-chip">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"></circle>
+<path d="M12 8V12L15 14" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+              Disponível a qualquer hora
+            </span>
+<span class="bar-chip">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 24 24" width="14">
+<path d="M5 12L10 17L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Experiência guiada e intuitiva
+            </span>
+</div>
+<div class="portal-toolbar">
+<div class="portal-title-wrap">
+<span aria-hidden="true" class="portal-icon">
+<svg fill="none" height="20" viewbox="0 0 24 24" width="20">
+<rect height="16" rx="3" stroke="currentColor" stroke-width="2" width="16" x="4" y="4"></rect>
+<path d="M8 9H16M8 12H16M8 15H13" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</span>
+<div>
+<p class="portal-title">Portal de Autoatendimento</p>
+<p class="portal-caption">Consulta segura, negociação digital e acompanhamento em uma única experiência.</p>
+</div>
 </div>
 
-<!-- ================================= APP =================================== -->
-<div class="app hidden" id="app">
-
-  <nav class="nav">
-    <div class="nav-marca">
-      <span class="nav-logo" id="navLogo"></span>
-      <div><b>Autoatendimento</b><span>Administração</span></div>
-    </div>
-
-    <button aria-current="true" class="nav-item" data-secao="marca" type="button">
-      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><circle cx="13.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="14" r="2.5"></circle><circle cx="8.5" cy="7.5" r="2.5"></circle><circle cx="6.5" cy="14.5" r="2.5"></circle><path d="M12 22c4.4 0 8-1.8 8-4s-3.6-4-8-4-8 1.8-8 4 3.6 4 8 4z"></path></svg>
-      Marca</button>
-    <button class="nav-item" data-secao="credores" type="button">
-      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M9 8h6M9 12h6M9 16h3"></path></svg>
-      Logos dos credores</button>
-    <button class="nav-item" data-secao="canais" type="button">
-      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.2a2 2 0 012.1-.5c.8.3 1.7.6 2.6.7a2 2 0 011.7 2z"></path></svg>
-      Canais e rodapé</button>
-    <button class="nav-item" data-secao="textos" type="button">
-      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
-      Textos e botões</button>
-    <button class="nav-item" data-secao="integracao" type="button">
-      <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.8 1.7"></path><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7L12.3 19"></path></svg>
-      Integração</button>
-
-    <div class="nav-rodape">
-      <button class="destaque" id="btnBaixarApp" type="button">
-        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M12 3v12M7 11l5 5 5-5M4 21h16"></path></svg>
-        Baixar aplicação</button>
-      <button id="btnSalvarCfg" type="button">
-        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path><path d="M17 21v-8H7v8M7 3v5h8"></path></svg>
-        Salvar configuração</button>
-      <button id="btnCarregarCfg" type="button">
-        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg>
-        Carregar configuração</button>
-      <button id="btnRestaurar" type="button">
-        <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.7 3M3 4v5h5"></path></svg>
-        Voltar ao padrão</button>
-    </div>
-  </nav>
-
-  <main class="edicao" id="edicao"></main>
-
-  <aside class="previa" id="previa">
-    <div class="previa-topo">
-      <b>Pré-visualização</b>
-      <select id="seletorTela"></select>
-      <button class="previa-fechar" onclick="document.getElementById('previa').classList.remove('aberta')" type="button">
-        <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
-    </div>
-    <div class="previa-palco">
-      <iframe id="palco" title="Pré-visualização do portal"></iframe>
-    </div>
-  </aside>
 </div>
-
-<div class="aviso" data-ver="0" id="aviso"></div>
-<input accept="application/json" class="hidden" id="inputCfg" type="file"/>
-<input accept="image/*" class="hidden" id="inputLogo" type="file"/>
+<div class="portal-stage">
+<div class="embedded-autoapp">
+<!-- A aplicação de autoatendimento vive em um arquivo próprio. É esse mesmo
+     arquivo que o painel de administração edita e entrega personalizado. A
+     página só o embute e ajusta a altura conforme o portal informa. -->
+<iframe class="portal-frame-app" id="portalFrame" title="Portal de Autoatendimento Quatro C"></iframe>
+</div>
+</div>
+</div>
+<div class="support-card" id="canais">
+<div>
+<div class="support-title-row">
+<span class="support-icon" aria-hidden="true">
+<svg fill="none" height="22" viewbox="0 0 24 24" width="22">
+<path d="M12 21C17 21 21 17.4 21 13C21 8.6 17 5 12 5C7 5 3 8.6 3 13C3 15.1 3.9 17 5.5 18.4L5 22L9 20.5C9.9 20.8 10.9 21 12 21Z" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M9 12H15M9 15H13" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</span>
+<strong>Prefere apoio humano? Tudo bem.</strong>
+</div>
+<p>Se fizer mais sentido para você, a equipe da Quatro C também pode atender pelos canais abaixo.</p>
+<div class="support-actions">
+<a aria-label="Atendimento por WhatsApp" class="support-link" href="https://wa.me/5511980161361?text=Olá%2C%20preciso%20de%20apoio%20com%20meu%20atendimento." id="support-whatsapp" rel="noopener noreferrer" target="_blank">
+<span>WhatsApp</span>
+</a>
+<a aria-label="Atendimento por chat" class="support-link" href="https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y" id="support-chat" rel="noopener noreferrer" target="_blank">
+<span>Chat online</span>
+</a>
+<a aria-label="Atendimento por e-mail" class="support-link" href="mailto:atendimento@quatroc.com.br?subject=Atendimento pelo portal" id="support-email">
+<span>E-mail</span>
+</a>
+<a aria-label="Atendimento por telefone 0800" class="support-link" href="tel:08000255072" id="support-phone">
+<span>0800 025 5072</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="footer">
+<div class="container footer-inner">
+<span><strong>Quatro C</strong> — Portal oficial de autoatendimento.</span>
+<span>Experiência digital pensada para acolher, orientar e simplificar.</span>
+</div>
+</footer>
 
 <script>
-/* ===========================================================================
-   PAINEL — estado e utilidades
-   =========================================================================== */
-const SENHA = 'portal2026';
+/* Monta o portal no quadro a partir da fonte guardada nesta página, e ajusta
+   a altura conforme o próprio portal informa. */
+(function () {
+  var f = document.getElementById("portalFrame");
+  if (f) f.srcdoc = lerFontePortal();
 
-/* Logo da Quatro C usado no login e na navegação. Troque por um arquivo
-   hospedado junto com o painel (ex.: 'logo-quatroc.png'); se a imagem não
-   carregar, o painel mostra o nome em texto e continua funcionando. */
-const LOGO_QUATROC = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaBEI-qyRmYw_D0waBvLPcxsHtI0AbVj8kX3eyla0WmQ&s=10';
-
-function pintarLogo(alvo, textoFallback) {
-  const el = document.getElementById(alvo);
-  if (!el) return;
-  const img = document.createElement('img');
-  img.src = LOGO_QUATROC;
-  img.alt = 'Quatro C';
-  img.referrerPolicy = 'no-referrer';
-  img.onerror = () => { el.innerHTML = '<b>' + textoFallback + '</b>'; };
-  el.appendChild(img);
-}
-pintarLogo('portaLogo', 'Quatro C');
-pintarLogo('navLogo', '4C');
-
-document.getElementById('btnOlho').addEventListener('click', () => {
-  const i = document.getElementById('senha');
-  i.type = i.type === 'password' ? 'text' : 'password';
-  i.focus();
-});
-/* O portal vem embutido nesta própria página: a prévia e o arquivo entregue
-   ao cliente saem do mesmo texto, sem depender de nenhum arquivo ao lado. */
-const PORTAL_FONTE = lerFontePortal();
-
-/* Telas do portal, na ordem da jornada. Rótulo é o que aparece no seletor. */
-const TELAS = [
-  ['vStart', '1. Identificação'],
-  ['vValidateCode', '2. Código por e-mail'],
-  ['vConfirmName', '3. Confirmar identidade'],
-  ['vIdentityError', 'Nome não confere'],
-  ['vBlocked', 'Acesso restrito'],
-  ['vNext', '4. Suas pendências'],
-  ['vNegotiate', '5. Pagamento'],
-  ['vNegotiationSuccess', '6. Negociação fechada'],
-  ['vNegotiationFailed', 'Não concluída'],
-  ['vSecondCopySuccess', 'Boleto emitido'],
-  ['vActiveAgreement', 'Acordo vigente'],
-  ['vNoRecord', 'Não localizado'],
-  ['vNoDebt', 'Em dia'],
-  ['vError', 'Indisponível'],
-  ['vIraSchedule', 'Agendamento'],
-  ['vIraSuccess', 'Agendamento registrado'],
-  ['vLoading', 'Carregando']
-];
-const NOME_TELA = Object.fromEntries(TELAS);
-
-const FONTES = ['Inter','Roboto','Open Sans','Lato','Montserrat','Nunito Sans','Source Sans 3','Work Sans','Poppins','Public Sans'];
-
-let CFG = null;      // configuração em edição
-let PADRAO = null;   // configuração original do portal
-let MAPA = {};       // mapa de textos que o portal devolveu
-let secaoAtual = 'marca';
-let filtroTexto = '';
-let abertos = {};    // blocos abertos/fechados por tela
-
-const $ = (id) => document.getElementById(id);
-const clone = (o) => JSON.parse(JSON.stringify(o));
-
-function avisar(msg, erro) {
-  const el = $('aviso');
-  el.textContent = msg;
-  el.classList.toggle('erro', !!erro);
-  el.dataset.ver = '1';
-  clearTimeout(el._t);
-  el._t = setTimeout(() => { el.dataset.ver = '0'; }, 3200);
-}
-
-function esc(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-/* --------------------------------- login ---------------------------------- */
-$('btnEntrar').addEventListener('click', entrar);
-$('senha').addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
-function entrar() {
-  if ($('senha').value !== SENHA) {
-    $('senhaErro').classList.remove('hidden');
-    return;
-  }
-  $('porta').classList.add('hidden');
-  $('app').classList.remove('hidden');
-  montarSeletorTelas();
-  $('palco').srcdoc = PORTAL_FONTE;   // só monta a prévia depois de entrar
-}
-
-/* ===========================================================================
-   Conversa com o portal (iframe)
-   =========================================================================== */
-const palco = () => $('palco').contentWindow;
-
-window.addEventListener('message', (ev) => {
-  if (!ev.data) return;
-
-  if (ev.data.tipo === 'portal-pronto') {
-    /* pega a configuração de fábrica direto do portal e pede o mapa de textos */
-    try {
-      PADRAO = clone($('palco').contentWindow.PORTAL_CONFIG || {});
-    } catch (e) { PADRAO = {}; }
-    if (!CFG) CFG = clone(PADRAO);
-    palco().postMessage({ tipo: 'portal-pedir-mapa' }, '*');
-    return;
-  }
-
-  if (ev.data.tipo === 'portal-mapa') {
-    MAPA = ev.data.mapa || {};
-    render();
-    aplicar();
-    return;
-  }
-});
-
-function aplicar() {
-  if (!CFG) return;
-  try { palco().postMessage({ tipo: 'portal-config', config: clone(CFG) }, '*'); } catch (e) {}
-}
-
-function verTela(tela) {
-  try { palco().postMessage({ tipo: 'portal-ver-tela', tela: tela }, '*'); } catch (e) {}
-}
-
-function montarSeletorTelas() {
-  const sel = $('seletorTela');
-  sel.innerHTML = TELAS.map(([id, nome]) => `<option value="${id}">${nome}</option>`).join('');
-  sel.addEventListener('change', () => verTela(sel.value));
-}
-
-/* ===========================================================================
-   Navegação
-   =========================================================================== */
-document.querySelectorAll('.nav-item').forEach(b => {
-  b.addEventListener('click', () => {
-    secaoAtual = b.dataset.secao;
-    document.querySelectorAll('.nav-item').forEach(o =>
-      o.setAttribute('aria-current', String(o === b)));
-    render();
+  window.addEventListener("message", function (ev) {
+    if (!ev.data || ev.data.tipo !== "portal-altura") return;
+    var q = document.getElementById("portalFrame");
+    if (!q) return;
+    var h = Number(ev.data.altura) || 720;
+    q.style.height = Math.max(560, Math.min(2600, h)) + "px";
   });
-});
-
-/* ===========================================================================
-   Render das seções
-   =========================================================================== */
-function render() {
-  if (!CFG) return;
-  const box = $('edicao');
-  const cabeca = {
-    marca:      ['Marca', 'Logo, cores e fonte do portal. A cor primária controla o botão de ação, a barra de progresso, os links e a seleção.'],
-    credores:   ['Logos dos credores', 'Cada credor é uma chave com o nome exato como o CRM devolve. Sem logo cadastrado, o portal mostra só o nome — sem placeholder.'],
-    canais:     ['Canais e rodapé', 'Estes canais aparecem em todas as telas que oferecem atendimento. Alterar aqui reflete no portal inteiro.'],
-    textos:     ['Textos e botões', 'Todo texto editável do portal, agrupado pela tela onde aparece. A estrutura das telas é fixa.'],
-    integracao: ['Integração', 'Endereço do backend e link de chat por credor. Mexa aqui só com o time técnico.']
-  }[secaoAtual];
-
-  box.innerHTML =
-    `<div class="edicao-topo">
-       <div><h2>${cabeca[0]}</h2><p>${cabeca[1]}</p></div>
-       <button class="btn-previa" type="button" onclick="document.getElementById('previa').classList.add('aberta')">Ver prévia</button>
-     </div>
-     <div id="secao"></div>`;
-
-  const alvo = $('secao');
-  if (secaoAtual === 'marca') renderMarca(alvo);
-  if (secaoAtual === 'credores') renderCredores(alvo);
-  if (secaoAtual === 'canais') renderCanais(alvo);
-  if (secaoAtual === 'textos') renderTextos(alvo);
-  if (secaoAtual === 'integracao') renderIntegracao(alvo);
-}
-
-/* --------------------------------- marca ---------------------------------- */
-function renderMarca(alvo) {
-  const m = CFG.marca || (CFG.marca = {});
-  const c = CFG.cores || (CFG.cores = {});
-
-  alvo.innerHTML = `
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Identidade</h3></div>
-      <div class="bloco-corpo">
-        <div class="campo">
-          <label for="mNome">Nome do projeto</label>
-          <input id="mNome" type="text" value="${esc(m.nome)}"/>
-          <p class="ajuda">Aparece no topo quando não há logo, e no título da aba.</p>
-        </div>
-        <div class="campo">
-          <label>Logo do projeto</label>
-          <div class="logo-area">
-            <div class="logo-previa" id="mLogoPrevia">
-              ${m.logoUrl ? `<img src="${esc(m.logoUrl)}" alt=""/>` : '<span>sem logo</span>'}
-            </div>
-            <div class="logo-acoes">
-              <button class="btn btn-2" id="mLogoEnviar" type="button">Enviar imagem</button>
-              <button class="btn btn-2" id="mLogoLimpar" type="button">Remover</button>
-            </div>
-          </div>
-          <p class="ajuda">PNG ou SVG com fundo transparente, altura mínima 48px, sem margem interna. Sem logo, o portal mostra o nome do projeto.</p>
-        </div>
-        <div class="campo">
-          <label for="mAltura">Altura do logo no topo (px)</label>
-          <input id="mAltura" type="text" value="${esc(m.logoAltura || 24)}"/>
-        </div>
-      </div>
-    </div>
-
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Cores</h3></div>
-      <div class="bloco-corpo">
-        <div class="grade2">
-          <div class="campo">
-            <label for="cPrim">Cor primária</label>
-            <div class="cor">
-              <input id="cPrimPicker" type="color" value="${esc(c.primaria || '#CE2E3C')}"/>
-              <input id="cPrim" type="text" value="${esc(c.primaria || '#CE2E3C')}"/>
-            </div>
-            <p class="ajuda">Botão de ação, progresso, links e seleção.</p>
-          </div>
-          <div class="campo">
-            <label for="cEsc">Cor primária escura</label>
-            <div class="cor">
-              <input id="cEscPicker" type="color" value="${esc(c.primariaEscura || '#A3222E')}"/>
-              <input id="cEsc" type="text" value="${esc(c.primariaEscura || '#A3222E')}"/>
-            </div>
-            <p class="ajuda">Usada no hover do botão. <button class="txt-reset" id="cGerar" type="button">gerar a partir da primária</button></p>
-          </div>
-        </div>
-        <p class="ajuda" style="margin-top:4px">As cores de estado — verde de economia, vermelho de erro, cinzas de texto — são fixas. É o que garante a leitura da tela em qualquer marca.</p>
-      </div>
-    </div>
-
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Fonte</h3></div>
-      <div class="bloco-corpo">
-        <div class="campo">
-          <label for="mFonte">Família tipográfica</label>
-          <select id="mFonte">
-            ${FONTES.map(f => `<option value="${f}"${(m.fonte || 'Inter') === f ? ' selected' : ''}>${f}</option>`).join('')}
-          </select>
-          <p class="ajuda">Fontes do Google Fonts. A escala de tamanhos e os pesos são fixos.</p>
-        </div>
-      </div>
-    </div>`;
-
-  const setCor = (chave, txt, picker) => {
-    const aplica = (v) => {
-      if (!/^#[0-9a-fA-F]{3,6}$/.test(v)) return;
-      CFG.cores[chave] = v;
-      $(txt).value = v; $(picker).value = v;
-      aplicar();
-    };
-    $(txt).addEventListener('input', e => aplica(e.target.value.trim()));
-    $(picker).addEventListener('input', e => aplica(e.target.value));
-  };
-  setCor('primaria', 'cPrim', 'cPrimPicker');
-  setCor('primariaEscura', 'cEsc', 'cEscPicker');
-
-  $('cGerar').addEventListener('click', () => {
-    const v = escurecer(CFG.cores.primaria || '#CE2E3C', 0.22);
-    CFG.cores.primariaEscura = v;
-    $('cEsc').value = v; $('cEscPicker').value = v;
-    aplicar();
-    avisar('Tom escuro gerado.');
-  });
-
-  $('mNome').addEventListener('input', e => { CFG.marca.nome = e.target.value; aplicar(); });
-  $('mAltura').addEventListener('input', e => {
-    const n = parseInt(e.target.value, 10);
-    CFG.marca.logoAltura = Number.isFinite(n) ? n : 24;
-    aplicar();
-  });
-  $('mFonte').addEventListener('change', e => {
-    CFG.marca.fonte = e.target.value;
-    carregarFonteNaPrevia(e.target.value);
-    aplicar();
-  });
-
-  $('mLogoEnviar').addEventListener('click', () => pedirImagem(dataUrl => {
-    CFG.marca.logoUrl = dataUrl;
-    render(); aplicar();
-  }));
-  $('mLogoLimpar').addEventListener('click', () => {
-    CFG.marca.logoUrl = '';
-    render(); aplicar();
-  });
-}
-
-function escurecer(hex, fator) {
-  const s = hex.replace('#', '');
-  const c = s.length === 3 ? s.split('').map(x => x + x).join('') : s;
-  const n = parseInt(c, 16);
-  const r = Math.max(0, Math.round(((n >> 16) & 255) * (1 - fator)));
-  const g = Math.max(0, Math.round(((n >> 8) & 255) * (1 - fator)));
-  const b = Math.max(0, Math.round((n & 255) * (1 - fator)));
-  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
-}
-
-/* A fonte precisa existir dentro do iframe para a prévia mudar de verdade. */
-function carregarFonteNaPrevia(nome) {
-  try {
-    const doc = $('palco').contentDocument;
-    const id = 'fonte-admin';
-    let link = doc.getElementById(id);
-    if (!link) {
-      link = doc.createElement('link');
-      link.id = id; link.rel = 'stylesheet';
-      doc.head.appendChild(link);
-    }
-    link.href = 'https://fonts.googleapis.com/css2?family=' +
-      encodeURIComponent(nome).replace(/%20/g, '+') + ':wght@400;500;600;700&display=swap';
-  } catch (e) {}
-}
-
-/* -------------------------------- credores -------------------------------- */
-function renderCredores(alvo) {
-  const mapa = CFG.logosCredor || (CFG.logosCredor = {});
-  const chaves = Object.keys(mapa);
-
-  alvo.innerHTML = `
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Credores cadastrados</h3><span class="cont">${chaves.length}</span></div>
-      <div class="bloco-corpo" id="listaCredores">
-        ${chaves.length ? '' : '<p class="vazio">Nenhum credor cadastrado. O portal mostra só o nome que vem do CRM.</p>'}
-      </div>
-    </div>
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Adicionar credor</h3></div>
-      <div class="bloco-corpo">
-        <div class="campo">
-          <label for="novoCredor">Nome do credor como vem do CRM</label>
-          <input id="novoCredor" placeholder="AMIL OPERADORAS" type="text"/>
-          <p class="ajuda">O portal casa este nome com o que a ficha devolve. Pode ser parte do nome — "AMIL OPERADORAS" casa com "AMIL OPERADORAS SP".</p>
-        </div>
-        <button class="btn btn-1" id="btnAddCredor" type="button">Adicionar</button>
-      </div>
-    </div>`;
-
-  const lista = $('listaCredores');
-  chaves.forEach(chave => {
-    const row = document.createElement('div');
-    row.className = 'credor';
-    row.innerHTML = `
-      <div class="campo" style="margin:0">
-        <label>Nome no CRM</label>
-        <input type="text" value="${esc(chave)}" data-chave="${esc(chave)}"/>
-      </div>
-      <div class="campo" style="margin:0">
-        <label>Logo</label>
-        <div class="logo-previa">${mapa[chave] ? `<img src="${esc(mapa[chave])}" alt=""/>` : '<span>sem logo</span>'}</div>
-      </div>
-      <button class="lixeira" title="Remover" type="button">
-        <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="15"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"></path></svg>
-      </button>`;
-
-    /* renomear a chave preservando o logo */
-    row.querySelector('input').addEventListener('change', e => {
-      const nova = e.target.value.trim().toUpperCase();
-      if (!nova || nova === chave) return;
-      const url = mapa[chave];
-      delete mapa[chave];
-      mapa[nova] = url;
-      render(); aplicar();
-    });
-
-    row.querySelector('.logo-previa').addEventListener('click', () => pedirImagem(dataUrl => {
-      mapa[chave] = dataUrl;
-      render(); aplicar();
-      avisar('Logo de ' + chave + ' atualizado.');
-    }));
-    row.querySelector('.logo-previa').style.cursor = 'pointer';
-    row.querySelector('.logo-previa').title = 'Clique para enviar uma imagem';
-
-    row.querySelector('.lixeira').addEventListener('click', () => {
-      delete mapa[chave];
-      render(); aplicar();
-    });
-
-    lista.appendChild(row);
-  });
-
-  $('btnAddCredor').addEventListener('click', () => {
-    const nome = $('novoCredor').value.trim().toUpperCase();
-    if (!nome) return avisar('Informe o nome do credor.', true);
-    if (mapa[nome] !== undefined) return avisar('Este credor já está cadastrado.', true);
-    mapa[nome] = '';
-    render(); aplicar();
-    avisar('Credor adicionado. Clique na área do logo para enviar a imagem.');
-  });
-}
-
-/* --------------------------------- canais --------------------------------- */
-function renderCanais(alvo) {
-  const c = CFG.contato || (CFG.contato = {});
-  const linha = (id, rot, val, ajuda) => `
-    <div class="campo">
-      <label for="${id}">${rot}</label>
-      <input id="${id}" type="text" value="${esc(val)}"/>
-      ${ajuda ? `<p class="ajuda">${ajuda}</p>` : ''}
-    </div>`;
-
-  alvo.innerHTML = `
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>WhatsApp</h3></div>
-      <div class="bloco-corpo">
-        ${linha('ctWaRotulo', 'Nome exibido', c.whatsappRotulo || 'WhatsApp')}
-        ${linha('ctWaHorario', 'Horário exibido', c.whatsappHorario || '', 'Aparece abaixo do nome. Ex.: Seg a sex, 8h às 18h.')}
-        ${linha('ctWa', 'Link', c.whatsapp || '', 'Link wa.me ou o endereço do chat que o cliente deve abrir.')}
-      </div>
-    </div>
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Telefone</h3></div>
-      <div class="bloco-corpo">
-        ${linha('ctTelRotulo', 'Nome exibido', c.telefoneRotulo || c.telefone || '')}
-        ${linha('ctTelHorario', 'Horário exibido', c.telefoneHorario || '')}
-        ${linha('ctTel', 'Número para discagem', c.telefone || '', 'Só os números são usados no clique. Deixe em branco para não oferecer telefone.')}
-      </div>
-    </div>
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Rodapé legal</h3></div>
-      <div class="bloco-corpo">
-        ${linha('ctRazao', 'Razão social', c.razaoSocial || '')}
-        ${linha('ctCnpj', 'CNPJ', c.cnpj || '')}
-        <p class="ajuda">O rodapé é montado assim: <b>Canal oficial de negociação · &lt;razão social&gt;</b> na primeira linha, <b>CNPJ &lt;cnpj&gt; · Dados protegidos pela LGPD</b> na segunda.</p>
-      </div>
-    </div>`;
-
-  const liga = (id, chave) => $(id).addEventListener('input', e => { CFG.contato[chave] = e.target.value; aplicar(); });
-  liga('ctWaRotulo', 'whatsappRotulo'); liga('ctWaHorario', 'whatsappHorario'); liga('ctWa', 'whatsapp');
-  liga('ctTelRotulo', 'telefoneRotulo'); liga('ctTelHorario', 'telefoneHorario'); liga('ctTel', 'telefone');
-  liga('ctRazao', 'razaoSocial'); liga('ctCnpj', 'cnpj');
-}
-
-/* --------------------------------- textos --------------------------------- */
-function renderTextos(alvo) {
-  CFG.textos = CFG.textos || {};
-  const chaves = Object.keys(MAPA);
-
-  if (!chaves.length) {
-    alvo.innerHTML = '<div class="bloco"><p class="vazio">Aguardando o portal responder o mapa de textos…</p></div>';
-    return;
-  }
-
-  /* agrupa por tela, na ordem da jornada */
-  const grupos = {};
-  chaves.forEach(k => {
-    const tela = MAPA[k].tela || 'global';
-    (grupos[tela] = grupos[tela] || []).push(k);
-  });
-  const ordem = TELAS.map(t => t[0]).filter(t => grupos[t]);
-  if (grupos.global) ordem.unshift('global');
-
-  const filtro = filtroTexto.trim().toLowerCase();
-  const combina = (k) => !filtro
-    || k.toLowerCase().includes(filtro)
-    || String(valorAtual(k)).toLowerCase().includes(filtro)
-    || String(MAPA[k].padrao || '').toLowerCase().includes(filtro);
-
-  let html = `
-    <div class="busca">
-      <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="15"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4.3-4.3"></path></svg>
-      <input id="buscaTxt" placeholder="Buscar por texto ou chave..." type="text" value="${esc(filtroTexto)}"/>
-    </div>`;
-
-  let achou = 0;
-  ordem.forEach(tela => {
-    const itens = grupos[tela].filter(combina).sort();
-    if (!itens.length) return;
-    achou += itens.length;
-    const fechado = abertos[tela] === false ? ' fechado' : '';
-    html += `
-      <div class="bloco${fechado}" data-tela="${tela}">
-        <div class="bloco-cabeca" role="button" data-toggle="${tela}">
-          <svg class="giro" fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="14"><path d="M6 9l6 6 6-6"></path></svg>
-          <h3>${tela === 'global' ? 'Cabeçalho e botões gerais' : (NOME_TELA[tela] || tela)}</h3>
-          <span class="cont">${itens.length}</span>
-        </div>
-        <div class="bloco-corpo">
-          ${itens.map(k => itemTexto(k)).join('')}
-        </div>
-      </div>`;
-  });
-
-  if (!achou) html += '<div class="bloco"><p class="vazio">Nenhum texto encontrado para essa busca.</p></div>';
-  alvo.innerHTML = html;
-
-  const busca = $('buscaTxt');
-  busca.addEventListener('input', e => {
-    filtroTexto = e.target.value;
-    const pos = e.target.selectionStart;
-    renderTextos(alvo);
-    const novo = $('buscaTxt');
-    novo.focus(); novo.setSelectionRange(pos, pos);
-  });
-
-  alvo.querySelectorAll('[data-toggle]').forEach(h => {
-    h.addEventListener('click', () => {
-      const tela = h.dataset.toggle;
-      abertos[tela] = abertos[tela] === false ? true : false;
-      h.closest('.bloco').classList.toggle('fechado');
-    });
-  });
-
-  alvo.querySelectorAll('textarea[data-chave]').forEach(ta => {
-    ta.addEventListener('input', () => {
-      const k = ta.dataset.chave;
-      CFG.textos[k] = ta.value;
-      ta.closest('.txt-item').classList.toggle('alterado', ta.value !== MAPA[k].padrao);
-      const reset = ta.closest('.txt-item').querySelector('.txt-reset');
-      if (reset) reset.disabled = ta.value === MAPA[k].padrao;
-      aplicar();
-    });
-  });
-
-  alvo.querySelectorAll('.txt-reset[data-reset]').forEach(b => {
-    b.addEventListener('click', () => {
-      const k = b.dataset.reset;
-      CFG.textos[k] = MAPA[k].padrao;
-      const ta = alvo.querySelector(`textarea[data-chave="${k}"]`);
-      if (ta) ta.value = MAPA[k].padrao;
-      b.closest('.txt-item').classList.remove('alterado');
-      b.disabled = true;
-      aplicar();
-    });
-  });
-}
-
-function valorAtual(k) {
-  const v = (CFG.textos || {})[k];
-  return v === undefined ? (MAPA[k].padrao || '') : v;
-}
-
-function itemTexto(k) {
-  const info = MAPA[k];
-  const valor = valorAtual(k);
-  const alterado = valor !== info.padrao;
-  const tipo = info.tipo === 'botao' ? 'botao' : (info.tipo === 'titulo' ? 'titulo' : 'texto');
-  const rotuloTipo = { botao: 'botão', titulo: 'título', texto: 'texto', rotulo: 'rótulo' }[info.tipo] || 'texto';
-  return `
-    <div class="txt-item${alterado ? ' alterado' : ''}">
-      <div class="txt-topo">
-        <span class="selo ${tipo}">${rotuloTipo}</span>
-        <span class="txt-chave">${esc(k)}</span>
-        <button class="txt-reset" data-reset="${esc(k)}" type="button"${alterado ? '' : ' disabled'}>voltar ao padrão</button>
-      </div>
-      <textarea data-chave="${esc(k)}" rows="${valor.length > 90 ? 3 : 1}">${esc(valor)}</textarea>
-    </div>`;
-}
-
-/* ------------------------------- integração ------------------------------- */
-function renderIntegracao(alvo) {
-  const i = CFG.integracao || (CFG.integracao = {});
-  const canais = i.canaisPorCredor || (i.canaisPorCredor = {});
-  alvo.innerHTML = `
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Backend</h3></div>
-      <div class="bloco-corpo">
-        <div class="campo">
-          <label for="inEndpoint">Endereço do worker</label>
-          <input id="inEndpoint" type="text" value="${esc(i.endpoint || '')}"/>
-          <p class="ajuda">Todas as etapas do portal chamam este endereço. Só altere junto com o time técnico.</p>
-        </div>
-      </div>
-    </div>
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Link de chat por credor</h3><span class="cont">${Object.keys(canais).length}</span></div>
-      <div class="bloco-corpo">
-        ${Object.keys(canais).map(k => `
-          <div class="campo">
-            <label>${esc(k)}</label>
-            <input data-canal="${esc(k)}" type="text" value="${esc(canais[k])}"/>
-          </div>`).join('')}
-        <p class="ajuda">A chave <b>PADRAO</b> é usada quando o credor não tem link próprio.</p>
-      </div>
-    </div>`;
-
-  $('inEndpoint').addEventListener('input', e => { CFG.integracao.endpoint = e.target.value.trim(); aplicar(); });
-  alvo.querySelectorAll('[data-canal]').forEach(inp => {
-    inp.addEventListener('input', e => {
-      CFG.integracao.canaisPorCredor[inp.dataset.canal] = e.target.value.trim();
-      aplicar();
-    });
-  });
-}
-
-/* ===========================================================================
-   Imagem, arquivos e publicação
-   =========================================================================== */
-let aoEscolherImagem = null;
-function pedirImagem(cb) { aoEscolherImagem = cb; $('inputLogo').click(); }
-$('inputLogo').addEventListener('change', (ev) => {
-  const f = ev.target.files && ev.target.files[0];
-  ev.target.value = '';
-  if (!f || !aoEscolherImagem) return;
-  if (f.size > 400 * 1024) return avisar('Imagem muito grande. Use um arquivo de até 400 KB.', true);
-  const fr = new FileReader();
-  fr.onload = () => { aoEscolherImagem(fr.result); aoEscolherImagem = null; };
-  fr.readAsDataURL(f);
-});
-
-function baixar(nome, conteudo, tipo) {
-  const blob = new Blob([conteudo], { type: tipo });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = nome;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1500);
-}
-
-function nomeArquivo() {
-  const n = ((CFG.marca || {}).nome || 'portal').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  return n || 'portal';
-}
-
-$('btnSalvarCfg').addEventListener('click', () => {
-  baixar('config-' + nomeArquivo() + '.json', JSON.stringify(CFG, null, 2), 'application/json');
-  avisar('Configuração salva.');
-});
-
-$('btnCarregarCfg').addEventListener('click', () => $('inputCfg').click());
-$('inputCfg').addEventListener('change', (ev) => {
-  const f = ev.target.files && ev.target.files[0];
-  ev.target.value = '';
-  if (!f) return;
-  const fr = new FileReader();
-  fr.onload = () => {
-    try {
-      CFG = JSON.parse(fr.result);
-      render(); aplicar();
-      if (CFG.marca && CFG.marca.fonte) carregarFonteNaPrevia(CFG.marca.fonte);
-      avisar('Configuração carregada.');
-    } catch (e) { avisar('Arquivo inválido.', true); }
-  };
-  fr.readAsText(f);
-});
-
-$('btnRestaurar').addEventListener('click', () => {
-  if (!PADRAO) return;
-  CFG = clone(PADRAO);
-  render(); aplicar();
-  avisar('Configuração restaurada para o padrão.');
-});
-
-/* Baixar aplicação: lê o portal, troca o bloco de configuração e entrega um
-   arquivo único, pronto para o cliente publicar. */
-$('btnBaixarApp').addEventListener('click', () => {
-  try {
-    const bloco = '<script id="portal-config">\nwindow.PORTAL_CONFIG = ' +
-      JSON.stringify(CFG, null, 2) + ';\n<' + '/script>';
-
-    const re = /<script id="portal-config">[\s\S]*?<\/script>/;
-    if (!re.test(PORTAL_FONTE)) throw new Error('bloco-nao-encontrado');
-
-    const saida = PORTAL_FONTE.replace(re, bloco);
-    baixar('autoatendimento-' + nomeArquivo() + '.html', saida, 'text/html;charset=utf-8');
-    avisar('Aplicação gerada. Um arquivo único, pronto para publicar.');
-  } catch (e) {
-    avisar('Não consegui gerar o arquivo. Recarregue a página e tente de novo.', true);
-  }
-});
+})();
 </script>
-</body>
+    <script>
+function reloadPortal() { window.location.reload(); }
+function openPortalExternally() { window.open(window.location.href, '_blank', 'noopener'); }
+</script></body>
 </html>
