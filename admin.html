@@ -174,10 +174,14 @@ svg{display:block;flex:0 0 auto}
 .logo-acoes{display:grid;gap:6px}
 
 /* credores */
-.credor{display:grid;grid-template-columns:1fr 130px 34px;gap:10px;align-items:end;padding:12px 0;border-bottom:1px solid var(--linha)}
-.credor:last-of-type{border-bottom:0}
-@media (max-width:620px){.credor{grid-template-columns:1fr 34px}}
-.credor .logo-previa{width:100%;height:40px;flex:none}
+.credor-card{border:1px solid var(--linha-2);border-radius:var(--r);padding:12px 14px 4px;margin-bottom:12px}
+.credor-card:last-of-type{margin-bottom:0}
+.credor-topo{display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--linha)}
+.credor-topo .logo-previa{width:76px;height:38px;flex:0 0 76px}
+.credor-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.credor-grade{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;padding-top:12px}
+.credor-grade .larga{grid-column:1/-1}
+@media (max-width:700px){.credor-grade{grid-template-columns:1fr}}
 .lixeira{
   width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--linha-2);
   border-radius:var(--r-p);background:var(--papel);color:var(--tinta-3);
@@ -295,26 +299,61 @@ window.PORTAL_CONFIG = {
     "telefone": "0800 025 5072",
     "telefoneRotulo": "0800 025 5072",
     "telefoneHorario": "Ligação gratuita",
+    "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y",
+    "chatRotulo": "Chat online",
+    "chatHorario": "Atendimento por mensagem",
     "razaoSocial": "Quatro C Serviços Ltda",
     "cnpj": "00.000.000/0001-00"
   },
-  "logosCredor": {
-    "AMIL OPERADORAS": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
-    "SANTA HELENA": "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif",
-    "SASCAR FIXA VARIAVEL": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
-    "SASCAR_IRA": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
-    "REDE AMERICAS": "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif"
+  /* Um bloco por credor. A chave é o nome como o CRM devolve; o casamento é
+     por "contém", então "AMIL OPERADORAS" casa com "AMIL OPERADORAS SP".
+     Campo vazio herda o valor global de "contato".                          */
+  "credores": {
+    "AMIL OPERADORAS": {
+      "nome": "Amil",
+      "logo": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
+      "whatsapp": "",
+      "telefone": "",
+      "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
+    },
+    "SANTA HELENA": {
+      "nome": "Santa Helena Saúde",
+      "logo": "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif",
+      "whatsapp": "",
+      "telefone": "",
+      "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
+    },
+    "SASCAR FIXA VARIAVEL": {
+      "nome": "Michelin",
+      "logo": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
+      "whatsapp": "",
+      "telefone": "",
+      "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y"
+    },
+    "SASCAR_IRA": {
+      "nome": "Michelin | Equipamentos",
+      "logo": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
+      "whatsapp": "",
+      "telefone": "",
+      "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y"
+    },
+    "REDE AMERICAS": {
+      "nome": "Rede Américas",
+      "logo": "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif",
+      "whatsapp": "",
+      "telefone": "",
+      "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y"
+    },
+    "AMIL HOSPITAIS": {
+      "nome": "Amil Hospitais",
+      "logo": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
+      "whatsapp": "",
+      "telefone": "",
+      "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
+    }
   },
   "integracao": {
-    "endpoint": "https://billowing-voice-6efd.asilvino19.workers.dev/",
-    "canaisPorCredor": {
-      "AMIL OPERADORAS": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y",
-      "SANTA HELENA": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y",
-      "SASCAR": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y",
-      "IRA": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y",
-      "REDE AMERICAS": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y",
-      "PADRAO": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
-    }
+    "endpoint": "https://billowing-voice-6efd.asilvino19.workers.dev/"
   },
   "textos": {
     "rotulo.cabecaSeguro": "Ambiente seguro",
@@ -1097,7 +1136,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
     if (l1) l1.textContent = 'Canal oficial de negociação' + (ct.razaoSocial ? ' · ' + ct.razaoSocial : '');
     if (l2) l2.textContent = (ct.cnpj ? 'CNPJ ' + ct.cnpj + ' · ' : '') + 'Dados protegidos pela LGPD';
 
-    if (typeof window.montarCanais === 'function') window.montarCanais();
+    if (typeof window.montarCanais === 'function') window.montarCanais();  /* mantém o credor do contexto */
     document.title = (marca.nome ? marca.nome + ' | ' : '') + 'Portal de Autoatendimento';
   };
 
@@ -1155,11 +1194,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const CRM_ENDPOINT = (CFG.integracao && CFG.integracao.endpoint)
         || "https://billowing-voice-6efd.asilvino19.workers.dev/";
 
-    const CANAL = ((CFG.integracao || {}).canaisPorCredor || {});
-    const CHAT_LINK_SASCAR         = CANAL["SASCAR"] || CANAL["PADRAO"] || "";
-    const CHAT_LINK_IRA            = CANAL["IRA"] || CANAL["PADRAO"] || "";
-    const CHAT_LINK_AMIL_DEFAULT   = CANAL["PADRAO"] || "";
-    const CHAT_LINK_REDE_AMERICAS  = CANAL["REDE AMERICAS"] || CANAL["PADRAO"] || "";
+    /* Canal padrão: usado quando não há credor no contexto (identificação,
+       documento não localizado, sistema indisponível).                       */
+    const chatPadrao = () => ((window.PORTAL_CONFIG || {}).contato || {}).chat
+        || (((window.PORTAL_CONFIG || {}).integracao || {}).canaisPorCredor || {})["PADRAO"] || "";
 
     const $ = (id) => document.getElementById(id);
 
@@ -1170,7 +1208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let sessionToken = "";
     let foundRecord = null;
     let selectedCard = null;
-    let lastHumanChat = CHAT_LINK_AMIL_DEFAULT;
+    let lastHumanChat = "";
     let identityAttemptCount = 0;
     let resendCodeTimer = null;
     let modoPreview = false;
@@ -1241,33 +1279,52 @@ document.addEventListener("DOMContentLoaded", () => {
     const ICO_WA = '<svg fill="currentColor" height="19" viewBox="0 0 24 24" width="19"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.06c-.24.68-1.42 1.3-1.96 1.35-.5.05-.96.23-3.3-.71-2.82-1.14-4.6-4.06-4.74-4.25-.14-.2-1.12-1.5-1.12-2.86 0-1.36.71-2.03.96-2.31.25-.28.55-.35.73-.35.18 0 .37 0 .53.01.17.01.4-.06.62.47.23.55.78 1.9.85 2.04.07.14.11.3.02.49-.09.19-.14.3-.28.47-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.6-.07.17-.2.72-.84.91-1.13.19-.28.38-.23.64-.14.26.1 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.7-.17 1.38z"></path></svg>';
     const ICO_TEL = '<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="18"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.2a2 2 0 012.1-.5c.8.3 1.7.6 2.6.7a2 2 0 011.7 2z"></path></svg>';
     const SETA = '<svg class="seta" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"><path d="M9 18l6-6-6-6"></path></svg>';
+    const ICO_CHAT = '<svg fill="none" height="19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="19"><path d="M21 12a8 8 0 01-8 8H8l-5 3 1.4-4.2A8 8 0 1121 12z"></path><path d="M8.5 11h7M8.5 14.5h4.5"></path></svg>';
     const ICO_CHECK = '<svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewBox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg>';
 
-    /* Os canais existem em um lugar só. Trocar telefone ou horário no painel
-       reflete em todas as telas de uma vez.                                   */
-    window.montarCanais = function () {
-        const c = (window.PORTAL_CONFIG || {}).contato || {};
-        const lista = [
-            { ico: ICO_WA,  nome: c.whatsappRotulo || "WhatsApp", sub: c.whatsappHorario || "", acao: "whatsapp" },
-            { ico: ICO_TEL, nome: c.telefoneRotulo || c.telefone || "", sub: c.telefoneHorario || "", acao: "telefone" }
-        ].filter(x => x.nome);
-        const html = lista.map(x =>
-            '<button class="canal" type="button" data-acao="' + x.acao + '">' +
+    /* Canais de atendimento. Quando existe um credor no contexto da tela, os
+       canais são os daquele credor; onde ele não define, herda o global.
+       O chat entra como canal visível — antes o link existia na configuração
+       mas não aparecia em nenhuma tela.                                      */
+    let credorContexto = "";
+
+    function canaisDoContexto(credorRaw) {
+        const g = (window.PORTAL_CONFIG || {}).contato || {};
+        const c = credorConfig(credorRaw);
+        const lista = [];
+
+        const wa = c.whatsapp || g.whatsapp;
+        if (wa) lista.push({ ico: ICO_WA, nome: g.whatsappRotulo || "WhatsApp",
+                             sub: g.whatsappHorario || "", acao: "link", url: wa });
+
+        const tel = c.telefone || g.telefone;
+        if (tel) lista.push({ ico: ICO_TEL, nome: c.telefone ? c.telefone : (g.telefoneRotulo || g.telefone),
+                              sub: g.telefoneHorario || "", acao: "telefone", url: tel });
+
+        const chat = c.chat || g.chat || chatPadrao();
+        if (chat) lista.push({ ico: ICO_CHAT, nome: g.chatRotulo || "Chat online",
+                               sub: g.chatHorario || "", acao: "link", url: chat });
+
+        return lista;
+    }
+
+    window.montarCanais = function (credorRaw) {
+        if (credorRaw !== undefined) credorContexto = credorRaw || "";
+        const html = canaisDoContexto(credorContexto).map(x =>
+            '<button class="canal" type="button" data-acao="' + x.acao + '" data-url="' +
+            String(x.url).replace(/"/g, "&quot;") + '">' +
             '<span class="canal-ico">' + x.ico + '</span><span class="canal-txt">' +
             '<span class="canal-nome">' + x.nome + '</span>' +
             '<span class="canal-sub">' + x.sub + '</span></span>' + SETA + '</button>').join("");
         document.querySelectorAll('[data-canais]').forEach(box => { box.innerHTML = html; });
     };
-    window.montarCanais();
+    window.montarCanais("");
 
     document.addEventListener("click", (ev) => {
         const b = ev.target.closest(".canal"); if (!b) return;
-        const c = (window.PORTAL_CONFIG || {}).contato || {};
-        if (b.dataset.acao === "telefone" && c.telefone) {
-            window.location.href = "tel:" + onlyDigits(c.telefone);
-            return;
-        }
-        openChat(lastHumanChat || c.whatsapp || CHAT_LINK_AMIL_DEFAULT);
+        const url = b.dataset.url || "";
+        if (b.dataset.acao === "telefone") { window.location.href = "tel:" + onlyDigits(url); return; }
+        openChat(url);
     });
 
     /* ===================== navegação ====================================== */
@@ -1378,7 +1435,9 @@ document.addEventListener("DOMContentLoaded", () => {
         currentDoc = ""; foundRecord = null; selectedCard = null;
         identityAttemptCount = 0; sessionToken = "";
         sessionId = Date.now().toString();
-        clearPortalForms(); setDocType("CPF"); setActiveView("vStart");
+        clearPortalForms(); setDocType("CPF");
+        window.montarCanais("");           /* fora de um credor, canais globais */
+        setActiveView("vStart");
     }
 
     /* ===================== backend ======================================== */
@@ -1397,34 +1456,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function openChat(url) {
-        const alvo = url || CHAT_LINK_AMIL_DEFAULT;
+        const alvo = url || lastHumanChat || chatPadrao();
         if (!alvo) return;
         window.open(alvo, "_blank", "noopener,noreferrer");
     }
 
     /* ===================== credor ========================================= */
-    /* O logo vem do PORTAL_CONFIG.logosCredor, com a chave igual ao nome do
-       credor como o CRM devolve. Sem logo cadastrado, fica só o nome — sem
-       placeholder, sem moldura.                                              */
-    function logoDoCredor(credorRaw) {
-        const mapa = (window.PORTAL_CONFIG || {}).logosCredor || {};
+    /* Cada credor tem um bloco em PORTAL_CONFIG.credores. A chave é o nome
+       como o CRM devolve e o casamento é por "contém". Campo vazio no credor
+       herda o valor global de "contato".                                     */
+    function credorConfig(credorRaw) {
+        const cfg = window.PORTAL_CONFIG || {};
+        const mapa = cfg.credores || {};
         const c = norm(credorRaw);
+        if (!c) return {};
+        let achado = null, tamanho = -1;
         for (const chave in mapa) {
-            if (c.includes(norm(chave))) return mapa[chave];
+            const k = norm(chave);
+            /* a chave mais específica ganha: "SASCAR_IRA" antes de "SASCAR" */
+            if (k && c.includes(k) && k.length > tamanho) { achado = mapa[chave]; tamanho = k.length; }
         }
-        return "";
+        if (achado) return achado;
+        /* compatibilidade com configurações antigas */
+        const legado = {};
+        const logos = cfg.logosCredor || {};
+        for (const chave in logos) if (c.includes(norm(chave))) legado.logo = logos[chave];
+        const canais = (cfg.integracao || {}).canaisPorCredor || {};
+        for (const chave in canais) if (c.includes(norm(chave))) legado.chat = canais[chave];
+        return legado;
     }
 
+    function nomeDoCredor(credorRaw, unidade) {
+        const c = credorConfig(credorRaw);
+        return c.nome || unidade || credorRaw || "Projeto";
+    }
+
+    /* Ação padrão por credor. O nome, o logo e os canais vêm da configuração;
+       só o tipo de ação continua sendo regra de negócio.                     */
     function getCredorPresentation(credorRaw, unidade) {
         const c = norm(credorRaw);
-        const logo = logoDoCredor(credorRaw);
-        if (c.includes("AMIL OPERADORAS"))      return { nome: "Amil", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "NEGOCIAR" };
-        if (c.includes("SANTA HELENA"))         return { nome: "Santa Helena Saúde", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
-        if (c.includes("SASCAR_IRA"))           return { nome: "Michelin | Equipamentos", logo, chat: CHAT_LINK_IRA, tipoAcao: "AGENDAR" };
-        if (c.includes("SASCAR FIXA VARIAVEL")) return { nome: "Michelin Connect Fleet", logo, chat: CHAT_LINK_SASCAR, tipoAcao: "HUMANO" };
-        if (c.includes("REDE AMERICAS"))        return { nome: unidade || "Rede Américas", logo, chat: CHAT_LINK_REDE_AMERICAS, tipoAcao: "HUMANO" };
-        if (c.includes("AMIL HOSPITAIS"))       return { nome: unidade || "Amil Hospitais", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
-        return { nome: credorRaw || "Projeto", logo, chat: CHAT_LINK_AMIL_DEFAULT, tipoAcao: "HUMANO" };
+        const cc = credorConfig(credorRaw);
+        const base = { nome: nomeDoCredor(credorRaw, unidade), logo: cc.logo || "", chat: cc.chat || chatPadrao() };
+        if (c.includes("AMIL OPERADORAS"))      return { ...base, tipoAcao: "NEGOCIAR" };
+        if (c.includes("SASCAR_IRA"))           return { ...base, tipoAcao: "AGENDAR" };
+        return { ...base, tipoAcao: "HUMANO" };
     }
 
     /* ===================== identidade ===================================== */
@@ -1534,6 +1609,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ===================== telas de estado ================================ */
     function telaErro(msg) {
+        window.montarCanais("");
         const el = $("errorMsg");
         if (el) el.textContent = msg || "Estamos com uma instabilidade no nosso sistema. Tente novamente em alguns minutos ou fale com a gente pelos nossos canais de atendimento.";
         setActiveView("vError");
@@ -1546,6 +1622,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setActiveView("vError");
     }
     function telaSemPendencia() {
+        window.montarCanais("");
         const nome = ($("nameInput")?.value || "").trim().split(" ")[0];
         const t = $("noDebtTitle");
         if (t) t.textContent = nome ? `${nome}, você está em dia` : "Você está em dia";
@@ -1565,18 +1642,24 @@ document.addEventListener("DOMContentLoaded", () => {
     function telaAcordoAtivo(data) {
         const ac = data?.acordoAtivo || {};
         const pres = getCredorPresentation(ac.credor || "", ac.unidade || "");
+        const doPainel = credorConfig(ac.credor || "").nome;
+        const parcelas = (Array.isArray(ac.parcelas) ? ac.parcelas : [])
+            .map(row => normalizaLinha(row, "acordo"));
         abrirAcordo({
-            credorNome: ac.credorNome || pres.nome,
+            /* o credor cru vai adiante: é ele que escolhe os canais da tela */
+            credor: ac.credor || "",
+            credorNome: doPainel || ac.credorNome || pres.nome,
             numeroContrato: ac.numeroContrato || "-",
             valorTotal: parseMoneyLike(ac.valorFormatado || ac.valor || 0),
             valorTotalFormatado: ac.valorFormatado || formatBRL(parseMoneyLike(ac.valor || 0)),
-            chatUrl: data?.chatUrl || ac.chatUrl || "",
-            parcelas: Array.isArray(ac.parcelas) ? ac.parcelas : [],
-            detalhes: Array.isArray(ac.parcelas) && ac.parcelas.length ? ac.parcelas : [{
+            valorNegociado: parseMoneyLike(ac.valorNegociadoFormatado || ac.valorNegociado || 0),
+            chatUrl: data?.chatUrl || ac.chatUrl || pres.chat,
+            parcelas,
+            detalhes: parcelas.length ? parcelas : [normalizaLinha({
                 vencimentoFormatado: ac.vencimentoFormatado || "--/--/----",
                 valorFormatado: ac.valorFormatado || "R$ 0,00",
                 valor: parseMoneyLike(ac.valor || 0)
-            }],
+            }, "acordo")],
             valorOriginal: 0, diasAtraso: 0
         });
     }
@@ -1616,39 +1699,48 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    /* Uma linha de detalhe — nota em atraso, parcela de acordo ou ordem de
+       serviço — sempre normalizada do mesmo jeito, venha de "detalhes" ou de
+       "parcelas".                                                             */
+    function normalizaLinha(row, tipo) {
+        if (tipo === "ira") {
+            return {
+                placa: row?.placa || row?.Placa || row?.numeroDocumento || "-",
+                os: row?.os || row?.OS || row?.IraOS || "-",
+                dataOS: row?.dataOS || row?.DataOS || row?.vencimentoFormatado || "-"
+            };
+        }
+        const valorDetalhe = parseMoneyLike(row?.valorFormatado || row?.valor || 0);
+        return {
+            numero: row?.numeroDocumento || row?.numero || row?.nota || "",
+            vencimento: row?.vencimento || "",
+            vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
+            valor: valorDetalhe,
+            valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
+            /* status de pagamento: o acordo vigente precisa saber quais
+               parcelas já foram pagas para calcular o saldo restante. */
+            pago: row?.pago === true || /pag/i.test(String(row?.status || "")),
+            status: row?.status || ""
+        };
+    }
+
     function normalizeCards(cards) {
         return (Array.isArray(cards) ? cards : []).map(c => {
             const pres = getCredorPresentation(c?.credor || "", c?.unidade || "");
             const tipo = String(c?.tipo || "pendencia").toLowerCase();
-            const detalhes = (Array.isArray(c?.detalhes) ? c.detalhes : []).map(row => {
-                if (tipo === "ira") {
-                    return {
-                        placa: row?.placa || row?.Placa || row?.numeroDocumento || "-",
-                        os: row?.os || row?.OS || row?.IraOS || "-",
-                        dataOS: row?.dataOS || row?.DataOS || row?.vencimentoFormatado || "-"
-                    };
-                }
-                const valorDetalhe = parseMoneyLike(row?.valorFormatado || row?.valor || 0);
-                return {
-                    numero: row?.numeroDocumento || row?.numero || row?.nota || "",
-                    vencimento: row?.vencimento || "",
-                    vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
-                    valor: valorDetalhe,
-                    valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
-                    /* status de pagamento: o acordo vigente precisa saber quais
-                       parcelas já foram pagas para calcular o saldo restante. */
-                    pago: row?.pago === true || /pag/i.test(String(row?.status || "")),
-                    status: row?.status || ""
-                };
-            });
+            const detalhes = (Array.isArray(c?.detalhes) ? c.detalhes : []).map(row => normalizaLinha(row, tipo));
+            /* Acordo: o backend pode mandar as parcelas em "parcelas" em vez de
+               "detalhes". As duas formas chegam iguais na tela.               */
+            const parcelas = (Array.isArray(c?.parcelas) ? c.parcelas : []).map(row => normalizaLinha(row, tipo));
             const valorTotal = parseMoneyLike(c?.valorTotalFormatado || c?.valorTotal || 0);
             const propostaQuitacao = parseMoneyLike(c?.propostaQuitacaoFormatada || c?.propostaQuitacao || 0);
-            /* Se o backend só repete o nome cru do credor ("AMIL OPERADORAS"),
-               usa o nome de apresentação ("Amil"). O cliente não deve ver a
-               nomenclatura interna do CRM.                                    */
+            /* Nome exibido: o que está cadastrado no painel para aquele credor
+               manda. Sem cadastro, usa o que o backend enviou; em último caso,
+               o nome cru. O cliente nunca deve ver nomenclatura de CRM.       */
+            const doPainel = credorConfig(c?.credor || "").nome;
             const nomeCru = norm(c?.credorNome || "");
-            const nomeBom = (!nomeCru || nomeCru === norm(c?.credor || ""))
-                ? pres.nome : c.credorNome;
+            const nomeBom = doPainel
+                || ((!nomeCru || nomeCru === norm(c?.credor || "")) ? pres.nome : c.credorNome);
             return {
                 tipo, credor: c?.credor || "", credorNome: nomeBom,
                 logo: c?.logo || pres.logo, chatUrl: c?.chatUrl || pres.chat,
@@ -1657,6 +1749,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 valorTotal, valorTotalFormatado: c?.valorTotalFormatado || formatBRL(valorTotal),
                 propostaQuitacao, propostaQuitacaoFormatada: c?.propostaQuitacaoFormatada || formatBRL(propostaQuitacao),
                 valorOriginal: parseMoneyLike(c?.valorOriginal || 0),
+                valorNegociado: parseMoneyLike(c?.valorNegociadoFormatado || c?.valorNegociado || 0),
                 diasAtraso: Number(c?.diasAtraso || 0),
                 exibirProposta: c?.exibirProposta === true,
                 tipoAcao: c?.tipoAcao || pres.tipoAcao,
@@ -1665,7 +1758,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 permiteSegundaVia: c?.permiteSegundaVia === true || c?.segundaVia === true || c?.tipoAcao === "SEGUNDA_VIA",
                 maiorValor: c?.maiorValor === true,
                 parcelamento: normalizeInstallmentData(c?.parcelamento || {}),
-                detalhes
+                detalhes, parcelas
             };
         });
     }
@@ -1846,7 +1939,8 @@ document.addEventListener("DOMContentLoaded", () => {
        tela de informação e canais, não de decisão de pagamento.               */
     function abrirAtendimento(card, variante) {
         selectedCard = card;
-        lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+        lastHumanChat = card?.chatUrl || chatPadrao();
+        window.montarCanais(card?.credor || "");
         const txts = (window.PORTAL_CONFIG || {}).textos || {};
         const esp = variante === "especialista";
         const t = $("atendimentoTitulo");
@@ -1907,6 +2001,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         montarDetalhes(origem, "acordoDetalhes", "acordo");
         lastHumanChat = origem.chatUrl || lastHumanChat;
+        window.montarCanais(origem.credor || "");
         setActiveView("vActiveAgreement");
     }
 
@@ -1915,11 +2010,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function montarDetalhes(card, alvoId, modo) {
         const dl = $(alvoId || "negotiationDetalhes"); if (!dl) return;
         const ehAcordo = modo === "acordo";
+        /* No acordo, as parcelas podem vir em "parcelas" ou em "detalhes". */
+        const itens = (ehAcordo && Array.isArray(card.parcelas) && card.parcelas.length)
+            ? card.parcelas : (card.detalhes || []);
         const linhas = [];
         linhas.push(`<li><dt>Empresa</dt><dd>${card.credorNome || "-"}</dd></li>`);
         linhas.push(`<li><dt>${ehAcordo ? "Acordo" : "Contrato"}</dt><dd>${card.numeroContrato || "-"}</dd></li>`);
 
-        (card.detalhes || []).forEach((d, i) => {
+        itens.forEach((d, i) => {
             if (ehAcordo) {
                 /* No acordo as linhas são parcelas, não notas em atraso. */
                 const situacao = d.pago ? "paga" : ("vence " + (d.vencimentoFormatado || "-"));
@@ -1930,11 +2028,11 @@ document.addEventListener("DOMContentLoaded", () => {
             linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${d.valorFormatado || "-"}</dd></li>`);
         });
 
-        const soma = (card.detalhes || []).reduce((a, d) => a + Number(d.valor || 0), 0);
+        const soma = itens.reduce((a, d) => a + Number(d.valor || 0), 0);
         if (ehAcordo) {
-            const total = Number(card.valorTotal || 0) || soma;
+            const total = Number(card.valorNegociado || 0) || soma || Number(card.valorTotal || 0);
             if (total > 0) linhas.push(`<li class="total"><dt>Valor negociado</dt><dd>${formatBRL(total)}</dd></li>`);
-            const pago = (card.detalhes || []).filter(d => d.pago).reduce((a, d) => a + Number(d.valor || 0), 0);
+            const pago = itens.filter(d => d.pago).reduce((a, d) => a + Number(d.valor || 0), 0);
             if (pago > 0) linhas.push(`<li class="total"><dt>Já pago</dt><dd>${formatBRL(pago)}</dd></li>`);
         } else {
             const original = card.valorOriginal > 0 ? card.valorOriginal : soma;
@@ -2094,7 +2192,8 @@ document.addEventListener("DOMContentLoaded", () => {
             tipoPagamentoOperacao: modoOperacao === "segunda_via" ? "segunda_via" : (card?.tipoPagamentoOperacao || "negociacao")
         };
         const isSecondVia = selectedCard.tipoPagamentoOperacao === "segunda_via";
-        lastHumanChat = selectedCard?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+        lastHumanChat = selectedCard?.chatUrl || chatPadrao();
+        window.montarCanais(selectedCard?.credor || "");
         hideText("negotiationError");
 
         const txts = (window.PORTAL_CONFIG || {}).textos || {};
@@ -2203,7 +2302,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function openIraSchedule(card) {
         selectedCard = card;
-        lastHumanChat = card?.chatUrl || CHAT_LINK_IRA;
+        lastHumanChat = card?.chatUrl || chatPadrao();
+        window.montarCanais(card?.credor || "");
         hideText("iraError");
         ["iraResponsible", "iraEmail", "iraWhatsapp"].forEach(id => { if ($(id)) $(id).value = ""; });
         setupIraDateOptions(); setupIraTimeOptions();
@@ -2356,9 +2456,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             foundRecord = data || {};
 
-            if (data?.proximoStep === "nao_localizado") return setActiveView("vNoRecord");
+            if (data?.proximoStep === "nao_localizado") { window.montarCanais(""); return setActiveView("vNoRecord"); }
             if (data?.proximoStep === "bloqueado") {
-                lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                lastHumanChat = data?.chatUrl || chatPadrao();
                 return setActiveView("vBlocked");
             }
             if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(false);
@@ -2405,7 +2505,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             if (data?.proximoStep === "bloqueado") {
-                lastHumanChat = data?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
+                lastHumanChat = data?.chatUrl || chatPadrao();
                 return setActiveView("vBlocked");
             }
             if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
@@ -2513,7 +2613,7 @@ document.addEventListener("DOMContentLoaded", () => {
             /* CRM não formalizou: tela própria, nunca confirmação de negociação */
             if (data?.proximoStep === "falha_negociacao" || data?.formalizado === false) {
                 if (data?.mensagem && $("negotiationFailedMsg")) $("negotiationFailedMsg").textContent = data.mensagem;
-                lastHumanChat = selectedCard?.chatUrl || lastHumanChat || CHAT_LINK_AMIL_DEFAULT;
+                lastHumanChat = selectedCard?.chatUrl || lastHumanChat || chatPadrao();
                 return setActiveView("vNegotiationFailed");
             }
 
@@ -2671,10 +2771,10 @@ document.addEventListener("DOMContentLoaded", () => {
       Marca</button>
     <button class="nav-item" data-secao="credores" type="button">
       <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M9 8h6M9 12h6M9 16h3"></path></svg>
-      Logos dos credores</button>
+      Credores</button>
     <button class="nav-item" data-secao="canais" type="button">
       <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.4 1.8.7 2.6a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.5-1.2a2 2 0 012.1-.5c.8.3 1.7.6 2.6.7a2 2 0 011.7 2z"></path></svg>
-      Canais e rodapé</button>
+      Canais gerais</button>
     <button class="nav-item" data-secao="textos" type="button">
       <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="16"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
       Textos e botões</button>
@@ -2873,13 +2973,14 @@ document.querySelectorAll('.nav-item').forEach(b => {
    =========================================================================== */
 function render() {
   if (!CFG) return;
+  migrarCredores();
   const box = $('edicao');
   const cabeca = {
     marca:      ['Marca', 'Logo, cores e fonte do portal. A cor primária controla o botão de ação, a barra de progresso, os links e a seleção.'],
-    credores:   ['Logos dos credores', 'Cada credor é uma chave com o nome exato como o CRM devolve. Sem logo cadastrado, o portal mostra só o nome — sem placeholder.'],
-    canais:     ['Canais e rodapé', 'Estes canais aparecem em todas as telas que oferecem atendimento. Alterar aqui reflete no portal inteiro.'],
+    credores:   ['Credores', 'Um cadastro por credor: como o nome chega do CRM, como ele aparece para o cliente, o logo e os canais de atendimento daquele projeto. Campo em branco herda o canal geral.'],
+    canais:     ['Canais gerais e rodapé', 'Usados quando o credor não tem canal próprio, e nas telas em que ainda não há credor definido (identificação, erro, sem pendência).'],
     textos:     ['Textos e botões', 'Todo texto editável do portal, agrupado pela tela onde aparece. A estrutura das telas é fixa.'],
-    integracao: ['Integração', 'Endereço do backend e link de chat por credor. Mexa aqui só com o time técnico.']
+    integracao: ['Integração', 'Endereço do backend. Mexa aqui só com o time técnico.']
   }[secaoAtual];
 
   box.innerHTML =
@@ -3039,15 +3140,53 @@ function carregarFonteNaPrevia(nome) {
 }
 
 /* -------------------------------- credores -------------------------------- */
+/* Traz configurações gravadas no formato antigo (logosCredor solto e
+   integracao.canaisPorCredor) para o formato atual, em que cada credor é um
+   bloco único com nome, logo e canais. Rodar duas vezes não muda nada. */
+function migrarCredores() {
+  if (!CFG) return;
+  const mapa = CFG.credores || (CFG.credores = {});
+
+  const logos = CFG.logosCredor || {};
+  Object.keys(logos).forEach(k => {
+    const c = mapa[k] || (mapa[k] = {});
+    if (!c.logo && typeof logos[k] === 'string') c.logo = logos[k];
+  });
+  delete CFG.logosCredor;
+
+  const canais = (CFG.integracao || {}).canaisPorCredor || {};
+  Object.keys(canais).forEach(k => {
+    const link = typeof canais[k] === 'string' ? canais[k] : '';
+    if (String(k).toUpperCase() === 'PADRAO') {
+      CFG.contato = CFG.contato || {};
+      if (!CFG.contato.chat && link) CFG.contato.chat = link;
+      return;
+    }
+    const c = mapa[k] || (mapa[k] = {});
+    if (!c.chat && link) c.chat = link;
+  });
+  if (CFG.integracao) delete CFG.integracao.canaisPorCredor;
+
+  /* credor gravado como texto puro era só o endereço do logo */
+  Object.keys(mapa).forEach(k => {
+    if (typeof mapa[k] === 'string') mapa[k] = { logo: mapa[k] };
+    else if (!mapa[k] || typeof mapa[k] !== 'object') mapa[k] = {};
+  });
+}
+
+const SVG_LIXEIRA = '<svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="15"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"></path></svg>';
+
 function renderCredores(alvo) {
-  const mapa = CFG.logosCredor || (CFG.logosCredor = {});
+  migrarCredores();
+  const mapa = CFG.credores;
   const chaves = Object.keys(mapa);
+  const g = CFG.contato || {};
 
   alvo.innerHTML = `
     <div class="bloco">
       <div class="bloco-cabeca"><h3>Credores cadastrados</h3><span class="cont">${chaves.length}</span></div>
       <div class="bloco-corpo" id="listaCredores">
-        ${chaves.length ? '' : '<p class="vazio">Nenhum credor cadastrado. O portal mostra só o nome que vem do CRM.</p>'}
+        ${chaves.length ? '' : '<p class="vazio">Nenhum credor cadastrado. O portal mostra o nome que vem do CRM e os canais gerais da aba Canais.</p>'}
       </div>
     </div>
     <div class="bloco">
@@ -3056,7 +3195,7 @@ function renderCredores(alvo) {
         <div class="campo">
           <label for="novoCredor">Nome do credor como vem do CRM</label>
           <input id="novoCredor" placeholder="AMIL OPERADORAS" type="text"/>
-          <p class="ajuda">O portal casa este nome com o que a ficha devolve. Pode ser parte do nome — "AMIL OPERADORAS" casa com "AMIL OPERADORAS SP".</p>
+          <p class="ajuda">O portal casa este nome com o que a ficha devolve. Pode ser parte do nome — "AMIL OPERADORAS" casa com "AMIL OPERADORAS SP". Quando dois cadastros casam com a mesma ficha, vale o mais específico.</p>
         </div>
         <button class="btn btn-1" id="btnAddCredor" type="button">Adicionar</button>
       </div>
@@ -3064,54 +3203,90 @@ function renderCredores(alvo) {
 
   const lista = $('listaCredores');
   chaves.forEach(chave => {
-    const row = document.createElement('div');
-    row.className = 'credor';
-    row.innerHTML = `
-      <div class="campo" style="margin:0">
-        <label>Nome no CRM</label>
-        <input type="text" value="${esc(chave)}" data-chave="${esc(chave)}"/>
+    const c = mapa[chave];
+    const card = document.createElement('div');
+    card.className = 'credor-card';
+    card.innerHTML = `
+      <div class="credor-topo">
+        <div class="logo-previa">${c.logo ? `<img src="${esc(c.logo)}" alt=""/>` : '<span>sem logo</span>'}</div>
+        <span class="credor-nome">${esc(c.nome || chave)}</span>
+        <button class="lixeira" title="Remover credor" type="button">${SVG_LIXEIRA}</button>
       </div>
-      <div class="campo" style="margin:0">
-        <label>Logo</label>
-        <div class="logo-previa">${mapa[chave] ? `<img src="${esc(mapa[chave])}" alt=""/>` : '<span>sem logo</span>'}</div>
-      </div>
-      <button class="lixeira" title="Remover" type="button">
-        <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewBox="0 0 24 24" width="15"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"></path></svg>
-      </button>`;
+      <div class="credor-grade">
+        <div class="campo">
+          <label>Nome no CRM</label>
+          <input data-f="chave" type="text" value="${esc(chave)}"/>
+          <p class="ajuda">Exatamente como o CRM devolve.</p>
+        </div>
+        <div class="campo">
+          <label>Nome exibido no portal</label>
+          <input data-f="nome" placeholder="${esc(chave)}" type="text" value="${esc(c.nome || '')}"/>
+          <p class="ajuda">É este nome que o cliente lê. Em branco, aparece o do CRM.</p>
+        </div>
+        <div class="campo">
+          <label>WhatsApp</label>
+          <input data-f="whatsapp" placeholder="${esc(g.whatsapp || 'usa o canal geral')}" type="text" value="${esc(c.whatsapp || '')}"/>
+          <p class="ajuda">Link wa.me. Em branco, usa o WhatsApp geral.</p>
+        </div>
+        <div class="campo">
+          <label>Telefone</label>
+          <input data-f="telefone" placeholder="${esc(g.telefone || 'usa o canal geral')}" type="text" value="${esc(c.telefone || '')}"/>
+          <p class="ajuda">Em branco, usa o telefone geral.</p>
+        </div>
+        <div class="campo larga">
+          <label>Link do chat</label>
+          <input data-f="chat" placeholder="${esc(g.chat || 'usa o chat geral')}" type="text" value="${esc(c.chat || '')}"/>
+          <p class="ajuda">Entra como <b>Chat online</b> ao lado do WhatsApp e do telefone, nas telas de atendimento deste credor. Em branco, usa o chat geral.</p>
+        </div>
+      </div>`;
 
-    /* renomear a chave preservando o logo */
-    row.querySelector('input').addEventListener('change', e => {
+    /* nome, canais e chat: gravam a cada tecla, sem redesenhar a seção */
+    card.querySelectorAll('input[data-f]').forEach(inp => {
+      const campo = inp.dataset.f;
+      if (campo === 'chave') return;
+      inp.addEventListener('input', e => {
+        const v = e.target.value.trim();
+        if (v) c[campo] = v; else delete c[campo];
+        if (campo === 'nome') card.querySelector('.credor-nome').textContent = v || chave;
+        aplicar();
+      });
+    });
+
+    /* renomear a chave preservando tudo que já está preenchido */
+    card.querySelector('input[data-f="chave"]').addEventListener('change', e => {
       const nova = e.target.value.trim().toUpperCase();
       if (!nova || nova === chave) return;
-      const url = mapa[chave];
+      if (mapa[nova] !== undefined) { e.target.value = chave; return avisar('Já existe um credor com esse nome no CRM.', true); }
+      const bloco = mapa[chave];
       delete mapa[chave];
-      mapa[nova] = url;
+      mapa[nova] = bloco;
       render(); aplicar();
     });
 
-    row.querySelector('.logo-previa').addEventListener('click', () => pedirImagem(dataUrl => {
-      mapa[chave] = dataUrl;
+    const previa = card.querySelector('.logo-previa');
+    previa.style.cursor = 'pointer';
+    previa.title = 'Clique para enviar uma imagem';
+    previa.addEventListener('click', () => pedirImagem(dataUrl => {
+      c.logo = dataUrl;
       render(); aplicar();
-      avisar('Logo de ' + chave + ' atualizado.');
+      avisar('Logo de ' + (c.nome || chave) + ' atualizado.');
     }));
-    row.querySelector('.logo-previa').style.cursor = 'pointer';
-    row.querySelector('.logo-previa').title = 'Clique para enviar uma imagem';
 
-    row.querySelector('.lixeira').addEventListener('click', () => {
+    card.querySelector('.lixeira').addEventListener('click', () => {
       delete mapa[chave];
       render(); aplicar();
     });
 
-    lista.appendChild(row);
+    lista.appendChild(card);
   });
 
   $('btnAddCredor').addEventListener('click', () => {
     const nome = $('novoCredor').value.trim().toUpperCase();
     if (!nome) return avisar('Informe o nome do credor.', true);
     if (mapa[nome] !== undefined) return avisar('Este credor já está cadastrado.', true);
-    mapa[nome] = '';
+    mapa[nome] = {};
     render(); aplicar();
-    avisar('Credor adicionado. Clique na área do logo para enviar a imagem.');
+    avisar('Credor adicionado. Preencha o nome exibido e os canais.');
   });
 }
 
@@ -3143,6 +3318,14 @@ function renderCanais(alvo) {
       </div>
     </div>
     <div class="bloco">
+      <div class="bloco-cabeca"><h3>Chat online</h3></div>
+      <div class="bloco-corpo">
+        ${linha('ctChatRotulo', 'Nome exibido', c.chatRotulo || 'Chat online')}
+        ${linha('ctChatHorario', 'Horário exibido', c.chatHorario || '')}
+        ${linha('ctChat', 'Link', c.chat || '', 'Chat usado quando o credor não tem link próprio. Cada credor pode ter o seu na aba Credores.')}
+      </div>
+    </div>
+    <div class="bloco">
       <div class="bloco-cabeca"><h3>Rodapé legal</h3></div>
       <div class="bloco-corpo">
         ${linha('ctRazao', 'Razão social', c.razaoSocial || '')}
@@ -3154,6 +3337,7 @@ function renderCanais(alvo) {
   const liga = (id, chave) => $(id).addEventListener('input', e => { CFG.contato[chave] = e.target.value; aplicar(); });
   liga('ctWaRotulo', 'whatsappRotulo'); liga('ctWaHorario', 'whatsappHorario'); liga('ctWa', 'whatsapp');
   liga('ctTelRotulo', 'telefoneRotulo'); liga('ctTelHorario', 'telefoneHorario'); liga('ctTel', 'telefone');
+  liga('ctChatRotulo', 'chatRotulo'); liga('ctChatHorario', 'chatHorario'); liga('ctChat', 'chat');
   liga('ctRazao', 'razaoSocial'); liga('ctCnpj', 'cnpj');
 }
 
@@ -3276,7 +3460,6 @@ function itemTexto(k) {
 /* ------------------------------- integração ------------------------------- */
 function renderIntegracao(alvo) {
   const i = CFG.integracao || (CFG.integracao = {});
-  const canais = i.canaisPorCredor || (i.canaisPorCredor = {});
   alvo.innerHTML = `
     <div class="bloco">
       <div class="bloco-cabeca"><h3>Backend</h3></div>
@@ -3287,26 +3470,9 @@ function renderIntegracao(alvo) {
           <p class="ajuda">Todas as etapas do portal chamam este endereço. Só altere junto com o time técnico.</p>
         </div>
       </div>
-    </div>
-    <div class="bloco">
-      <div class="bloco-cabeca"><h3>Link de chat por credor</h3><span class="cont">${Object.keys(canais).length}</span></div>
-      <div class="bloco-corpo">
-        ${Object.keys(canais).map(k => `
-          <div class="campo">
-            <label>${esc(k)}</label>
-            <input data-canal="${esc(k)}" type="text" value="${esc(canais[k])}"/>
-          </div>`).join('')}
-        <p class="ajuda">A chave <b>PADRAO</b> é usada quando o credor não tem link próprio.</p>
-      </div>
     </div>`;
 
   $('inEndpoint').addEventListener('input', e => { CFG.integracao.endpoint = e.target.value.trim(); aplicar(); });
-  alvo.querySelectorAll('[data-canal]').forEach(inp => {
-    inp.addEventListener('input', e => {
-      CFG.integracao.canaisPorCredor[inp.dataset.canal] = e.target.value.trim();
-      aplicar();
-    });
-  });
 }
 
 /* ===========================================================================
