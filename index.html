@@ -2560,7 +2560,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
     const l1 = document.getElementById('rodapeLinha1');
     const l2 = document.getElementById('rodapeLinha2');
     if (l1) l1.textContent = 'Canal oficial de negociação' + (ct.razaoSocial ? ' · ' + ct.razaoSocial : '');
-    if (l2) l2.textContent = (ct.cnpj ? 'CNPJ ' + ct.cnpj + ' · ' : '') + 'Dados protegidos pela LGPD';
+    if (l2) l2.textContent = (ct.cnpj ? 'CNPJ ' + ct.cnpj + ' · ' : '') + 'Dados protegidos';
 
     if (typeof window.montarCanais === 'function') window.montarCanais();  /* mantém o credor do contexto */
     document.title = (marca.nome ? marca.nome + ' | ' : '') + 'Portal de Autoatendimento';
