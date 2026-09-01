@@ -2747,10 +2747,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <button class="btn btn-1" id="btnEntrar" type="button">Entrar</button>
     </div>
-
-    <p class="porta-nota">
-      <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M12 3l7.5 3.5v5c0 4.6-3.1 8.8-7.5 10-4.4-1.2-7.5-5.4-7.5-10v-5L12 3z"></path><path d="M9 12l2 2 4-4"></path></svg>
-      Ambiente interno da Quatro C. As alterações feitas aqui não afetam o portal publicado até você gerar e subir a nova versão.
     </p>
     <p class="porta-rodape">Quatro C · Desenvolvimento e Inovação</p>
   </div>
