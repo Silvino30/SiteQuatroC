@@ -1799,6 +1799,15 @@ window.PORTAL_CONFIG = {
     "titulo.vActiveAgreement": "Seu acordo está em dia",
     "botao.btnReenviarBoleto": "Reenviar boleto",
 
+    "titulo.vReenviado": "Boleto reenviado",
+    "texto.vReenviado.1": "Boleto sem alteração de valor ou de vencimento.",
+    "botao.btnVoltarAcordo": "Voltar ao meu acordo",
+
+    "titulo.vAtendimento.especialista": "Um especialista já foi acionado",
+    "texto.vAtendimento.especialista": "Você vai receber um contato para a elaboração da melhor condição para o seu caso.",
+    "titulo.vAtendimento.equipe": "Atendimento com a nossa equipe",
+    "texto.vAtendimento.equipe": "A condição deste contrato é montada junto com um atendente.",
+
     "titulo.vNoRecord": "Nada em aberto para este documento",
     "texto.vNoRecord.1": "Não localizamos nenhuma pendência registrada na nossa base para o documento informado.",
     "botao.btnNovaConsultaNoRecord": "Consultar outro documento",
@@ -2295,6 +2304,46 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
   <div class="acoes">
     <button class="btn btn-1" id="btnAgreementHumano" type="button"><span data-txt="botao.btnReenviarBoleto">Reenviar boleto</span></button>
   </div>
+
+  <div class="sanfona" data-aberta="0">
+    <button class="sanfona-cabeca" data-sanfona="1" type="button"><span data-txt="rotulo.detalhes">Detalhes da dívida</span>
+      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg></button>
+    <div class="sanfona-corpo"><dl class="dados" id="acordoDetalhes"></dl></div>
+  </div>
+</section>
+
+<!-- ==================== BOLETO REENVIADO (acordo vigente) ================== -->
+<section class="view" data-prog="100" id="vReenviado">
+  <h1 data-txt="titulo.vReenviado">Boleto reenviado</h1>
+  <p class="sub" data-txt="texto.vReenviado.1" id="reenviadoSub">Boleto sem alteração de valor ou de vencimento.</p>
+  <ul class="fatos">
+    <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <span>O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+    <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
+      <span id="reenviadoVenc">Vencimento a confirmar</span></li>
+  </ul>
+  <div class="acoes acoes-centro">
+    <button class="btn btn-2" id="btnVoltarAcordo" type="button"><span data-txt="botao.btnVoltarAcordo">Voltar ao meu acordo</span></button>
+  </div>
+  <p class="rotulo" data-txt="rotulo.canais.duvida" style="margin-top:30px">Se ainda tiver dúvida</p>
+  <div class="canais discretos" data-canais="1"></div>
+</section>
+
+<!-- ============ ATENDIMENTO (especialista e tratativa com a equipe) ======== -->
+<!-- Tela própria, sem barra de ação. Antes isso reaproveitava a tela de
+     negociação, o que deixava um botão "Confirmar negociação" no lugar errado. -->
+<section class="view" data-prog="70" id="vAtendimento">
+  <h1 id="atendimentoTitulo">Um especialista já foi acionado</h1>
+  <p class="sub" id="atendimentoSub">Você vai receber um contato para a elaboração da melhor condição para o seu caso.</p>
+
+  <div class="sanfona" data-aberta="0" style="margin-top:0">
+    <button class="sanfona-cabeca" data-sanfona="1" type="button"><span data-txt="rotulo.detalhes">Detalhes da dívida</span>
+      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg></button>
+    <div class="sanfona-corpo"><dl class="dados" id="atendimentoDetalhes"></dl></div>
+  </div>
+
+  <p class="rotulo" data-txt="rotulo.canais.falarAgora">Prefere falar agora?</p>
+  <div class="canais" data-canais="1"></div>
 </section>
 
 <!-- ============================= NÃO LOCALIZADO ============================ -->
@@ -2386,7 +2435,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
   <p class="rodape">
     <span id="rodapeLinha1">Canal oficial de negociação · Quatro C Serviços Ltda</span>
-    <span id="rodapeLinha2"> · Dados protegidos</span>
+    <span id="rodapeLinha2">CNPJ 00.000.000/0001-00 · Dados protegidos pela LGPD</span>
   </p>
 </div>
 
@@ -2425,6 +2474,17 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
     const alvo = Array.from(el.childNodes).find(n => n.nodeType === 3 && n.textContent.trim());
     if (alvo) alvo.textContent = valor; else el.appendChild(document.createTextNode(valor));
   }
+
+  /* Textos que só o JavaScript usa (não estão presos a um elemento na tela).
+     Declarados aqui para o painel de administração conseguir editá-los. */
+  window.PORTAL_TEXTOS_EXTRA = {
+    'rotulo.vencimento':               { tela: 'vNegotiate',   padrao: 'Vencimento do boleto' },
+    'rotulo.vencimentoParcelado':      { tela: 'vNegotiate',   padrao: 'Vencimento do primeiro boleto' },
+    'titulo.vAtendimento.especialista':{ tela: 'vAtendimento', padrao: 'Um especialista já foi acionado' },
+    'texto.vAtendimento.especialista': { tela: 'vAtendimento', padrao: 'Você vai receber um contato para a elaboração da melhor condição para o seu caso.' },
+    'titulo.vAtendimento.equipe':      { tela: 'vAtendimento', padrao: 'Atendimento com a nossa equipe' },
+    'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' }
+  };
 
   window.aplicarPortalConfig = function (cfg) {
     cfg = cfg || window.PORTAL_CONFIG || {};
@@ -2491,6 +2551,12 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
           tipo: chave.split('.')[0],
           padrao: (el.textContent || '').replace(/\s+/g, ' ').trim()
         };
+      });
+      /* soma os textos que vivem só no JavaScript */
+      const extra = window.PORTAL_TEXTOS_EXTRA || {};
+      Object.keys(extra).forEach(chave => {
+        if (mapa[chave]) return;
+        mapa[chave] = { tela: extra[chave].tela, tipo: chave.split('.')[0], padrao: extra[chave].padrao };
       });
       const alvo = ev.source || window.parent;
       if (alvo) alvo.postMessage({ tipo: 'portal-mapa', mapa: mapa }, '*');
@@ -2672,6 +2738,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (tela === "vNegotiate" && !selectedCard) openNegotiation(cardsDemo()[0]);
         if (tela === "vConfirmName" && !$("nameOptions").children.length) {
             renderIdentityOptions([], "ANA PAULA SILVINO", "CPF");
+        }
+        if (tela === "vAtendimento" && !$("atendimentoDetalhes").children.length) {
+            abrirAtendimento(cardsDemo()[0], "especialista");
+        }
+        if (tela === "vActiveAgreement" && !$("acordoDetalhes").children.length) {
+            abrirAcordo(normalizeCards(cardsDemo())[0]);
         }
         setActiveView(tela);
     };
@@ -2919,37 +2991,24 @@ document.addEventListener("DOMContentLoaded", () => {
         setActiveView("vNoDebt");
     }
 
-    /* Acordo vigente. O portal mostra o que o CRM devolve hoje: uma linha com
-       vencimento e valor. Quando o backend passar a devolver o array de
-       parcelas em acordoAtivo.parcelas, a lista aparece sozinha.             */
+    /* Passo "mostrar_acordo_ativo" do backend: normaliza e usa a mesma tela. */
     function telaAcordoAtivo(data) {
         const ac = data?.acordoAtivo || {};
-        const dl = $("activeAgreementDados");
-        const sub = $("activeAgreementSub");
-        const parcelas = Array.isArray(ac.parcelas) ? ac.parcelas : [];
-        const credor = ac.credorNome || getCredorPresentation(ac.credor || "", ac.unidade || "").nome;
-
-        if (parcelas.length > 1) {
-            const pagas = parcelas.filter(p => p.pago === true || /pag/i.test(String(p.status || ""))).length;
-            if (sub) sub.innerHTML = `<b>${credor}</b> · ${pagas} de ${parcelas.length} parcelas pagas`;
-            dl.innerHTML = parcelas.map((p, i) => {
-                const paga = p.pago === true || /pag/i.test(String(p.status || ""));
-                return `<li><dt>Parcela ${i + 1} · ${p.vencimentoFormatado || p.vencimento || "-"}</dt>` +
-                       `<dd class="${paga ? "paga" : ""}">${paga ? "Paga" : (p.valorFormatado || formatBRL(p.valor || 0))}</dd></li>`;
-            }).join("");
-        } else {
-            if (sub) sub.innerHTML = `<b>${credor}</b> · pagamento à vista, aguardando pagamento`;
-            dl.innerHTML = `<li><dt>Vencimento · <span id="activeAgreementDue">${ac.vencimentoFormatado || "--/--/----"}</span></dt>` +
-                           `<dd id="activeAgreementValue">${ac.valorFormatado || "R$ 0,00"}</dd></li>`;
-        }
-
-        const btn = $("btnAgreementHumano");
-        if (btn) {
-            const span = btn.querySelector("[data-txt]");
-            if (span) span.textContent = parcelas.length > 1 ? "Reenviar boleto da próxima parcela" : "Reenviar boleto do acordo";
-        }
-        lastHumanChat = data?.chatUrl || lastHumanChat;
-        setActiveView("vActiveAgreement");
+        const pres = getCredorPresentation(ac.credor || "", ac.unidade || "");
+        abrirAcordo({
+            credorNome: ac.credorNome || pres.nome,
+            numeroContrato: ac.numeroContrato || "-",
+            valorTotal: parseMoneyLike(ac.valorFormatado || ac.valor || 0),
+            valorTotalFormatado: ac.valorFormatado || formatBRL(parseMoneyLike(ac.valor || 0)),
+            chatUrl: data?.chatUrl || ac.chatUrl || "",
+            parcelas: Array.isArray(ac.parcelas) ? ac.parcelas : [],
+            detalhes: Array.isArray(ac.parcelas) && ac.parcelas.length ? ac.parcelas : [{
+                vencimentoFormatado: ac.vencimentoFormatado || "--/--/----",
+                valorFormatado: ac.valorFormatado || "R$ 0,00",
+                valor: parseMoneyLike(ac.valor || 0)
+            }],
+            valorOriginal: 0, diasAtraso: 0
+        });
     }
 
     /* ===================== valores ======================================== */
@@ -3005,13 +3064,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     vencimento: row?.vencimento || "",
                     vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
                     valor: valorDetalhe,
-                    valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe)
+                    valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
+                    /* status de pagamento: o acordo vigente precisa saber quais
+                       parcelas já foram pagas para calcular o saldo restante. */
+                    pago: row?.pago === true || /pag/i.test(String(row?.status || "")),
+                    status: row?.status || ""
                 };
             });
             const valorTotal = parseMoneyLike(c?.valorTotalFormatado || c?.valorTotal || 0);
             const propostaQuitacao = parseMoneyLike(c?.propostaQuitacaoFormatada || c?.propostaQuitacao || 0);
+            /* Se o backend só repete o nome cru do credor ("AMIL OPERADORAS"),
+               usa o nome de apresentação ("Amil"). O cliente não deve ver a
+               nomenclatura interna do CRM.                                    */
+            const nomeCru = norm(c?.credorNome || "");
+            const nomeBom = (!nomeCru || nomeCru === norm(c?.credor || ""))
+                ? pres.nome : c.credorNome;
             return {
-                tipo, credor: c?.credor || "", credorNome: c?.credorNome || pres.nome,
+                tipo, credor: c?.credor || "", credorNome: nomeBom,
                 logo: c?.logo || pres.logo, chatUrl: c?.chatUrl || pres.chat,
                 numeroContrato: c?.numeroContrato || "-", idContrato: c?.idContrato || "",
                 unidade: c?.unidade || "",
@@ -3172,9 +3241,14 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.type = "button"; btn.className = "btn btn-1";
             let irPara = null;
 
-            if (isPremium) {
+            /* Regra: nenhum cartão abre link externo direto. Todo cartão leva
+               a uma tela do portal, onde ficam o detalhamento e os canais.    */
+            if (isAgreement) {
+                btn.textContent = "Ver meu acordo";
+                irPara = () => abrirAcordo(card);
+            } else if (isPremium) {
                 btn.textContent = "Ver meu atendimento";
-                irPara = () => { abrirEspecialista(card); };
+                irPara = () => abrirAtendimento(card, "especialista");
             } else if (actions.canNegotiate) {
                 btn.textContent = "Negociar agora";
                 irPara = () => openNegotiation(card);
@@ -3184,12 +3258,9 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (actions.canSecondCopy) {
                 btn.textContent = "Emitir boleto";
                 irPara = () => openSecondCopyNegotiation(card);
-            } else if (isAgreement) {
-                btn.textContent = "Reenviar boleto";
-                irPara = () => openChat(actions.chatUrl);
             } else {
-                btn.textContent = "Falar com o atendimento";
-                irPara = () => openChat(actions.chatUrl);
+                btn.textContent = "Ver meu atendimento";
+                irPara = () => abrirAtendimento(card, "equipe");
             }
             btn.addEventListener("click", () => { if (!modoPreview) irPara(); });
             seta.addEventListener("click", () => { if (!modoPreview) irPara(); });
@@ -3199,58 +3270,108 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* Cartão de valor alto: reaproveita a tela de negociação sem as opções de
-       pagamento, mostrando o detalhamento e os canais.                       */
-    function abrirEspecialista(card) {
+    /* ===================== atendimento (tela própria) ===================== */
+    /* Duas variantes na mesma tela: valor alto (especialista já acionado) e
+       carteira tratada pela equipe. Nenhuma das duas tem barra de ação — é
+       tela de informação e canais, não de decisão de pagamento.               */
+    function abrirAtendimento(card, variante) {
         selectedCard = card;
         lastHumanChat = card?.chatUrl || CHAT_LINK_AMIL_DEFAULT;
-        const t = $("negotiateTitle");
-        const s = $("negotiateSub");
-        if (t) t.textContent = "Um especialista já foi acionado";
-        if (s) s.innerHTML = "Você vai receber um contato para a elaboração da melhor condição para o seu caso.";
-        $("negotiationPaymentBlock")?.classList.add("hidden");
-        $("installmentBlock")?.classList.add("hidden");
-        $("rotuloVencimento")?.classList.add("hidden");
-        $("paymentDateOptions")?.classList.add("hidden");
-        montarDetalhes(card);
-        const barra = $("barraAcao"); if (barra) barra.dataset.ver = "0";
-        setActiveView("vNegotiate");
-        const alvo = document.querySelector("#vNegotiate .view-canais");
-        if (!alvo) {
-            const p = document.createElement("p");
-            p.className = "rotulo view-canais-rot";
-            p.textContent = "Prefere falar agora?";
-            const box = document.createElement("div");
-            box.className = "canais view-canais";
-            box.setAttribute("data-canais", "1");
-            $("vNegotiate").appendChild(p);
-            $("vNegotiate").appendChild(box);
-            window.montarCanais();
-        }
+        const txts = (window.PORTAL_CONFIG || {}).textos || {};
+        const esp = variante === "especialista";
+        const t = $("atendimentoTitulo");
+        const sub = $("atendimentoSub");
+        if (t) t.textContent = esp
+            ? (txts["titulo.vAtendimento.especialista"] || "Um especialista já foi acionado")
+            : (txts["titulo.vAtendimento.equipe"] || "Atendimento com a nossa equipe");
+        if (sub) sub.textContent = esp
+            ? (txts["texto.vAtendimento.especialista"] || "Você vai receber um contato para a elaboração da melhor condição para o seu caso.")
+            : (txts["texto.vAtendimento.equipe"] || "A condição deste contrato é montada junto com um atendente.");
+        montarDetalhes(card, "atendimentoDetalhes");
+        setActiveView("vAtendimento");
     }
 
-    function limparEspecialista() {
-        document.querySelectorAll("#vNegotiate .view-canais, #vNegotiate .view-canais-rot").forEach(e => e.remove());
-        $("rotuloVencimento")?.classList.remove("hidden");
-        $("paymentDateOptions")?.classList.remove("hidden");
+    /* ===================== acordo vigente ================================= */
+    /* Monta a tela a partir do cartão ou do payload de acordo ativo. O botão
+       de 2ª via leva a uma tela de confirmação dentro do portal — antes ele
+       abria o chat externo, o que fugia do fluxo combinado.                   */
+    function abrirAcordo(origem) {
+        const parcelas = Array.isArray(origem.parcelas) && origem.parcelas.length
+            ? origem.parcelas
+            : (Array.isArray(origem.detalhes) ? origem.detalhes : []);
+        const credor = origem.credorNome || "-";
+        const sub = $("activeAgreementSub");
+        const dl = $("activeAgreementDados");
+        const btn = $("btnAgreementHumano");
+        const rotuloBtn = btn ? btn.querySelector("[data-txt]") : null;
+
+        const ehPaga = (p) => p.pago === true || /pag/i.test(String(p.status || ""));
+        const proxima = parcelas.find(p => !ehPaga(p)) || parcelas[0] || {};
+
+        if (parcelas.length > 1) {
+            const pagas = parcelas.filter(ehPaga).length;
+            if (sub) sub.innerHTML = "<b>" + credor + "</b> · " + pagas + " de " + parcelas.length + " parcelas pagas";
+            const restante = parcelas.filter(p => !ehPaga(p))
+                .reduce((a, p) => a + Number(p.valor || 0), 0);
+            dl.innerHTML = parcelas.map((p, i) =>
+                "<li><dt>Parcela " + (i + 1) + " · " + (p.vencimentoFormatado || p.vencimento || "-") + "</dt>" +
+                "<dd class=\"" + (ehPaga(p) ? "paga" : "") + "\">" +
+                (ehPaga(p) ? "Paga" : (p.valorFormatado || formatBRL(p.valor || 0))) + "</dd></li>").join("") +
+                (restante > 0 ? "<li class=\"total\"><dt>Saldo restante</dt><dd>" + formatBRL(restante) + "</dd></li>" : "");
+            if (rotuloBtn) rotuloBtn.textContent = "Reenviar boleto da próxima parcela";
+        } else {
+            if (sub) sub.innerHTML = "<b>" + credor + "</b> · pagamento à vista, aguardando pagamento";
+            dl.innerHTML = "<li><dt>Vencimento · " + (proxima.vencimentoFormatado || proxima.vencimento || "--/--/----") +
+                "</dt><dd>" + (proxima.valorFormatado || formatBRL(proxima.valor || origem.valorTotal || 0)) + "</dd></li>";
+            if (rotuloBtn) rotuloBtn.textContent = "Reenviar boleto do acordo";
+        }
+
+        /* alimenta a tela de confirmação do reenvio */
+        const rSub = $("reenviadoSub");
+        if (rSub) rSub.textContent = "Boleto da " + credor + ", sem alteração de valor ou de vencimento.";
+        const rVenc = $("reenviadoVenc");
+        if (rVenc) {
+            rVenc.innerHTML = "Vencimento em <b>" + (proxima.vencimentoFormatado || proxima.vencimento || "--/--/----") +
+                "</b> — <b>" + (proxima.valorFormatado || formatBRL(proxima.valor || origem.valorTotal || 0)) + "</b>";
+        }
+
+        montarDetalhes(origem, "acordoDetalhes", "acordo");
+        lastHumanChat = origem.chatUrl || lastHumanChat;
+        setActiveView("vActiveAgreement");
     }
 
     /* ===================== detalhes da dívida ============================= */
     /* Mesmo bloco, mesma ordem, em todas as telas que o mostram.             */
-    function montarDetalhes(card) {
-        const dl = $("negotiationDetalhes"); if (!dl) return;
+    function montarDetalhes(card, alvoId, modo) {
+        const dl = $(alvoId || "negotiationDetalhes"); if (!dl) return;
+        const ehAcordo = modo === "acordo";
         const linhas = [];
         linhas.push(`<li><dt>Empresa</dt><dd>${card.credorNome || "-"}</dd></li>`);
-        linhas.push(`<li><dt>Contrato</dt><dd>${card.numeroContrato || "-"}</dd></li>`);
+        linhas.push(`<li><dt>${ehAcordo ? "Acordo" : "Contrato"}</dt><dd>${card.numeroContrato || "-"}</dd></li>`);
+
         (card.detalhes || []).forEach((d, i) => {
+            if (ehAcordo) {
+                /* No acordo as linhas são parcelas, não notas em atraso. */
+                const situacao = d.pago ? "paga" : ("vence " + (d.vencimentoFormatado || "-"));
+                linhas.push(`<li><dt>Parcela ${i + 1}</dt><dd class="livre">${situacao} · ${d.valorFormatado || "-"}</dd></li>`);
+                return;
+            }
             const rot = d.numero ? `Nota ${d.numero}` : `Nota ${i + 1}`;
             linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${d.valorFormatado || "-"}</dd></li>`);
         });
-        const somaNotas = (card.detalhes || []).reduce((a, d) => a + Number(d.valor || 0), 0);
-        const original = card.valorOriginal > 0 ? card.valorOriginal : somaNotas;
-        if (original > 0) linhas.push(`<li class="total"><dt>Valor original</dt><dd>${formatBRL(original)}</dd></li>`);
-        linhas.push(`<li class="total"><dt>Valor atualizado</dt><dd>${card.valorTotalFormatado}</dd></li>`);
-        if (card.diasAtraso > 0) linhas.push(`<li><dt>Dias em atraso</dt><dd>${card.diasAtraso}</dd></li>`);
+
+        const soma = (card.detalhes || []).reduce((a, d) => a + Number(d.valor || 0), 0);
+        if (ehAcordo) {
+            const total = Number(card.valorTotal || 0) || soma;
+            if (total > 0) linhas.push(`<li class="total"><dt>Valor negociado</dt><dd>${formatBRL(total)}</dd></li>`);
+            const pago = (card.detalhes || []).filter(d => d.pago).reduce((a, d) => a + Number(d.valor || 0), 0);
+            if (pago > 0) linhas.push(`<li class="total"><dt>Já pago</dt><dd>${formatBRL(pago)}</dd></li>`);
+        } else {
+            const original = card.valorOriginal > 0 ? card.valorOriginal : soma;
+            if (original > 0) linhas.push(`<li class="total"><dt>Valor original</dt><dd>${formatBRL(original)}</dd></li>`);
+            linhas.push(`<li class="total"><dt>Valor atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(card.valorTotal || 0)}</dd></li>`);
+            if (card.diasAtraso > 0) linhas.push(`<li><dt>Dias em atraso</dt><dd>${card.diasAtraso}</dd></li>`);
+        }
         dl.innerHTML = linhas.join("");
     }
 
@@ -3398,7 +3519,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function openNegotiation(card, modoOperacao = "negociacao") {
-        limparEspecialista();
         selectedCard = {
             ...card,
             tipoPagamentoOperacao: modoOperacao === "segunda_via" ? "segunda_via" : (card?.tipoPagamentoOperacao || "negociacao")
@@ -3642,7 +3762,8 @@ document.addEventListener("DOMContentLoaded", () => {
     on("btnNovaConsultaSegundaVia", "click", goStart);
     on("btnNovaConsultaIra", "click", goStart);
     on("btnIdentityTryAgain", "click", () => setActiveView("vConfirmName"));
-    on("btnAgreementHumano", "click", () => openChat(lastHumanChat));
+    on("btnAgreementHumano", "click", () => setActiveView("vReenviado"));
+    on("btnVoltarAcordo", "click", () => setActiveView("vActiveAgreement"));
 
     /* ===================== fluxo com o backend ============================ */
     on("btnConsultar", "click", async () => {
