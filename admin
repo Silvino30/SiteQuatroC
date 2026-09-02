@@ -476,44 +476,48 @@ svg{display:block;flex:0 0 auto}
 .hidden{display:none !important}
 
 /* ------------------------------- moldura ---------------------------------- */
-.portal{max-width:548px;margin:0 auto;padding:0 0 152px}
+.portal{max-width:548px;margin:0 auto;padding:0 0 24px}
+/* A faixa reservada no rodape existe so quando a barra de acao esta na tela.
+   Sem isso, toda tela terminava com um vao morto de ~100px. */
+body[data-barra="1"] .portal{padding-bottom:132px}
 .cabeca{position:sticky;top:0;z-index:20;background:var(--papel);border-bottom:1px solid var(--linha)}
-.cabeca-topo{display:flex;align-items:center;gap:12px;height:60px;padding:0 20px}
+.cabeca-topo{display:flex;align-items:center;gap:12px;height:52px;padding:0 18px}
 .cabeca-logo{height:24px;width:auto;max-width:130px;object-fit:contain;object-position:left center}
 .cabeca-nome{font-size:15.5px;font-weight:700;letter-spacing:-.022em}
 .cabeca-seguro{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--tinta-3);white-space:nowrap}
 .progresso{height:3px;background:var(--linha);overflow:hidden}
 .progresso i{display:block;height:100%;width:15%;background:var(--marca);transition:width .45s cubic-bezier(.4,0,.2,1)}
 
-.corpo{padding:24px 20px 30px;background:var(--papel);min-height:62vh}
+.corpo{padding:20px 18px 24px;background:var(--papel);min-height:62vh}
 /* Dentro de um iframe a altura do quadro é definida pelo conteúdo. Qualquer
    medida em vh viraria uma conta circular (o conteúdo cresce, o quadro cresce,
    o conteúdo cresce de novo), então elas são desligadas no modo embutido. */
 html.embutido body{background:var(--papel)}
 html.embutido .corpo{min-height:0}
-html.embutido .portal{padding-bottom:96px}
+html.embutido .portal{padding-bottom:6px}
+html.embutido body[data-barra="1"] .portal{padding-bottom:98px}
 .view{display:none}
 .view.active{display:block;animation:entra .24s ease}
 @keyframes entra{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-.voltar{display:inline-flex;align-items:center;gap:5px;margin:0 0 18px;padding:0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca)}
+.voltar{display:inline-flex;align-items:center;gap:5px;margin:0 0 14px;padding:0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca)}
 .voltar:hover{opacity:.7}
 
-h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;font-weight:700}
-.sub{margin:0 0 26px;font-size:14.5px;color:var(--tinta-2);max-width:40em}
+h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;font-weight:700}
+.sub{margin:0 0 18px;font-size:14px;color:var(--tinta-2);max-width:40em}
 .sub b{color:var(--tinta);font-weight:600}
 .mini{font-size:12.5px;color:var(--tinta-3);margin:0}
-.rotulo{margin:24px 0 10px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
-.nota-centro{margin:18px 0 0;text-align:center;font-size:12.5px;color:var(--tinta-3)}
-.secao{margin:28px 0 12px;font-size:12.5px;font-weight:700;color:var(--tinta);padding-top:20px;border-top:1px solid var(--linha)}
+.rotulo{margin:18px 0 8px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.nota-centro{margin:14px 0 0;text-align:center;font-size:12.5px;color:var(--tinta-3)}
+.secao{margin:22px 0 10px;font-size:12.5px;font-weight:700;color:var(--tinta);padding-top:16px;border-top:1px solid var(--linha)}
 
 /* --------------------------------- campos --------------------------------- */
-.campo{margin-bottom:15px}
-.campo > label{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.campo{margin-bottom:12px}
+.campo > label{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
 .caixa{position:relative;display:flex;align-items:center}
 .caixa > svg{position:absolute;left:13px;color:var(--tinta-3);pointer-events:none}
 .campo input,.campo select{
-  width:100%;padding:13px 14px;border:1px solid var(--linha-2);border-radius:var(--r);
+  width:100%;padding:11px 13px;border:1px solid var(--linha-2);border-radius:var(--r);
   font:inherit;font-size:16px;font-weight:500;color:var(--tinta);background:var(--papel);
   transition:border-color .14s, box-shadow .14s;appearance:none;
 }
@@ -526,7 +530,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .campo input:focus,.campo select:focus{outline:none;border-color:var(--marca);box-shadow:0 0 0 3px rgba(var(--marca-rgb),.10)}
 .caixa:focus-within > svg{color:var(--marca)}
 .campo.invalido input{border-color:var(--falha)}
-.campo-duplo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.campo-duplo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:460px){.campo-duplo{grid-template-columns:1fr}}
 .erro{margin:6px 0 0;font-size:12.5px;font-weight:500;color:var(--falha)}
 .tipo-doc{margin-left:auto;font-size:11px;font-weight:700;color:var(--tinta-3);letter-spacing:.06em;transition:opacity .16s}
@@ -534,24 +538,24 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* --------------------------------- botões --------------------------------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r);transition:.14s;letter-spacing:-.008em}
-.btn-1{width:100%;min-height:48px;padding:0 22px;font-size:14.5px;font-weight:600;color:#fff;background:var(--marca)}
+.btn-1{width:100%;min-height:46px;padding:0 22px;font-size:14.5px;font-weight:600;color:#fff;background:var(--marca)}
 .btn-1:hover{background:var(--marca-escura)}
 .btn-1:disabled{background:#E4E4EA;color:#A5A5B2;cursor:not-allowed}
 .btn-2{width:auto;min-height:38px;padding:0 16px;font-size:13px;font-weight:600;background:var(--papel);border:1px solid var(--linha-2);color:var(--tinta-2)}
 .btn-2:hover{border-color:var(--tinta-3);color:var(--tinta)}
-.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .acoes-centro{justify-content:center}
 .acoes > .btn-1{flex:1 1 100%}
 .btn-txt{width:auto;min-height:auto;padding:2px 0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca);text-decoration:none}
 .btn-txt:hover{color:var(--marca-escura)}
 .btn-txt:disabled{color:var(--tinta-3);cursor:not-allowed}
-.reenvio{margin-top:16px;text-align:center}
+.reenvio{margin-top:12px;text-align:center}
 
 /* ------------------------- cartão de pendência ---------------------------- */
-.pend{padding:20px 0;border-top:1px solid var(--linha)}
+.pend{padding:16px 0;border-top:1px solid var(--linha)}
 .pend:first-child{border-top:0;padding-top:2px}
-.pend-topo{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
-.logo-credor{height:22px;max-width:150px;width:auto;object-fit:contain;object-position:left center;display:block;margin-bottom:9px}
+.pend-topo{display:flex;align-items:flex-start;gap:14px;margin-bottom:11px}
+.logo-credor{height:22px;max-width:150px;width:auto;object-fit:contain;object-position:left center;display:block;margin-bottom:7px}
 .pend-id{min-width:0;flex:1}
 .pend-credor{font-size:15.5px;font-weight:600;letter-spacing:-.018em}
 .pend-abrir{background:none;border:0;padding:2px;margin-left:auto;color:var(--tinta-3);flex:0 0 auto}
@@ -559,18 +563,18 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .de{font-size:13px;color:var(--tinta-3);margin:0 0 1px}
 .de s{text-decoration-thickness:1px}
 .por{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
-.por b{font-size:29px;font-weight:700;letter-spacing:-.04em;line-height:1.1}
+.por b{font-size:26px;font-weight:700;letter-spacing:-.04em;line-height:1.1}
 .por em{font-style:normal;font-size:13px;color:var(--tinta-3);font-weight:500}
 .linha-eco{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .eco{font-size:13.5px;font-weight:600;color:var(--ok)}
 .pct{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:var(--r-p);background:var(--ok-fraco);color:var(--ok);font-size:12px;font-weight:600}
 .destaque-esp{font-size:13.5px;font-weight:600;color:var(--marca)}
-.pend .btn-1{margin-top:16px}
-.pend .btn-2{margin-top:16px;width:100%;min-height:44px;font-size:14px}
+.pend .btn-1{margin-top:13px}
+.pend .btn-2{margin-top:13px;width:100%;min-height:42px;font-size:14px}
 
 /* ----------------------------- linhas de dados ---------------------------- */
 .dados{margin:0;padding:0;list-style:none;border-top:1px solid var(--linha)}
-.dados li{display:flex;gap:16px;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--linha);font-size:14px}
+.dados li{display:flex;gap:16px;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--linha);font-size:14px}
 .dados dt{color:var(--tinta-3);font-size:13.5px;flex:0 0 auto}
 .dados dd{margin:0;font-weight:600;text-align:right;min-width:0}
 .dados dd.livre{font-weight:500}
@@ -579,7 +583,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* fatos */
 .fatos{list-style:none;margin:0;padding:0}
-.fatos li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--linha);font-size:14.5px;color:var(--tinta-2)}
+.fatos li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--linha);font-size:14.5px;color:var(--tinta-2)}
 .fatos li:first-child{border-top:1px solid var(--linha)}
 .fatos b{color:var(--tinta);font-weight:600}
 .fatos-ico{color:var(--tinta-3);margin-top:2px}
@@ -587,7 +591,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* ------------------------------- opções ----------------------------------- */
 .opcoes{margin:0;border-top:1px solid var(--linha)}
-.opcao{width:100%;display:flex;align-items:center;gap:14px;padding:15px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left;transition:.14s}
+.opcao{width:100%;display:flex;align-items:center;gap:14px;padding:13px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left;transition:.14s}
 .opcao:hover .opcao-nome{color:var(--marca)}
 .opcao[aria-pressed="true"]{background:rgba(var(--marca-rgb),.035);box-shadow:inset 3px 0 0 var(--marca);padding-left:13px}
 .opcao[aria-pressed="true"] .opcao-nome{color:var(--marca)}
@@ -599,14 +603,14 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .opcao-dir{margin-left:auto;text-align:right;flex:0 0 auto}
 .opcao-valor{display:block;font-size:15px;font-weight:600}
 .opcao-eco{display:block;font-size:12px;color:var(--ok);font-weight:600;margin-top:1px}
-.opcao.simples{padding:16px 2px}
+.opcao.simples{padding:14px 2px}
 .opcao.simples[aria-pressed="true"]{padding-left:13px}
 
 /* grade quadrada: parcelas e datas */
-.grade{display:grid;gap:8px}
+.grade{display:grid;gap:7px}
 .grade.parcelas{grid-template-columns:repeat(auto-fit,minmax(74px,1fr))}
 .grade.datas{grid-template-columns:repeat(auto-fit,minmax(78px,1fr))}
-.opt{padding:11px 6px;border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);text-align:center;transition:.14s}
+.opt{padding:10px 6px;border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);text-align:center;transition:.14s}
 .opt:hover{border-color:var(--tinta-3)}
 .opt[aria-pressed="true"]{border-color:var(--marca);background:rgba(var(--marca-rgb),.05);box-shadow:inset 0 0 0 1px var(--marca)}
 .opt small{display:block;font-size:10.5px;color:var(--tinta-3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
@@ -616,8 +620,8 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .opt[aria-pressed="true"] small,.opt[aria-pressed="true"] i{color:var(--marca-escura)}
 
 /* --------------------------------- sanfona -------------------------------- */
-.sanfona{border-top:1px solid var(--linha);margin-top:24px}
-.sanfona-cabeca{width:100%;display:flex;align-items:center;gap:12px;padding:16px 2px;background:none;border:0;text-align:left;font-size:14.5px;font-weight:600}
+.sanfona{border-top:1px solid var(--linha);margin-top:18px}
+.sanfona-cabeca{width:100%;display:flex;align-items:center;gap:12px;padding:14px 2px;background:none;border:0;text-align:left;font-size:14.5px;font-weight:600}
 .sanfona-cabeca svg{margin-left:auto;color:var(--tinta-3);transition:transform .22s}
 .sanfona[data-aberta="1"] .sanfona-cabeca svg{transform:rotate(180deg)}
 .sanfona-corpo{display:none;padding:0 2px 8px}
@@ -625,13 +629,13 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* ------------------------- canais de atendimento -------------------------- */
 .canais{border-top:1px solid var(--linha)}
-.canal{width:100%;display:flex;align-items:center;gap:14px;padding:15px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left}
+.canal{width:100%;display:flex;align-items:center;gap:14px;padding:13px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left}
 .canal:hover .canal-nome{color:var(--marca)}
 .canal-ico{width:36px;height:36px;flex:0 0 36px;border-radius:var(--r);display:grid;place-items:center;background:#F3F3F7;color:var(--tinta-2)}
 .canal-nome{display:block;font-size:14.5px;font-weight:600;transition:.14s}
 .canal-sub{display:block;font-size:12.5px;color:var(--tinta-3);margin-top:1px}
 .canal svg.seta{margin-left:auto;color:var(--tinta-3)}
-.canais.discretos .canal{padding:11px 2px}
+.canais.discretos .canal{padding:10px 2px}
 .canais.discretos .canal-ico{width:28px;height:28px;flex:0 0 28px;border-radius:var(--r-p)}
 .canais.discretos .canal-nome{font-size:13.5px}
 .canais.discretos .canal-sub{font-size:12px}
@@ -640,14 +644,14 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 /* --------------------------- código de segurança -------------------------- */
 .codigo-caixa{display:flex;gap:8px;margin:4px 0 0}
 .codigo-caixa input{
-  width:48px;height:56px;text-align:center;font-size:22px;font-weight:600;
+  width:46px;height:52px;text-align:center;font-size:21px;font-weight:600;
   border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);
   color:var(--tinta);font-family:var(--fonte);padding:0;
 }
 .codigo-caixa input:focus{outline:none;border-color:var(--marca);box-shadow:0 0 0 3px rgba(var(--marca-rgb),.10)}
 .codigo-caixa.erro-cod input{border-color:var(--falha)}
 @media (max-width:400px){.codigo-caixa input{width:42px;height:50px;font-size:19px}}
-.enviado-para{margin:0 0 20px;font-size:14px;color:var(--tinta-2)}
+.enviado-para{margin:0 0 16px;font-size:14px;color:var(--tinta-2)}
 .enviado-para b{color:var(--tinta);font-weight:600}
 
 /* ------------------------- barra de ação fixa ----------------------------- */
@@ -657,7 +661,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
   transform:translateY(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);
 }
 .barra[data-ver="1"]{transform:none}
-.barra-in{max-width:548px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.barra-in{max-width:548px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:16px}
 .barra-val{min-width:0;flex:1}
 .barra-rot{font-size:11.5px;color:var(--tinta-3);font-weight:500}
 .barra-num{font-size:20px;font-weight:700;letter-spacing:-.032em;line-height:1.2}
@@ -665,12 +669,12 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .barra .btn-1{width:auto;min-width:148px;flex:0 0 auto;min-height:44px}
 @media (max-width:400px){.barra .btn-1{min-width:116px;padding:0 14px;font-size:13.5px}}
 
-.rodape{padding:20px;text-align:center;font-size:11.5px;color:var(--tinta-3);line-height:1.6}
+.rodape{padding:14px 20px 10px;text-align:center;font-size:11.5px;color:var(--tinta-3);line-height:1.6}
 .rodape span{display:block}
 .rodape span + span{margin-top:3px;color:#A0A0AE}
 
 /* ------------------------------- carregando ------------------------------- */
-.carregando{padding:60px 0;text-align:center}
+.carregando{padding:44px 0;text-align:center}
 .giro{
   width:34px;height:34px;margin:0 auto 18px;border-radius:50%;
   border:2.5px solid var(--linha);border-top-color:var(--marca);
@@ -1342,7 +1346,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btnVoltar) btnVoltar.style.visibility = (viewId === "vStart" || viewId === "vLoading") ? "hidden" : "visible";
 
         const barra = $("barraAcao");
-        if (barra) barra.dataset.ver = (target && target.dataset.barra === "1") ? "1" : "0";
+        const comBarra = (target && target.dataset.barra === "1") ? "1" : "0";
+        if (barra) barra.dataset.ver = comBarra;
+        /* o rodape so reserva espaco para a barra quando ela aparece */
+        document.body.dataset.barra = comBarra;
 
         currentView = viewId;
         setProgress(viewId);
@@ -2694,7 +2701,7 @@ document.addEventListener("DOMContentLoaded", () => {
             h = r.height;
         }
         if (rodape) h = Math.max(h, rodape.getBoundingClientRect().bottom);
-        h = Math.ceil(h) + 8;
+        h = Math.ceil(h) + 2;
         if (!h || Math.abs(h - ultimaAltura) < 4) return;
         ultimaAltura = h;
         window.parent.postMessage({ tipo: "portal-altura", altura: h }, "*");
@@ -2747,7 +2754,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <button class="btn btn-1" id="btnEntrar" type="button">Entrar</button>
     </div>
-    </p>
+
     <p class="porta-rodape">Quatro C · Desenvolvimento e Inovação</p>
   </div>
 </div>
