@@ -1675,6 +1675,353 @@ img, svg, video, canvas { max-width: 100%; }
   .portal-frame-app{ border-radius: 18px; }
 }
 </style>
+
+<style id="melhorias-v6">
+/* ===========================================================================
+   MELHORIAS — v6
+   Mesma estrutura, mesmas cores, mesmos destaques. O que muda é o acabamento:
+   alinhamento na grade, vidro nos blocos vermelhos, relevo nos cartões,
+   entrada suave no rolar e o quadro do portal com moldura de aparelho.
+   =========================================================================== */
+
+/* --------------------------------------------------- 1. fundo com mais vida */
+body{
+  background:
+    radial-gradient(900px 520px at 6% -6%, rgba(206,46,60,.10), transparent 62%),
+    radial-gradient(760px 460px at 104% 12%, rgba(235,155,60,.075), transparent 60%),
+    radial-gradient(900px 620px at 50% 108%, rgba(44,138,97,.055), transparent 62%),
+    linear-gradient(180deg,#FFFFFF 0%,#FDFCFD 38%,#F7F6F8 100%);
+  background-attachment:fixed;
+}
+
+/* ------------------------------------------- 2. cabeçalho: vidro de verdade */
+/* O cabeçalho é branco opaco. Translúcido, o fundo rosado da página passava
+   por trás e o retângulo branco do arquivo do logo aparecia por cima dele. */
+.header{
+  background:#FFFFFF;
+  backdrop-filter:saturate(180%) blur(18px);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid rgba(232,232,236,.85);
+  transition:box-shadow .25s ease, border-color .25s ease;
+}
+.header[data-rolou="1"]{
+  border-bottom-color:rgba(232,232,236,.95);
+  box-shadow:0 8px 26px rgba(36,36,40,.07);
+}
+/* sem fio nem borda no item do menu: só a cor muda */
+.nav-link::after{content:none !important;display:none !important}
+.nav-link:focus{outline:none}
+.header-badge{
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 8px 22px rgba(36,36,40,.05);
+}
+
+/* ------------------------------------- 3. alinhamento do topo com a grade */
+/* A coluna da direita começava 4px abaixo e terminava 8px antes da borda
+   da página. Agora as duas colunas nascem e morrem na mesma linha. */
+.hero-visual{padding:0 !important}
+.hero-panel{max-width:none !important;margin-inline:0 !important}
+.hero h1{text-wrap:balance}
+.hero-panel h2{text-wrap:balance}
+
+/* etiqueta do topo com um leve degradê, ainda discreta */
+.eyebrow{
+  background:linear-gradient(135deg,rgba(206,46,60,.11),rgba(206,46,60,.05));
+  border:1px solid rgba(206,46,60,.14);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset;
+}
+
+/* -------------------------------------------------- 4. botões com resposta */
+.btn{position:relative;overflow:hidden}
+.btn-primary{box-shadow:0 12px 26px rgba(206,46,60,.26),0 1px 0 rgba(255,255,255,.22) inset}
+.btn-primary:hover{box-shadow:0 18px 38px rgba(206,46,60,.34),0 1px 0 rgba(255,255,255,.24) inset}
+.btn-primary::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);
+  transform:translateX(-120%);transition:transform .55s ease;
+}
+.btn-primary:hover::after{transform:translateX(120%)}
+.btn-secondary:hover{border-color:rgba(206,46,60,.28);color:var(--red);background:#FFF9FA}
+.btn:active{transform:translateY(0)}
+.btn:focus-visible,.nav-link:focus-visible,.support-link:focus-visible{
+  outline:2px solid rgba(206,46,60,.45);outline-offset:2px;
+}
+
+/* -------------------------------------- 5. cartões com relevo e fio vermelho */
+.point-card,.step-card{
+  position:relative;overflow:hidden;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border-color:rgba(226,226,232,.95);
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.point-card::before,.step-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--red),rgba(206,46,60,.15));
+  transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.4,0,.2,1);
+}
+.point-card:hover,.step-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(206,46,60,.20);
+  box-shadow:0 20px 40px rgba(36,36,40,.09);
+}
+.point-card:hover::before,.step-card:hover::before{transform:scaleX(1)}
+.point-card p{font-size:13.5px;line-height:1.52}
+.step-no{
+  border-radius:13px;
+  background:linear-gradient(140deg,rgba(206,46,60,.14),rgba(206,46,60,.06));
+  border:1px solid rgba(206,46,60,.13);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+}
+
+/* ------------------------------------ 6. painel vermelho com mais dimensão */
+.hero-panel{
+  background:
+    radial-gradient(560px 300px at 88% -6%, rgba(255,255,255,.20), transparent 60%),
+    linear-gradient(140deg,#D93645 0%,#C22B39 42%,#9C1F2B 100%);
+  box-shadow:0 22px 52px rgba(163,34,46,.20),0 1px 0 rgba(255,255,255,.16) inset;
+}
+.hero-panel::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  border-radius:inherit;border:1px solid rgba(255,255,255,.10);
+}
+.hero-panel-badge{
+  background:rgba(255,255,255,.16);
+  border-color:rgba(255,255,255,.20);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.journey-item{
+  background:rgba(255,255,255,.11);
+  border-color:rgba(255,255,255,.14);
+  transition:background .2s ease, transform .2s ease, border-color .2s ease;
+}
+.journey-item:hover{
+  background:rgba(255,255,255,.17);
+  border-color:rgba(255,255,255,.24);
+  transform:translateX(2px);
+}
+.journey-icon{
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 1px 0 rgba(255,255,255,.18) inset;
+}
+.meta-chip{
+  background:rgba(255,255,255,.13);
+  border-color:rgba(255,255,255,.18);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+
+/* ------------------------------------------- 7. o quadro do portal, ajustado */
+/* A moldura branca começava 30px dentro da grade e o cinza se espalhava por
+   toda a largura, deixando um vão grande dos dois lados do portal. */
+.portal-shell{
+  max-width:none !important;
+  border-color:rgba(226,226,232,.95);
+  box-shadow:0 26px 60px rgba(36,36,40,.10);
+}
+.portal-bar{
+  padding:12px 20px;
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(252,252,253,.9));
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.bar-chip{
+  background:linear-gradient(135deg,#FFF8F9,#FFFDFD);
+  border-color:rgba(206,46,60,.13);
+  box-shadow:0 1px 0 rgba(255,255,255,.8) inset;
+}
+.portal-toolbar{min-height:0;padding:14px 20px}
+.portal-icon{
+  background:linear-gradient(140deg,rgba(206,46,60,.13),rgba(206,46,60,.05));
+  border:1px solid rgba(206,46,60,.13);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset;
+}
+.portal-stage{
+  padding:20px 16px !important;
+  background:
+    radial-gradient(620px 300px at 50% 0%, rgba(206,46,60,.045), transparent 62%),
+    linear-gradient(180deg,#F7F7F9 0%,#F2F2F5 100%);
+  /* bandeja rebaixada: o cinza deixa de parecer espaço vazio */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85), inset 0 10px 26px rgba(36,36,40,.045);
+}
+/* o cinza passa a abraçar o quadro, em vez de ocupar a largura toda */
+.embedded-autoapp{max-width:660px !important;margin-inline:auto}
+.portal-frame-app{
+  max-width:620px;margin-inline:auto;
+  border:1px solid rgba(214,214,222,.9);
+  border-radius:20px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 2px 6px rgba(36,36,40,.05),
+    0 24px 54px rgba(36,36,40,.13);
+}
+
+/* ---------------------------------------------- 8. canais com mais resposta */
+.support-card{
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border-color:rgba(226,226,232,.95);
+}
+.support-icon{
+  background:linear-gradient(140deg,rgba(206,46,60,.12),rgba(206,46,60,.05));
+  border-color:rgba(206,46,60,.14);
+}
+.support-link{
+  background:linear-gradient(135deg,#FFF7F8,#FFFDFD);
+  box-shadow:0 1px 0 rgba(255,255,255,.85) inset;
+}
+.support-link:hover{
+  background:linear-gradient(135deg,#FFEFF2,#FFF8F9);
+  border-color:rgba(206,46,60,.30);
+  box-shadow:0 10px 22px rgba(206,46,60,.14);
+}
+
+/* ===========================================================================
+   ESCALA — v7
+   A página estava ocupando a tela toda. Aqui ela volta à proporção enxuta da
+   versão original: caixa mais estreita, tipografia menor, blocos mais baixos.
+   Nada de conteúdo muda — só o tamanho.
+   =========================================================================== */
+.container{width:min(calc(100% - 56px),1120px) !important}
+
+/* --- cabeçalho e logo ------------------------------------------------------ */
+.header-inner{min-height:72px}
+.brand{margin-left:0}
+.brand-logo-wrap,
+.brand-logo{width:82px;height:54px}
+.brand-logo-wrap{
+  padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;
+}
+/* O arquivo do logo é um JPG com fundo branco; sem isto o retângulo dele
+   aparecia contra o cabeçalho. "multiply" apaga o branco da imagem.          */
+.brand-logo{mix-blend-mode:multiply}
+.nav-link{padding:8px 12px;font-size:11.5px}
+.header-badge{padding:9px 13px;font-size:11px}
+.header-badge svg{width:14px;height:14px}
+
+/* --- topo ------------------------------------------------------------------ */
+.hero{padding:32px 0 20px}
+.hero-grid{grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:clamp(30px,3vw,44px)}
+.hero-grid > div:first-child{max-width:600px}
+.eyebrow{padding:7px 12px;font-size:10px;letter-spacing:.1em}
+.hero h1{
+  margin-top:14px;max-width:600px;
+  font-size:clamp(29px,2.5vw,38px);line-height:1.1;letter-spacing:-.04em;
+}
+.hero p{margin-top:15px;max-width:580px;font-size:15.5px;line-height:1.6}
+.hero-actions{margin-top:20px;gap:12px}
+.btn{min-height:46px;padding:0 20px;font-size:12px;letter-spacing:.05em;border-radius:12px}
+.hero-points{margin-top:20px;gap:10px;max-width:600px}
+.point-card{padding:13px 14px;border-radius:14px}
+.point-kicker{font-size:9.5px;letter-spacing:.09em}
+.point-card p{margin-top:7px;font-size:12.5px;line-height:1.5}
+
+/* --- painel da jornada ----------------------------------------------------- */
+.hero-panel{padding:22px;border-radius:22px}
+.hero-panel-badge{padding:7px 11px;font-size:10px;letter-spacing:.1em}
+.hero-panel h2{margin:14px 0 8px;font-size:22px;line-height:1.16}
+.hero-panel p{font-size:13.5px;line-height:1.55}
+.journey-list{margin-top:16px;gap:8px}
+.journey-item{grid-template-columns:38px 1fr;gap:11px;padding:10px;border-radius:14px}
+.journey-icon{width:38px;height:38px;border-radius:12px}
+.journey-icon svg{width:18px;height:18px}
+.journey-item strong{font-size:12.5px;margin-bottom:3px}
+.journey-item span{font-size:11.5px;line-height:1.45}
+.hero-meta{margin-top:16px;gap:8px}
+.meta-chip{padding:7px 10px;font-size:9.5px}
+
+/* --- seções ---------------------------------------------------------------- */
+.steps{padding:14px 0 6px}
+.section-head{margin-bottom:18px}
+.section-head span{margin-bottom:8px;font-size:11px}
+.section-head h3{font-size:clamp(23px,2.1vw,31px);line-height:1.1}
+.section-head p{margin-top:11px;font-size:15px;line-height:1.6}
+.steps-grid{gap:14px}
+.step-card{padding:20px 18px 18px;border-radius:18px}
+.step-no{width:36px;height:36px;border-radius:11px;font-size:12.5px}
+.step-card h4{margin:14px 0 8px;font-size:18px}
+.step-card p{font-size:13.5px;line-height:1.55}
+
+/* --- portal ---------------------------------------------------------------- */
+.portal-section{padding:18px 0 54px}
+.steps .section-head,.portal-intro{margin-bottom:20px}
+.portal-intro{padding:18px 20px 0}
+.portal-shell{border-radius:22px}
+.portal-bar{padding:10px 18px;gap:8px}
+.bar-chip{padding:8px 11px;font-size:11px}
+.bar-chip svg{width:13px;height:13px}
+.portal-toolbar{padding:12px 18px}
+.portal-title-wrap{grid-template-columns:40px auto;column-gap:12px}
+.portal-icon{width:40px;height:40px;flex-basis:40px;border-radius:12px}
+.portal-icon svg{width:18px;height:18px}
+.portal-title{font-size:14.5px}
+.portal-caption{margin-top:3px;font-size:11.5px;max-width:520px}
+.portal-stage{padding:16px 14px !important}
+.embedded-autoapp{max-width:620px !important}
+.portal-frame-app{max-width:590px;border-radius:18px}
+
+/* --- canais e rodapé ------------------------------------------------------- */
+.support-card{margin-top:16px;padding:20px;border-radius:18px}
+.support-icon{width:30px;height:30px;border-radius:10px}
+.support-icon svg{width:18px;height:18px}
+.support-card strong{font-size:14.5px}
+.support-card p{font-size:13.5px}
+.support-actions{margin-top:14px;gap:9px}
+.support-link{min-height:40px;padding:0 14px;font-size:12px;border-radius:12px}
+.footer{padding:22px 0 28px}
+.footer-inner{font-size:11.5px}
+
+/* --- 0800: botão de copiar ------------------------------------------------- */
+.support-link[data-copiar]{cursor:pointer;gap:7px}
+.support-link[data-copiar] svg{width:14px;height:14px;opacity:.75}
+.support-link[data-copiar][data-feito="1"]{
+  color:var(--green);border-color:rgba(44,138,97,.32);
+  background:linear-gradient(135deg,#F1F9F5,#FBFDFC);
+}
+.copiado-aviso{
+  position:fixed;left:50%;bottom:26px;z-index:200;transform:translate(-50%,140%);
+  padding:11px 16px;border-radius:12px;background:#26262F;color:#fff;
+  font-size:12.5px;font-weight:600;box-shadow:0 16px 34px rgba(36,36,40,.24);
+  visibility:hidden;transition:transform .26s cubic-bezier(.4,0,.2,1),visibility .26s;
+}
+.copiado-aviso[data-ver="1"]{transform:translate(-50%,0);visibility:visible}
+
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:minmax(0,1fr)}
+  .hero-grid > div:first-child{max-width:600px;margin-inline:auto}
+  .hero h1,.hero p,.hero-points{max-width:600px}
+}
+@media (max-width:760px){
+  .container{width:min(calc(100% - 28px),620px) !important}
+  .header-inner{min-height:64px}
+  .brand-logo-wrap,.brand-logo{width:72px;height:48px}
+  .hero{padding:24px 0 16px}
+  .hero h1{font-size:clamp(26px,7.2vw,32px)}
+  .hero p{font-size:14.5px}
+  .portal-stage{padding:12px 8px !important}
+  .portal-frame-app{max-width:100%;border-radius:14px}
+}
+
+/* ------------------------------------------- 9. entrada suave ao rolar */
+.revelar{opacity:0;transform:translateY(14px);transition:opacity .5s ease, transform .5s cubic-bezier(.22,.8,.28,1)}
+.revelar.visivel{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .revelar{opacity:1;transform:none;transition:none}
+  .btn-primary::after{display:none}
+  .point-card:hover,.step-card:hover,.journey-item:hover{transform:none}
+  html{scroll-behavior:auto}
+}
+
+/* --------------------------------------------------- 10. telas estreitas */
+@media (max-width:980px){
+  .hero-panel{max-width:none !important}
+}
+@media (max-width:760px){
+  .portal-stage{padding:12px 10px !important}
+  .portal-frame-app{border-radius:16px}
+  .point-card p{font-size:13.5px}
+}
+</style>
 <script>
 /* Lê o portal guardado na página e devolve o HTML original. */
 function lerFontePortal() {
@@ -1902,44 +2249,48 @@ svg{display:block;flex:0 0 auto}
 .hidden{display:none !important}
 
 /* ------------------------------- moldura ---------------------------------- */
-.portal{max-width:548px;margin:0 auto;padding:0 0 152px}
+.portal{max-width:548px;margin:0 auto;padding:0 0 24px}
+/* A faixa reservada no rodape existe so quando a barra de acao esta na tela.
+   Sem isso, toda tela terminava com um vao morto de ~100px. */
+body[data-barra="1"] .portal{padding-bottom:132px}
 .cabeca{position:sticky;top:0;z-index:20;background:var(--papel);border-bottom:1px solid var(--linha)}
-.cabeca-topo{display:flex;align-items:center;gap:12px;height:60px;padding:0 20px}
+.cabeca-topo{display:flex;align-items:center;gap:12px;height:52px;padding:0 18px}
 .cabeca-logo{height:24px;width:auto;max-width:130px;object-fit:contain;object-position:left center}
 .cabeca-nome{font-size:15.5px;font-weight:700;letter-spacing:-.022em}
 .cabeca-seguro{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--tinta-3);white-space:nowrap}
 .progresso{height:3px;background:var(--linha);overflow:hidden}
 .progresso i{display:block;height:100%;width:15%;background:var(--marca);transition:width .45s cubic-bezier(.4,0,.2,1)}
 
-.corpo{padding:24px 20px 30px;background:var(--papel);min-height:62vh}
+.corpo{padding:20px 18px 24px;background:var(--papel);min-height:62vh}
 /* Dentro de um iframe a altura do quadro é definida pelo conteúdo. Qualquer
    medida em vh viraria uma conta circular (o conteúdo cresce, o quadro cresce,
    o conteúdo cresce de novo), então elas são desligadas no modo embutido. */
 html.embutido body{background:var(--papel)}
 html.embutido .corpo{min-height:0}
-html.embutido .portal{padding-bottom:96px}
+html.embutido .portal{padding-bottom:6px}
+html.embutido body[data-barra="1"] .portal{padding-bottom:98px}
 .view{display:none}
 .view.active{display:block;animation:entra .24s ease}
 @keyframes entra{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-.voltar{display:inline-flex;align-items:center;gap:5px;margin:0 0 18px;padding:0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca)}
+.voltar{display:inline-flex;align-items:center;gap:5px;margin:0 0 14px;padding:0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca)}
 .voltar:hover{opacity:.7}
 
-h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;font-weight:700}
-.sub{margin:0 0 26px;font-size:14.5px;color:var(--tinta-2);max-width:40em}
+h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;font-weight:700}
+.sub{margin:0 0 18px;font-size:14px;color:var(--tinta-2);max-width:40em}
 .sub b{color:var(--tinta);font-weight:600}
 .mini{font-size:12.5px;color:var(--tinta-3);margin:0}
-.rotulo{margin:24px 0 10px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
-.nota-centro{margin:18px 0 0;text-align:center;font-size:12.5px;color:var(--tinta-3)}
-.secao{margin:28px 0 12px;font-size:12.5px;font-weight:700;color:var(--tinta);padding-top:20px;border-top:1px solid var(--linha)}
+.rotulo{margin:18px 0 8px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.nota-centro{margin:14px 0 0;text-align:center;font-size:12.5px;color:var(--tinta-3)}
+.secao{margin:22px 0 10px;font-size:12.5px;font-weight:700;color:var(--tinta);padding-top:16px;border-top:1px solid var(--linha)}
 
 /* --------------------------------- campos --------------------------------- */
-.campo{margin-bottom:15px}
-.campo > label{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.campo{margin-bottom:12px}
+.campo > label{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
 .caixa{position:relative;display:flex;align-items:center}
 .caixa > svg{position:absolute;left:13px;color:var(--tinta-3);pointer-events:none}
 .campo input,.campo select{
-  width:100%;padding:13px 14px;border:1px solid var(--linha-2);border-radius:var(--r);
+  width:100%;padding:11px 13px;border:1px solid var(--linha-2);border-radius:var(--r);
   font:inherit;font-size:16px;font-weight:500;color:var(--tinta);background:var(--papel);
   transition:border-color .14s, box-shadow .14s;appearance:none;
 }
@@ -1952,7 +2303,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .campo input:focus,.campo select:focus{outline:none;border-color:var(--marca);box-shadow:0 0 0 3px rgba(var(--marca-rgb),.10)}
 .caixa:focus-within > svg{color:var(--marca)}
 .campo.invalido input{border-color:var(--falha)}
-.campo-duplo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.campo-duplo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:460px){.campo-duplo{grid-template-columns:1fr}}
 .erro{margin:6px 0 0;font-size:12.5px;font-weight:500;color:var(--falha)}
 .tipo-doc{margin-left:auto;font-size:11px;font-weight:700;color:var(--tinta-3);letter-spacing:.06em;transition:opacity .16s}
@@ -1960,24 +2311,24 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* --------------------------------- botões --------------------------------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r);transition:.14s;letter-spacing:-.008em}
-.btn-1{width:100%;min-height:48px;padding:0 22px;font-size:14.5px;font-weight:600;color:#fff;background:var(--marca)}
+.btn-1{width:100%;min-height:46px;padding:0 22px;font-size:14.5px;font-weight:600;color:#fff;background:var(--marca)}
 .btn-1:hover{background:var(--marca-escura)}
 .btn-1:disabled{background:#E4E4EA;color:#A5A5B2;cursor:not-allowed}
 .btn-2{width:auto;min-height:38px;padding:0 16px;font-size:13px;font-weight:600;background:var(--papel);border:1px solid var(--linha-2);color:var(--tinta-2)}
 .btn-2:hover{border-color:var(--tinta-3);color:var(--tinta)}
-.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .acoes-centro{justify-content:center}
 .acoes > .btn-1{flex:1 1 100%}
 .btn-txt{width:auto;min-height:auto;padding:2px 0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca);text-decoration:none}
 .btn-txt:hover{color:var(--marca-escura)}
 .btn-txt:disabled{color:var(--tinta-3);cursor:not-allowed}
-.reenvio{margin-top:16px;text-align:center}
+.reenvio{margin-top:12px;text-align:center}
 
 /* ------------------------- cartão de pendência ---------------------------- */
-.pend{padding:20px 0;border-top:1px solid var(--linha)}
+.pend{padding:16px 0;border-top:1px solid var(--linha)}
 .pend:first-child{border-top:0;padding-top:2px}
-.pend-topo{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
-.logo-credor{height:22px;max-width:150px;width:auto;object-fit:contain;object-position:left center;display:block;margin-bottom:9px}
+.pend-topo{display:flex;align-items:flex-start;gap:14px;margin-bottom:11px}
+.logo-credor{height:22px;max-width:150px;width:auto;object-fit:contain;object-position:left center;display:block;margin-bottom:7px}
 .pend-id{min-width:0;flex:1}
 .pend-credor{font-size:15.5px;font-weight:600;letter-spacing:-.018em}
 .pend-abrir{background:none;border:0;padding:2px;margin-left:auto;color:var(--tinta-3);flex:0 0 auto}
@@ -1985,18 +2336,18 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .de{font-size:13px;color:var(--tinta-3);margin:0 0 1px}
 .de s{text-decoration-thickness:1px}
 .por{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
-.por b{font-size:29px;font-weight:700;letter-spacing:-.04em;line-height:1.1}
+.por b{font-size:26px;font-weight:700;letter-spacing:-.04em;line-height:1.1}
 .por em{font-style:normal;font-size:13px;color:var(--tinta-3);font-weight:500}
 .linha-eco{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .eco{font-size:13.5px;font-weight:600;color:var(--ok)}
 .pct{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:var(--r-p);background:var(--ok-fraco);color:var(--ok);font-size:12px;font-weight:600}
 .destaque-esp{font-size:13.5px;font-weight:600;color:var(--marca)}
-.pend .btn-1{margin-top:16px}
-.pend .btn-2{margin-top:16px;width:100%;min-height:44px;font-size:14px}
+.pend .btn-1{margin-top:13px}
+.pend .btn-2{margin-top:13px;width:100%;min-height:42px;font-size:14px}
 
 /* ----------------------------- linhas de dados ---------------------------- */
 .dados{margin:0;padding:0;list-style:none;border-top:1px solid var(--linha)}
-.dados li{display:flex;gap:16px;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--linha);font-size:14px}
+.dados li{display:flex;gap:16px;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--linha);font-size:14px}
 .dados dt{color:var(--tinta-3);font-size:13.5px;flex:0 0 auto}
 .dados dd{margin:0;font-weight:600;text-align:right;min-width:0}
 .dados dd.livre{font-weight:500}
@@ -2005,7 +2356,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* fatos */
 .fatos{list-style:none;margin:0;padding:0}
-.fatos li{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--linha);font-size:14.5px;color:var(--tinta-2)}
+.fatos li{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--linha);font-size:14.5px;color:var(--tinta-2)}
 .fatos li:first-child{border-top:1px solid var(--linha)}
 .fatos b{color:var(--tinta);font-weight:600}
 .fatos-ico{color:var(--tinta-3);margin-top:2px}
@@ -2013,7 +2364,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* ------------------------------- opções ----------------------------------- */
 .opcoes{margin:0;border-top:1px solid var(--linha)}
-.opcao{width:100%;display:flex;align-items:center;gap:14px;padding:15px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left;transition:.14s}
+.opcao{width:100%;display:flex;align-items:center;gap:14px;padding:13px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left;transition:.14s}
 .opcao:hover .opcao-nome{color:var(--marca)}
 .opcao[aria-pressed="true"]{background:rgba(var(--marca-rgb),.035);box-shadow:inset 3px 0 0 var(--marca);padding-left:13px}
 .opcao[aria-pressed="true"] .opcao-nome{color:var(--marca)}
@@ -2025,14 +2376,14 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .opcao-dir{margin-left:auto;text-align:right;flex:0 0 auto}
 .opcao-valor{display:block;font-size:15px;font-weight:600}
 .opcao-eco{display:block;font-size:12px;color:var(--ok);font-weight:600;margin-top:1px}
-.opcao.simples{padding:16px 2px}
+.opcao.simples{padding:14px 2px}
 .opcao.simples[aria-pressed="true"]{padding-left:13px}
 
 /* grade quadrada: parcelas e datas */
-.grade{display:grid;gap:8px}
+.grade{display:grid;gap:7px}
 .grade.parcelas{grid-template-columns:repeat(auto-fit,minmax(74px,1fr))}
 .grade.datas{grid-template-columns:repeat(auto-fit,minmax(78px,1fr))}
-.opt{padding:11px 6px;border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);text-align:center;transition:.14s}
+.opt{padding:10px 6px;border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);text-align:center;transition:.14s}
 .opt:hover{border-color:var(--tinta-3)}
 .opt[aria-pressed="true"]{border-color:var(--marca);background:rgba(var(--marca-rgb),.05);box-shadow:inset 0 0 0 1px var(--marca)}
 .opt small{display:block;font-size:10.5px;color:var(--tinta-3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
@@ -2042,8 +2393,8 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .opt[aria-pressed="true"] small,.opt[aria-pressed="true"] i{color:var(--marca-escura)}
 
 /* --------------------------------- sanfona -------------------------------- */
-.sanfona{border-top:1px solid var(--linha);margin-top:24px}
-.sanfona-cabeca{width:100%;display:flex;align-items:center;gap:12px;padding:16px 2px;background:none;border:0;text-align:left;font-size:14.5px;font-weight:600}
+.sanfona{border-top:1px solid var(--linha);margin-top:18px}
+.sanfona-cabeca{width:100%;display:flex;align-items:center;gap:12px;padding:14px 2px;background:none;border:0;text-align:left;font-size:14.5px;font-weight:600}
 .sanfona-cabeca svg{margin-left:auto;color:var(--tinta-3);transition:transform .22s}
 .sanfona[data-aberta="1"] .sanfona-cabeca svg{transform:rotate(180deg)}
 .sanfona-corpo{display:none;padding:0 2px 8px}
@@ -2051,13 +2402,13 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 
 /* ------------------------- canais de atendimento -------------------------- */
 .canais{border-top:1px solid var(--linha)}
-.canal{width:100%;display:flex;align-items:center;gap:14px;padding:15px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left}
+.canal{width:100%;display:flex;align-items:center;gap:14px;padding:13px 2px;background:none;border:0;border-bottom:1px solid var(--linha);text-align:left}
 .canal:hover .canal-nome{color:var(--marca)}
 .canal-ico{width:36px;height:36px;flex:0 0 36px;border-radius:var(--r);display:grid;place-items:center;background:#F3F3F7;color:var(--tinta-2)}
 .canal-nome{display:block;font-size:14.5px;font-weight:600;transition:.14s}
 .canal-sub{display:block;font-size:12.5px;color:var(--tinta-3);margin-top:1px}
 .canal svg.seta{margin-left:auto;color:var(--tinta-3)}
-.canais.discretos .canal{padding:11px 2px}
+.canais.discretos .canal{padding:10px 2px}
 .canais.discretos .canal-ico{width:28px;height:28px;flex:0 0 28px;border-radius:var(--r-p)}
 .canais.discretos .canal-nome{font-size:13.5px}
 .canais.discretos .canal-sub{font-size:12px}
@@ -2066,14 +2417,14 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 /* --------------------------- código de segurança -------------------------- */
 .codigo-caixa{display:flex;gap:8px;margin:4px 0 0}
 .codigo-caixa input{
-  width:48px;height:56px;text-align:center;font-size:22px;font-weight:600;
+  width:46px;height:52px;text-align:center;font-size:21px;font-weight:600;
   border:1px solid var(--linha-2);border-radius:var(--r);background:var(--papel);
   color:var(--tinta);font-family:var(--fonte);padding:0;
 }
 .codigo-caixa input:focus{outline:none;border-color:var(--marca);box-shadow:0 0 0 3px rgba(var(--marca-rgb),.10)}
 .codigo-caixa.erro-cod input{border-color:var(--falha)}
 @media (max-width:400px){.codigo-caixa input{width:42px;height:50px;font-size:19px}}
-.enviado-para{margin:0 0 20px;font-size:14px;color:var(--tinta-2)}
+.enviado-para{margin:0 0 16px;font-size:14px;color:var(--tinta-2)}
 .enviado-para b{color:var(--tinta);font-weight:600}
 
 /* ------------------------- barra de ação fixa ----------------------------- */
@@ -2083,7 +2434,7 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
   transform:translateY(110%);transition:transform .3s cubic-bezier(.4,0,.2,1);
 }
 .barra[data-ver="1"]{transform:none}
-.barra-in{max-width:548px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.barra-in{max-width:548px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:16px}
 .barra-val{min-width:0;flex:1}
 .barra-rot{font-size:11.5px;color:var(--tinta-3);font-weight:500}
 .barra-num{font-size:20px;font-weight:700;letter-spacing:-.032em;line-height:1.2}
@@ -2091,12 +2442,12 @@ h1,.titulo{margin:0 0 8px;font-size:24px;line-height:1.2;letter-spacing:-.03em;f
 .barra .btn-1{width:auto;min-width:148px;flex:0 0 auto;min-height:44px}
 @media (max-width:400px){.barra .btn-1{min-width:116px;padding:0 14px;font-size:13.5px}}
 
-.rodape{padding:20px;text-align:center;font-size:11.5px;color:var(--tinta-3);line-height:1.6}
+.rodape{padding:14px 20px 10px;text-align:center;font-size:11.5px;color:var(--tinta-3);line-height:1.6}
 .rodape span{display:block}
 .rodape span + span{margin-top:3px;color:#A0A0AE}
 
 /* ------------------------------- carregando ------------------------------- */
-.carregando{padding:60px 0;text-align:center}
+.carregando{padding:44px 0;text-align:center}
 .giro{
   width:34px;height:34px;margin:0 auto 18px;border-radius:50%;
   border:2.5px solid var(--linha);border-top-color:var(--marca);
@@ -2768,7 +3119,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btnVoltar) btnVoltar.style.visibility = (viewId === "vStart" || viewId === "vLoading") ? "hidden" : "visible";
 
         const barra = $("barraAcao");
-        if (barra) barra.dataset.ver = (target && target.dataset.barra === "1") ? "1" : "0";
+        const comBarra = (target && target.dataset.barra === "1") ? "1" : "0";
+        if (barra) barra.dataset.ver = comBarra;
+        /* o rodape so reserva espaco para a barra quando ela aparece */
+        document.body.dataset.barra = comBarra;
 
         currentView = viewId;
         setProgress(viewId);
@@ -4120,7 +4474,7 @@ document.addEventListener("DOMContentLoaded", () => {
             h = r.height;
         }
         if (rodape) h = Math.max(h, rodape.getBoundingClientRect().bottom);
-        h = Math.ceil(h) + 8;
+        h = Math.ceil(h) + 2;
         if (!h || Math.abs(h - ultimaAltura) < 4) return;
         ultimaAltura = h;
         window.parent.postMessage({ tipo: "portal-altura", altura: h }, "*");
@@ -4432,5 +4786,108 @@ document.addEventListener("DOMContentLoaded", () => {
     <script>
 function reloadPortal() { window.location.reload(); }
 function openPortalExternally() { window.open(window.location.href, '_blank', 'noopener'); }
-</script></body>
+</script>
+<script>
+/* Acabamento: sombra do cabeçalho ao rolar e entrada suave dos blocos. */
+(function () {
+  var cab = document.querySelector('.header');
+  function aoRolar() { if (cab) cab.dataset.rolou = window.scrollY > 8 ? '1' : '0'; }
+  aoRolar();
+  window.addEventListener('scroll', aoRolar, { passive: true });
+
+  /* ------------------------------------------------------------------------
+     O 0800 abria a caixa "Selecionar um aplicativo" do sistema. Agora ele
+     copia o número e avisa na tela.
+     ------------------------------------------------------------------------ */
+  (function () {
+    var tel = document.querySelector('.support-actions a[href^="tel:"]');
+    if (!tel) return;
+
+    var numero = (tel.textContent || '').trim();
+    tel.removeAttribute('href');
+    tel.setAttribute('role', 'button');
+    tel.setAttribute('tabindex', '0');
+    tel.setAttribute('aria-label', 'Copiar o telefone ' + numero);
+    tel.dataset.copiar = numero;
+    tel.insertAdjacentHTML('beforeend',
+      '<svg aria-hidden="true" fill="none" height="14" stroke="currentColor" ' +
+      'stroke-linecap="round" stroke-linejoin="round" stroke-width="2" ' +
+      'viewBox="0 0 24 24" width="14"><rect height="13" rx="2" width="13" x="9" y="9">' +
+      '</rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path></svg>');
+
+    var aviso = document.createElement('div');
+    aviso.className = 'copiado-aviso';
+    aviso.setAttribute('role', 'status');
+    aviso.dataset.ver = '0';
+    document.body.appendChild(aviso);
+
+    function mostrar(msg) {
+      aviso.textContent = msg;
+      aviso.dataset.ver = '1';
+      clearTimeout(aviso._t);
+      aviso._t = setTimeout(function () { aviso.dataset.ver = '0'; }, 2400);
+    }
+
+    /* navigator.clipboard só existe em contexto seguro; aberto do disco,
+       o caminho antigo com textarea ainda funciona. */
+    function copiar(texto) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(texto);
+      }
+      return new Promise(function (ok, erro) {
+        try {
+          var t = document.createElement('textarea');
+          t.value = texto;
+          t.setAttribute('readonly', '');
+          t.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+          document.body.appendChild(t);
+          t.select();
+          var deu = document.execCommand('copy');
+          document.body.removeChild(t);
+          deu ? ok() : erro();
+        } catch (e) { erro(e); }
+      });
+    }
+
+    function acionar(ev) {
+      ev.preventDefault();
+      copiar(numero).then(function () {
+        tel.dataset.feito = '1';
+        mostrar('Telefone ' + numero + ' copiado');
+        setTimeout(function () { delete tel.dataset.feito; }, 2400);
+      }).catch(function () {
+        mostrar('Não consegui copiar. O número é ' + numero);
+      });
+    }
+
+    tel.addEventListener('click', acionar);
+    tel.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' || ev.key === ' ') acionar(ev);
+    });
+  })();
+
+
+  var alvos = document.querySelectorAll(
+    '.hero-grid > div, .hero-visual, .section-head, .point-card, .step-card, .portal-shell, .support-card'
+  );
+  var reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduz || typeof IntersectionObserver !== 'function') return;
+
+  alvos.forEach(function (el, i) {
+    el.classList.add('revelar');
+    el.style.transitionDelay = Math.min(i % 4, 3) * 60 + 'ms';
+  });
+
+  var obs = new IntersectionObserver(function (itens) {
+    itens.forEach(function (it) {
+      if (!it.isIntersecting) return;
+      it.target.classList.add('visivel');
+      obs.unobserve(it.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  alvos.forEach(function (el) { obs.observe(el); });
+})();
+</script>
+
+</body>
 </html>
