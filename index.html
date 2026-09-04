@@ -2059,7 +2059,10 @@ window.PORTAL_CONFIG = {
     "nome": "Quatro C",
     "logoUrl": "",
     "logoAltura": 24,
-    "fonte": "Inter"
+    "fonte": "Inter",
+    /* Fonte só do nome da marca no topo. Em branco, usa a da aplicação. */
+    "fonteNome": "",
+    "pesoNome": 700
   },
   "cores": {
     "primaria": "#CE2E3C",
@@ -2080,9 +2083,12 @@ window.PORTAL_CONFIG = {
   },
   /* Um bloco por credor. A chave é o nome como o CRM devolve; o casamento é
      por "contém", então "AMIL OPERADORAS" casa com "AMIL OPERADORAS SP".
-     Campo vazio herda o valor global de "contato".                          */
+     Campo vazio herda o valor global de "contato".
+     "exibir" diz como o credor aparece no cartão: "ambos", "logo" (quando o
+     próprio logo já traz o nome) ou "nome".                                  */
   "credores": {
     "AMIL OPERADORAS": {
+      "exibir": "ambos",
       "nome": "Amil",
       "logo": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
       "whatsapp": "",
@@ -2090,6 +2096,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
     },
     "SANTA HELENA": {
+      "exibir": "ambos",
       "nome": "Santa Helena Saúde",
       "logo": "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif",
       "whatsapp": "",
@@ -2097,6 +2104,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
     },
     "SASCAR FIXA VARIAVEL": {
+      "exibir": "ambos",
       "nome": "Michelin",
       "logo": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
       "whatsapp": "",
@@ -2104,6 +2112,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y"
     },
     "SASCAR_IRA": {
+      "exibir": "ambos",
       "nome": "Michelin | Equipamentos",
       "logo": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
       "whatsapp": "",
@@ -2111,6 +2120,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y"
     },
     "REDE AMERICAS": {
+      "exibir": "ambos",
       "nome": "Rede Américas",
       "logo": "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif",
       "whatsapp": "",
@@ -2118,6 +2128,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y"
     },
     "AMIL HOSPITAIS": {
+      "exibir": "ambos",
       "nome": "Amil Hospitais",
       "logo": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
       "whatsapp": "",
@@ -2144,7 +2155,8 @@ window.PORTAL_CONFIG = {
     "titulo.vValidateCode": "Confirme seu e-mail",
     "texto.vValidateCode.1": "Enviamos um código de 6 dígitos para o e-mail que você informou.",
     "botao.btnValidateCode": "Confirmar",
-    "botao.btnResendCode": "Reenviar código",
+    "botao.btnResendCode": "Reenviar por e-mail",
+    "botao.btnSmsCode": "Enviar por SMS",
 
     "titulo.vConfirmName": "Selecione o seu nome completo",
     "texto.vConfirmName.1": "Para seguir com segurança, confirme o nome do titular do documento informado.",
@@ -2213,7 +2225,7 @@ window.PORTAL_CONFIG = {
     "titulo.vIraSuccess": "Solicitação registrada",
     "texto.vIraSuccess.1": "Vamos validar a disponibilidade e confirmar o agendamento pelos contatos informados.",
 
-    "texto.vLoading.1": "Consultando..."
+    "texto.vLoading.1": "Carregando..."
   }
 };
 <\/script>
@@ -2229,6 +2241,8 @@ window.PORTAL_CONFIG = {
 :root{
   --marca:#CE2E3C; --marca-escura:#A3222E; --marca-rgb:206,46,60;
   --fonte:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  /* o nome da marca pode ter fonte própria; por padrão segue a aplicação */
+  --fonte-nome:var(--fonte);
 
   --tinta:#15151B; --tinta-2:#5C5C6A; --tinta-3:#8A8A98;
   --linha:#EAEAEF; --linha-2:#D9D9E1;
@@ -2256,7 +2270,7 @@ body[data-barra="1"] .portal{padding-bottom:132px}
 .cabeca{position:sticky;top:0;z-index:20;background:var(--papel);border-bottom:1px solid var(--linha)}
 .cabeca-topo{display:flex;align-items:center;gap:12px;height:52px;padding:0 18px}
 .cabeca-logo{height:24px;width:auto;max-width:130px;object-fit:contain;object-position:left center}
-.cabeca-nome{font-size:15.5px;font-weight:700;letter-spacing:-.022em}
+.cabeca-nome{font-family:var(--fonte-nome);font-size:15.5px;font-weight:var(--peso-nome,700);letter-spacing:-.022em}
 .cabeca-seguro{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--tinta-3);white-space:nowrap}
 .progresso{height:3px;background:var(--linha);overflow:hidden}
 .progresso i{display:block;height:100%;width:15%;background:var(--marca);transition:width .45s cubic-bezier(.4,0,.2,1)}
@@ -2322,13 +2336,16 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
 .btn-txt{width:auto;min-height:auto;padding:2px 0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca);text-decoration:none}
 .btn-txt:hover{color:var(--marca-escura)}
 .btn-txt:disabled{color:var(--tinta-3);cursor:not-allowed}
-.reenvio{margin-top:12px;text-align:center}
+.reenvio{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.reenvio-sep{width:1px;height:13px;background:var(--linha-2)}
+@media (max-width:400px){.reenvio{gap:10px}.reenvio-sep{display:none}}
 
 /* ------------------------- cartão de pendência ---------------------------- */
 .pend{padding:16px 0;border-top:1px solid var(--linha)}
 .pend:first-child{border-top:0;padding-top:2px}
 .pend-topo{display:flex;align-items:flex-start;gap:14px;margin-bottom:11px}
 .logo-credor{height:22px;max-width:150px;width:auto;object-fit:contain;object-position:left center;display:block;margin-bottom:7px}
+.logo-credor.logo-so{height:26px;max-width:170px;margin-bottom:0}
 .pend-id{min-width:0;flex:1}
 .pend-credor{font-size:15.5px;font-weight:600;letter-spacing:-.018em}
 .pend-abrir{background:none;border:0;padding:2px;margin-left:auto;color:var(--tinta-3);flex:0 0 auto}
@@ -2481,7 +2498,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
 <section class="view" data-prog="40" id="vLoading">
   <div class="carregando">
     <div class="giro"></div>
-    <p class="mini" data-txt="texto.vLoading.1">Consultando...</p>
+    <p class="mini" data-txt="texto.vLoading.1">Carregando...</p>
   </div>
 </section>
 
@@ -2553,7 +2570,9 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     <button class="btn btn-1" disabled="" id="btnValidateCode" type="button"><span data-txt="botao.btnValidateCode">Confirmar</span></button>
   </div>
   <div class="reenvio">
-    <button class="btn-txt" disabled="" id="btnResendCode" type="button"><span data-txt="botao.btnResendCode">Reenviar código</span></button>
+    <button class="btn-txt" disabled="" id="btnResendCode" type="button"><span data-txt="botao.btnResendCode">Reenviar por e-mail</span></button>
+    <span aria-hidden="true" class="reenvio-sep"></span>
+    <button class="btn-txt" disabled="" id="btnSmsCode" type="button"><span data-txt="botao.btnSmsCode">Enviar por SMS</span></button>
   </div>
 </section>
 
@@ -2605,7 +2624,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     <button aria-pressed="false" class="opcao" data-mode="parcelado" type="button">
       <span class="opcao-ico"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="18"><rect height="15" rx="2" width="18" x="3" y="5"></rect><path d="M3 10h18M8 15h4"></path></svg></span>
       <span class="opcao-txt"><span class="opcao-nome">Parcelado</span><span class="opcao-sub" id="optParceladoSub"></span></span>
-      <span class="opcao-dir"><span class="opcao-valor" id="optParceladoValor">-</span></span>
+      <span class="opcao-dir"><span class="opcao-valor" id="optParceladoValor">-</span><span class="opcao-eco hidden" id="optParceladoEco"></span></span>
     </button>
   </div>
   <span class="hidden" id="paymentModeButtons"></span>
@@ -2869,7 +2888,11 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     'titulo.vAtendimento.especialista':{ tela: 'vAtendimento', padrao: 'Um especialista já foi acionado' },
     'texto.vAtendimento.especialista': { tela: 'vAtendimento', padrao: 'Você vai receber um contato para a elaboração da melhor condição para o seu caso.' },
     'titulo.vAtendimento.equipe':      { tela: 'vAtendimento', padrao: 'Atendimento com a nossa equipe' },
-    'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' }
+    'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' },
+    /* a mesma tela serve para código por e-mail e por SMS */
+    'texto.vValidateCode.reenvio':     { tela: 'vValidateCode', padrao: 'Enviamos um novo código de 6 dígitos para o e-mail que você informou.' },
+    'titulo.vValidateCode.sms':        { tela: 'vValidateCode', padrao: 'Confirme seu celular' },
+    'texto.vValidateCode.sms':         { tela: 'vValidateCode', padrao: 'Enviamos um código de 6 dígitos por SMS para o celular que você informou.' }
   };
 
   window.aplicarPortalConfig = function (cfg) {
@@ -2884,7 +2907,32 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     if (cores.primariaEscura) raiz.setProperty('--marca-escura', cores.primariaEscura);
 
     const marca = cfg.marca || {};
+
+    /* O portal carrega sozinho as fontes que a configuração pedir. Sem isto,
+       o arquivo entregue ao cliente cairia na fonte de sistema.              */
+    function garantirFonte(nome, id) {
+      if (!nome) return;
+      try {
+        let l = document.getElementById(id);
+        if (!l) {
+          l = document.createElement('link');
+          l.id = id; l.rel = 'stylesheet';
+          document.head.appendChild(l);
+        }
+        l.href = 'https://fonts.googleapis.com/css2?family=' +
+          encodeURIComponent(nome).replace(/%20/g, '+') +
+          ':wght@400;500;600;700&display=swap';
+      } catch (e) {}
+    }
+    garantirFonte(marca.fonte, 'fonte-aplicacao');
+    garantirFonte(marca.fonteNome, 'fonte-marca');
     if (marca.fonte) raiz.setProperty('--fonte', "'" + marca.fonte + "', system-ui, Arial, sans-serif");
+    /* A fonte do nome da marca é independente: o cliente às vezes tem uma
+       fonte só para a assinatura. Em branco, o nome segue a aplicação.      */
+    raiz.setProperty('--fonte-nome', marca.fonteNome
+      ? "'" + marca.fonteNome + "', system-ui, Arial, sans-serif"
+      : 'var(--fonte)');
+    raiz.setProperty('--peso-nome', String(marca.pesoNome || 700));
 
     const logo = document.getElementById('portalLogo');
     const nome = document.getElementById('portalNomeMarca');
@@ -3050,6 +3098,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const at = e.indexOf("@");
         if (at < 1) return "o e-mail informado";
         return e.slice(0, 2) + "•••••" + e.slice(at);
+    }
+
+    /* Mostra só o DDD e os últimos dígitos: o cliente reconhece o número
+       sem que ele seja exposto inteiro na tela.                              */
+    function mascararTelefone(tel) {
+        const d = onlyDigits(tel);
+        if (d.length < 10) return "o celular informado";
+        return "(" + d.slice(0, 2) + ") •••••-" + d.slice(-4);
     }
 
     /* ===================== ícones e canais ================================= */
@@ -3276,7 +3332,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function getCredorPresentation(credorRaw, unidade) {
         const c = norm(credorRaw);
         const cc = credorConfig(credorRaw);
-        const base = { nome: nomeDoCredor(credorRaw, unidade), logo: cc.logo || "", chat: cc.chat || chatPadrao() };
+        const base = { nome: nomeDoCredor(credorRaw, unidade), logo: cc.logo || "",
+                       chat: cc.chat || chatPadrao(), exibir: cc.exibir || "ambos" };
         if (c.includes("AMIL OPERADORAS"))      return { ...base, tipoAcao: "NEGOCIAR" };
         if (c.includes("SASCAR_IRA"))           return { ...base, tipoAcao: "AGENDAR" };
         return { ...base, tipoAcao: "HUMANO" };
@@ -3524,6 +3581,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return {
                 tipo, credor: c?.credor || "", credorNome: nomeBom,
                 logo: c?.logo || pres.logo, chatUrl: c?.chatUrl || pres.chat,
+                exibir: credorConfig(c?.credor || "").exibir || "ambos",
                 numeroContrato: c?.numeroContrato || "-", idContrato: c?.idContrato || "",
                 unidade: c?.unidade || "",
                 valorTotal, valorTotalFormatado: c?.valorTotalFormatado || formatBRL(valorTotal),
@@ -3634,17 +3692,26 @@ document.addEventListener("DOMContentLoaded", () => {
             topo.className = "pend-topo";
             const id = document.createElement("div");
             id.className = "pend-id";
-            if (card.logo) {
+
+            /* Como o credor se apresenta no cartão, definido no painel:
+               "ambos" (padrão), "logo" (o logo já traz o nome) ou "nome".
+               No modo "logo", se a imagem não carregar o nome volta — o
+               cartão nunca fica sem identidade.                              */
+            const exibir = card.exibir === "logo" || card.exibir === "nome" ? card.exibir : "ambos";
+            const nome = document.createElement("div");
+            nome.className = "pend-credor";
+            nome.textContent = card.credorNome;
+
+            if (card.logo && exibir !== "nome") {
                 const img = document.createElement("img");
                 img.className = "logo-credor";
                 img.alt = card.credorNome;
                 img.src = card.logo;
-                img.onerror = () => img.remove();
+                if (exibir === "logo") img.classList.add("logo-so");
+                img.onerror = () => { img.remove(); nome.classList.remove("hidden"); };
                 id.appendChild(img);
+                if (exibir === "logo") nome.classList.add("hidden");
             }
-            const nome = document.createElement("div");
-            nome.className = "pend-credor";
-            nome.textContent = card.credorNome;
             id.appendChild(nome);
             topo.appendChild(id);
 
@@ -3941,9 +4008,16 @@ document.addEventListener("DOMContentLoaded", () => {
         block.classList.remove("hidden");
         const maxParcelas = Math.max.apply(null, parcelas);
         if ($("optParceladoSub")) $("optParceladoSub").textContent = "Em até " + maxParcelas + " vezes";
+        /* As duas opções mostram a mesma informação: o total negociado e o
+           quanto ele economiza sobre o valor atualizado. O valor de cada
+           parcela aparece na grade, no momento em que ele escolhe quantas. */
         const totalParcelado = Number(card.parcelamento.valorNegociadoParcelado || 0);
-        if ($("optParceladoValor")) {
-            $("optParceladoValor").textContent = maxParcelas + "x " + formatBRL(getInstallmentAmount(totalParcelado, maxParcelas));
+        if ($("optParceladoValor")) $("optParceladoValor").textContent = formatBRL(totalParcelado);
+        const ecoParcelado = Math.max(0, Number(card?.valorTotal || 0) - totalParcelado);
+        const elEcoParc = $("optParceladoEco");
+        if (elEcoParc) {
+            if (ecoParcelado > 0) { elEcoParc.textContent = "− " + formatBRL(ecoParcelado); elEcoParc.classList.remove("hidden"); }
+            else elEcoParc.classList.add("hidden");
         }
 
         if (instButtons) {
@@ -4127,22 +4201,49 @@ document.addEventListener("DOMContentLoaded", () => {
     /* O botão de reenvio aparece sempre, mas só fica clicável depois de 60s.
        Sem contagem visível — o cliente não precisa vigiar um cronômetro.     */
     function startResendCodeCooldown(seconds = RESEND_CODE_WAIT_SECONDS) {
-        const btn = $("btnResendCode"); if (!btn) return;
+        /* A espera vale para os dois caminhos: quem acabou de receber por
+           e-mail também aguarda antes de pedir por SMS, e vice-versa.        */
+        const botoes = [$("btnResendCode"), $("btnSmsCode")].filter(Boolean);
+        if (!botoes.length) return;
         if (resendCodeTimer) clearTimeout(resendCodeTimer);
-        btn.disabled = true;
-        resendCodeTimer = setTimeout(() => { btn.disabled = false; resendCodeTimer = null; }, (Number(seconds) || 60) * 1000);
+        botoes.forEach(b => { b.disabled = true; });
+        resendCodeTimer = setTimeout(() => {
+            botoes.forEach(b => { b.disabled = false; });
+            resendCodeTimer = null;
+        }, (Number(seconds) || 60) * 1000);
     }
 
-    function abrirTelaCodigo(isResend) {
+    /* modo: "inicial" (primeiro envio por e-mail), "email" (reenvio por
+       e-mail) ou "sms" (envio para o celular informado no início).           */
+    function abrirTelaCodigo(modo) {
+        if (modo === true) modo = "email";
+        if (!modo) modo = "inicial";
+        const txts = ((window.PORTAL_CONFIG || {}).textos || {});
+        const ehSms = modo === "sms";
+
+        const tit = document.querySelector('#vValidateCode h1');
+        if (tit) {
+            tit.textContent = ehSms
+                ? (txts["titulo.vValidateCode.sms"] || "Confirme seu celular")
+                : (txts["titulo.vValidateCode"] || "Confirme seu e-mail");
+        }
         const txt = $("validateCodeText");
         if (txt) {
-            txt.textContent = isResend
-                ? "Enviamos um novo código de 6 dígitos para o e-mail que você informou."
-                : ((window.PORTAL_CONFIG || {}).textos || {})["texto.vValidateCode.1"]
-                  || "Enviamos um código de 6 dígitos para o e-mail que você informou.";
+            txt.textContent = ehSms
+                ? (txts["texto.vValidateCode.sms"]
+                   || "Enviamos um código de 6 dígitos por SMS para o celular que você informou.")
+                : modo === "email"
+                  ? (txts["texto.vValidateCode.reenvio"]
+                     || "Enviamos um novo código de 6 dígitos para o e-mail que você informou.")
+                  : (txts["texto.vValidateCode.1"]
+                     || "Enviamos um código de 6 dígitos para o e-mail que você informou.");
         }
         const dest = $("codigoDestino");
-        if (dest) dest.textContent = mascararEmail($("emailInput")?.value || "");
+        if (dest) {
+            dest.textContent = ehSms
+                ? mascararTelefone($("phoneInput")?.value || "")
+                : mascararEmail($("emailInput")?.value || "");
+        }
         limparCodigo();
         hideText("validationCodeError");
         setActiveView("vValidateCode");
@@ -4241,7 +4342,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 lastHumanChat = data?.chatUrl || chatPadrao();
                 return setActiveView("vBlocked");
             }
-            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(false);
+            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo("inicial");
             if (data?.proximoStep === "validar_identidade") {
                 renderIdentityOptions(data?.options || [], data?.fullName || nome, data?.type || "CPF");
                 return setActiveView("vConfirmName");
@@ -4302,23 +4403,34 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    on("btnResendCode", "click", async () => {
-        if ($("btnResendCode")?.disabled) return;
+    /* Os dois caminhos usam a mesma chamada; muda só o step e o texto que a
+       tela mostra depois. O backend responde igual nos dois casos.           */
+    async function pedirNovoCodigo(step, modo) {
         hideText("validationCodeError");
         setActiveView("vLoading");
         try {
-            const data = await callBackend("reenviar_codigo_contato", {
+            const data = await callBackend(step, {
                 documento: currentDoc,
                 nomeInformado: $("nameInput")?.value.trim() || "",
                 telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
                 emailInformado: $("emailInput")?.value.trim() || ""
             });
-            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(true);
+            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(modo);
             if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
             telaErro(data?.mensagem);
         } catch (e) {
             telaErro();
         }
+    }
+
+    on("btnResendCode", "click", () => {
+        if ($("btnResendCode")?.disabled) return;
+        pedirNovoCodigo("reenviar_codigo_contato", "email");
+    });
+
+    on("btnSmsCode", "click", () => {
+        if ($("btnSmsCode")?.disabled) return;
+        pedirNovoCodigo("reenviar_codigo_sms", "sms");
     });
 
     function validatePaymentDate(dateStr) {
