@@ -3037,6 +3037,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const $ = (id) => document.getElementById(id);
 
+    /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
+       no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
+    window.PORTAL_BUILD = "2026-09-04-b";
+    try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
+
     let currentView = "vStart";
     let docType = "CPF";
     let currentDoc = "";
@@ -3195,6 +3200,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (barra) barra.dataset.ver = comBarra;
         /* o rodape so reserva espaco para a barra quando ela aparece */
         document.body.dataset.barra = comBarra;
+
+        /* Garantia extra: sempre que a tela do código entra em cena, o rótulo
+           do SMS é recalculado do estado. Assim ele nunca fica "Enviar" depois
+           de o cliente já ter pedido por SMS, mesmo em caminhos que não passam
+           por abrirTelaCodigo.                                                */
+        if (viewId === "vValidateCode") rotularBotaoSms(smsJaEnviado);
 
         currentView = viewId;
         setProgress(viewId);
