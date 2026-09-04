@@ -1225,9 +1225,11 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     'titulo.vAtendimento.equipe':      { tela: 'vAtendimento', padrao: 'Atendimento com a nossa equipe' },
     'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' },
     /* a mesma tela serve para código por e-mail e por SMS */
-    'texto.vValidateCode.reenvio':     { tela: 'vValidateCode', padrao: 'Enviamos um novo código de 6 dígitos para o e-mail que você informou.' },
+    'texto.vValidateCode.reenvio':     { tela: 'vValidateCode', padrao: 'Reenviamos o código de 6 dígitos para o e-mail que você informou.' },
     'titulo.vValidateCode.sms':        { tela: 'vValidateCode', padrao: 'Confirme seu celular' },
-    'texto.vValidateCode.sms':         { tela: 'vValidateCode', padrao: 'Enviamos um código de 6 dígitos por SMS para o celular que você informou.' }
+    'texto.vValidateCode.sms':         { tela: 'vValidateCode', padrao: 'Enviamos um código de 6 dígitos por SMS para o celular que você informou.' },
+    'texto.vValidateCode.smsReenvio':  { tela: 'vValidateCode', padrao: 'Reenviamos o código de 6 dígitos por SMS para o celular que você informou.' },
+    'erro.codigoNaoEnviado':           { tela: 'vValidateCode', padrao: 'Não conseguimos enviar agora. Tente o outro caminho ou fale com a gente.' }
   };
 
   window.aplicarPortalConfig = function (cfg) {
@@ -1371,7 +1373,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastHumanChat = "";
     let identityAttemptCount = 0;
     let resendCodeTimer = null;
-    let smsJaEnviado = false;   /* já houve um envio por SMS nesta sessão */
+    /* Contam CLIQUES, não sucessos: se o cliente já pediu por SMS uma vez, o
+       botão vira "Reenviar por SMS" mesmo que aquele envio tenha falhado. */
+    let cliquesSms = 0;
+    let smsJaEnviado = false;
+    let acordoAberto = null;    /* cartão de acordo que está na tela */
     let modoPreview = false;
     const RESEND_CODE_WAIT_SECONDS = 60;
 
@@ -1539,11 +1545,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return ($("cardsGrid")?.children.length || 0) > 0;
     }
 
+    /* Telas anteriores aos cartões: recomeçar é o certo. */
+    const TELAS_ANTES_DOS_CARTOES = ["vValidateCode", "vConfirmName", "vIdentityError"];
+
     function voltarContextual() {
-        if (temCartoesNaTela() && TELAS_DE_CARTAO.indexOf(currentView) !== -1) {
-            return setActiveView("vNext");
-        }
-        /* telas anteriores aos cartões: aí sim recomeçar é o certo */
+        if (TELAS_ANTES_DOS_CARTOES.indexOf(currentView) !== -1) return goStart();
+        /* Depois que a lista existe, voltar é sempre voltar para ela — inclusive
+           de uma tela de erro, para o cliente não perder a consulta. */
+        if (temCartoesNaTela()) return setActiveView("vNext");
         goStart();
     }
 
@@ -1623,7 +1632,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function goStart() {
         currentDoc = ""; foundRecord = null; selectedCard = null;
         identityAttemptCount = 0; sessionToken = "";
-        smsJaEnviado = false; rotularBotaoSms(false); avisarCodigo("");
+        cliquesSms = 0; smsJaEnviado = false;
+        rotularBotaoSms(false); avisarCodigo("");
         sessionId = Date.now().toString();
         clearPortalForms(); setDocType("CPF");
         window.montarCanais("");           /* fora de um credor, canais globais */
@@ -2202,6 +2212,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "</b> — <b>" + (proxima.valorFormatado || formatBRL(proxima.valor || origem.valorTotal || 0)) + "</b>";
         }
 
+        acordoAberto = origem;
         montarDetalhes(origem, "acordoDetalhes", "acordo");
         lastHumanChat = origem.chatUrl || lastHumanChat;
         window.montarCanais(origem.credor || "");
@@ -2619,14 +2630,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? (txts["titulo.vValidateCode.sms"] || "Confirme seu celular")
                 : (txts["titulo.vValidateCode"] || "Confirme seu e-mail");
         }
+        /* Do segundo pedido em diante, no mesmo canal, a tela diz "Reenviamos".
+           O e-mail já é sempre reenvio: o primeiro saiu na consulta.        */
+        const smsRepetido = ehSms && cliquesSms > 1;
         const txt = $("validateCodeText");
         if (txt) {
             txt.textContent = ehSms
-                ? (txts["texto.vValidateCode.sms"]
-                   || "Enviamos um código de 6 dígitos por SMS para o celular que você informou.")
+                ? (smsRepetido
+                    ? (txts["texto.vValidateCode.smsReenvio"]
+                       || "Reenviamos o código de 6 dígitos por SMS para o celular que você informou.")
+                    : (txts["texto.vValidateCode.sms"]
+                       || "Enviamos um código de 6 dígitos por SMS para o celular que você informou."))
                 : modo === "email"
                   ? (txts["texto.vValidateCode.reenvio"]
-                     || "Enviamos um novo código de 6 dígitos para o e-mail que você informou.")
+                     || "Reenviamos o código de 6 dígitos para o e-mail que você informou.")
                   : (txts["texto.vValidateCode.1"]
                      || "Enviamos um código de 6 dígitos para o e-mail que você informou.");
         }
@@ -2636,11 +2653,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? mascararTelefone($("phoneInput")?.value || "")
                 : mascararEmail($("emailInput")?.value || "");
         }
-        if (ehSms) smsJaEnviado = true;
         rotularBotaoSms(smsJaEnviado);
         avisarCodigo(
-            modo === "sms"   ? "Código enviado por SMS agora." :
-            modo === "email" ? "Código reenviado para o seu e-mail agora." : ""
+            modo === "sms"   ? (smsRepetido ? "Reenviamos o código por SMS agora."
+                                            : "Código enviado por SMS agora.") :
+            modo === "email" ? "Reenviamos o código para o seu e-mail agora." : ""
         );
         limparCodigo();
         hideText("validationCodeError");
@@ -2711,7 +2728,27 @@ document.addEventListener("DOMContentLoaded", () => {
     on("btnNovaConsultaSegundaVia", "click", goStart);
     on("btnNovaConsultaIra", "click", goStart);
     on("btnIdentityTryAgain", "click", () => setActiveView("vConfirmName"));
-    on("btnAgreementHumano", "click", () => setActiveView("vReenviado"));
+    /* Reenviar boleto é um caminho próprio: o boleto do acordo já existe, então
+       o backend só busca os dados dele e dispara. Antes este botão apenas
+       trocava de tela e nada era enviado.                                    */
+    on("btnAgreementHumano", "click", async () => {
+        const card = acordoAberto || selectedCard;
+        if (!card) return telaErro();
+        setActiveView("vLoading");
+        try {
+            /* Só o contrato vai daqui: os boletos são resolvidos no backend a
+               partir do contexto lacrado da sessão.                          */
+            const data = await callBackend("reenviar_boleto_acordo", {
+                credor: card.credor || "",
+                idContrato: card.idContrato || ""
+            });
+            if (data?.proximoStep === "boleto_reenviado") return setActiveView("vReenviado");
+            if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
+            telaErro(data?.mensagem);
+        } catch (e) {
+            telaErro();
+        }
+    });
     on("btnVoltarAcordo", "click", () => setActiveView("vActiveAgreement"));
 
     /* ===================== fluxo com o backend ============================ */
@@ -2819,10 +2856,22 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(modo);
             if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
-            telaErro(data?.mensagem);
+            /* Falhou o envio, mas a sessão está viva: o cliente volta para a
+               tela do código e pode tentar o outro caminho. Antes ele caía na
+               tela de indisponível e perdia a consulta.                     */
+            return falhaNoEnvioDoCodigo(data?.mensagem);
         } catch (e) {
-            telaErro();
+            return falhaNoEnvioDoCodigo();
         }
+    }
+
+    function falhaNoEnvioDoCodigo(mensagem) {
+        const txts = ((window.PORTAL_CONFIG || {}).textos || {});
+        avisarCodigo("");
+        setActiveView("vValidateCode");
+        showText("validationCodeError", mensagem
+            || txts["erro.codigoNaoEnviado"]
+            || "Não conseguimos enviar agora. Tente o outro caminho ou fale com a gente.");
     }
 
     on("btnResendCode", "click", () => {
@@ -2832,6 +2881,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     on("btnSmsCode", "click", () => {
         if ($("btnSmsCode")?.disabled) return;
+        /* Marcado no clique: o rótulo vira "Reenviar por SMS" já agora, e a
+           espera de 60s recomeça mesmo se o envio falhar.                   */
+        cliquesSms += 1;
+        smsJaEnviado = true;
+        rotularBotaoSms(true);
         pedirNovoCodigo("reenviar_codigo_sms", "sms");
     });
 
