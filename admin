@@ -95,46 +95,111 @@ svg{display:block;flex:0 0 auto}
 }
 
 /* nav */
-.nav{background:var(--escuro);color:#fff;padding:18px 14px;overflow-y:auto;display:flex;flex-direction:column}
-.nav-marca{display:flex;align-items:center;gap:9px;padding:0 6px 18px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:14px}
-.nav-logo{flex:0 0 auto;display:grid;place-items:center;height:38px;width:52px}
-.nav-logo img{max-height:38px;max-width:52px;object-fit:contain}
+/* A lateral não é preta neutra: é o vinho da Quatro C escurecido, com a
+   faixa tricolor da marca na aresta e o vermelho marcando o item ativo. */
+.nav{
+  position:relative;color:#fff;padding:18px 14px;overflow-y:auto;display:flex;flex-direction:column;
+  background:
+    radial-gradient(420px 260px at 12% -4%, rgba(206,46,60,.34), transparent 62%),
+    linear-gradient(180deg,#2A1116 0%,#1E1013 46%,#170E10 100%);
+}
+.nav::after{
+  content:"";position:absolute;top:0;right:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--acento) 0 62%,var(--ouro) 62% 82%,var(--verde) 82% 100%);
+}
+.nav-marca{display:flex;align-items:center;gap:9px;padding:0 6px 18px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px}
+.nav-logo{
+  flex:0 0 auto;display:grid;place-items:center;height:40px;width:56px;
+  padding:5px 7px;border-radius:8px;background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.14);
+}
+.nav-logo img{max-height:30px;max-width:44px;object-fit:contain;display:block}
 .nav-logo b{font-size:12px;font-weight:900;color:#fff;letter-spacing:-.01em}
 .nav-marca b{font-size:13px;font-weight:700;letter-spacing:-.01em}
-.nav-marca span{display:block;font-size:10px;color:rgba(255,255,255,.45);font-weight:500}
+.nav-marca span{display:block;font-size:10px;color:rgba(255,255,255,.50);font-weight:500}
 .nav-item{
   width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;margin-bottom:2px;
   background:none;border:0;border-radius:var(--r-p);text-align:left;
   font-size:13px;font-weight:500;color:rgba(255,255,255,.7);
 }
-.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
-.nav-item[aria-current="true"]{background:rgba(255,255,255,.13);color:#fff;font-weight:600}
-.nav-rodape{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:grid;gap:6px}
+.nav-item{position:relative;transition:background .14s, color .14s}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item[aria-current="true"]{
+  background:linear-gradient(90deg,rgba(206,46,60,.34),rgba(206,46,60,.14));
+  color:#fff;font-weight:600;
+}
+.nav-item[aria-current="true"]::before{
+  content:"";position:absolute;left:0;top:6px;bottom:6px;width:2.5px;border-radius:2px;background:var(--acento);
+}
+.nav-rodape{margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);display:grid;gap:6px}
 .nav-rodape button{
   width:100%;padding:9px 10px;border-radius:var(--r-p);border:1px solid rgba(255,255,255,.18);
   background:none;color:rgba(255,255,255,.8);font-size:12px;font-weight:600;text-align:left;
   display:flex;align-items:center;gap:8px;
 }
 .nav-rodape button:hover{background:rgba(255,255,255,.08);color:#fff}
-.nav-rodape button.destaque{background:#fff;color:var(--escuro);border-color:#fff}
-.nav-rodape button.destaque:hover{background:rgba(255,255,255,.88)}
+.nav-rodape button.destaque{
+  background:linear-gradient(135deg,var(--acento),var(--acento-escuro));
+  color:#fff;border-color:transparent;
+  box-shadow:0 8px 20px rgba(206,46,60,.32),0 1px 0 rgba(255,255,255,.18) inset;
+}
+.nav-rodape button.destaque:hover{background:linear-gradient(135deg,#D8404D,var(--acento-escuro))}
 
 /* edição */
-.edicao{overflow-y:auto;padding:26px 28px 60px;background:var(--fundo)}
-.edicao-topo{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+/* O mesmo acabamento da lateral, em claro: véu quente da marca no alto e
+   um filete tricolor sob o cabeçalho da seção. */
+.edicao{
+  overflow-y:auto;padding:22px 28px 60px;
+  background:
+    radial-gradient(760px 300px at 0% -8%, rgba(206,46,60,.055), transparent 62%),
+    linear-gradient(180deg,#FBFAFB 0%,var(--fundo) 42%);
+}
+.edicao-topo{
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:flex-start;gap:16px;
+  margin:-22px -28px 22px;padding:20px 28px 16px;
+  background:rgba(251,250,251,.92);
+  backdrop-filter:saturate(160%) blur(12px);-webkit-backdrop-filter:saturate(160%) blur(12px);
+  border-bottom:1px solid var(--linha);
+}
+.edicao-topo::after{
+  content:"";position:absolute;left:28px;right:28px;bottom:-1px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--acento) 0 62%,var(--ouro) 62% 82%,var(--verde) 82% 100%);
+  opacity:.85;
+}
 .edicao-topo h2{margin:0 0 3px;font-size:19px;letter-spacing:-.024em}
-.edicao-topo p{margin:0;font-size:13px;color:var(--tinta-3);max-width:52ch}
+.edicao-topo p{margin:0;font-size:12.5px;line-height:1.55;color:var(--tinta-3);max-width:60ch}
 .btn-previa{
   margin-left:auto;flex:0 0 auto;padding:8px 12px;border-radius:var(--r-p);
   border:1px solid var(--linha-2);background:var(--papel);font-size:12.5px;font-weight:600;
 }
 @media (min-width:1181px){.btn-previa{display:none}}
 
-.bloco{background:var(--papel);border:1px solid var(--linha);border-radius:12px;margin-bottom:16px;overflow:hidden}
-.bloco-cabeca{padding:14px 18px;border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:10px}
-.bloco-cabeca h3{margin:0;font-size:13.5px;font-weight:600}
-.bloco-cabeca .cont{margin-left:auto;font-size:11.5px;color:var(--tinta-3);font-weight:500}
-.bloco-corpo{padding:18px}
+.bloco{
+  position:relative;background:var(--papel);border:1px solid var(--linha);
+  border-radius:12px;margin-bottom:14px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(21,21,27,.03),0 8px 22px rgba(21,21,27,.045);
+}
+.bloco-cabeca{
+  padding:13px 18px;border-bottom:1px solid var(--linha);
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(180deg,#FFFFFF,#FCFBFC);
+}
+.bloco-cabeca h3{
+  margin:0;font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;
+  color:var(--tinta-2);
+}
+/* marcador curto na cor da marca, o mesmo gesto do item ativo na lateral */
+.bloco-cabeca h3::before{
+  content:"";display:inline-block;width:3px;height:12px;margin-right:9px;
+  vertical-align:-1px;border-radius:2px;background:var(--acento);
+}
+.bloco-cabeca .cont{
+  margin-left:auto;min-width:22px;padding:2px 7px;border-radius:20px;
+  background:var(--acento-fraco);color:var(--acento-escuro);
+  font-size:11px;font-weight:700;text-align:center;
+}
+.bloco-corpo{padding:16px 18px 18px}
 .bloco.fechado .bloco-corpo{display:none}
 .bloco-cabeca[role="button"]{cursor:pointer}
 .bloco-cabeca .giro{transition:transform .2s;color:var(--tinta-3)}
@@ -142,12 +207,14 @@ svg{display:block;flex:0 0 auto}
 
 .campo{margin-bottom:14px}
 .campo:last-child{margin-bottom:0}
-.campo label{display:block;margin-bottom:5px;font-size:12.5px;font-weight:600;color:var(--tinta-2)}
+.campo label{display:block;margin-bottom:5px;font-size:12px;font-weight:600;color:var(--tinta-2)}
 .campo .ajuda{margin:4px 0 0;font-size:11.5px;color:var(--tinta-3)}
 .campo input[type=text],.campo input[type=url],.campo select,.campo textarea{
   width:100%;padding:9px 11px;border:1px solid var(--linha-2);border-radius:var(--r-p);
-  font-size:13.5px;color:var(--tinta);background:var(--papel);
+  font-size:13.5px;color:var(--tinta);background:#FDFDFE;
+  transition:border-color .14s, box-shadow .14s, background .14s;
 }
+.campo input[type=text]:hover,.campo select:hover,.campo textarea:hover{border-color:var(--tinta-3)}
 .campo textarea{resize:vertical;min-height:60px;line-height:1.45}
 .campo input:focus,.campo select:focus,.campo textarea:focus{
   outline:none;border-color:var(--acento);box-shadow:0 0 0 3px rgba(206,46,60,.12);
@@ -181,6 +248,15 @@ svg{display:block;flex:0 0 auto}
 .credor-nome{flex:1;min-width:0;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .credor-grade{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;padding-top:12px}
 .credor-grade .larga{grid-column:1/-1}
+.escolha{display:flex;gap:6px;flex-wrap:wrap}
+.escolha button{
+  padding:8px 12px;border:1px solid var(--linha-2);border-radius:var(--r-p);
+  background:var(--papel);color:var(--tinta-2);font-size:12.5px;font-weight:600;
+}
+.escolha button:hover{border-color:var(--tinta-3);color:var(--tinta)}
+.escolha button[aria-pressed="true"]{
+  border-color:var(--acento);color:var(--acento);background:var(--acento-fraco);
+}
 @media (max-width:700px){.credor-grade{grid-template-columns:1fr}}
 .lixeira{
   width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--linha-2);
@@ -218,18 +294,41 @@ svg{display:block;flex:0 0 auto}
 
 /* prévia */
 .previa{background:var(--papel);border-left:1px solid var(--linha);display:flex;flex-direction:column}
-.previa-topo{padding:12px 16px;border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:10px}
-.previa-topo b{font-size:12.5px;font-weight:600}
+.previa-topo{
+  position:relative;padding:12px 16px;border-bottom:1px solid var(--linha);
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(180deg,#FFFFFF,#FCFBFC);
+}
+.previa-topo::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:linear-gradient(90deg,var(--acento) 0 62%,var(--ouro) 62% 82%,var(--verde) 82% 100%);
+  opacity:.85;
+}
+.previa-topo b{
+  font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-2);
+}
 .previa-topo select{
   margin-left:auto;padding:7px 10px;border:1px solid var(--linha-2);border-radius:var(--r-p);
   font-size:12.5px;max-width:230px;background:var(--papel);
 }
 .previa-fechar{background:none;border:0;color:var(--tinta-3);padding:4px}
 @media (min-width:1181px){.previa-fechar{display:none}}
-.previa-palco{flex:1;background:var(--fundo);padding:16px;overflow:auto;display:flex;justify-content:center}
+/* Bandeja rebaixada, igual à da página pública: o portal lê como aparelho
+   apoiado, não como um retângulo solto no cinza. */
+.previa-palco{
+  flex:1;padding:18px 16px;overflow:auto;display:flex;justify-content:center;
+  background:
+    radial-gradient(520px 260px at 50% 0%, rgba(206,46,60,.05), transparent 62%),
+    linear-gradient(180deg,#F6F5F7 0%,#F1F0F3 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), inset 0 10px 26px rgba(21,21,27,.05);
+}
 .previa-palco iframe{
-  width:100%;max-width:420px;height:100%;min-height:640px;border:1px solid var(--linha);
-  border-radius:12px;background:#fff;box-shadow:0 8px 30px rgba(16,16,26,.07);
+  width:100%;max-width:420px;height:100%;min-height:640px;
+  border:1px solid var(--linha-2);border-radius:16px;background:#fff;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 2px 6px rgba(21,21,27,.05),
+    0 18px 40px rgba(21,21,27,.13);
 }
 
 /* aviso */
@@ -286,7 +385,10 @@ window.PORTAL_CONFIG = {
     "nome": "Quatro C",
     "logoUrl": "",
     "logoAltura": 24,
-    "fonte": "Inter"
+    "fonte": "Inter",
+    /* Fonte só do nome da marca no topo. Em branco, usa a da aplicação. */
+    "fonteNome": "",
+    "pesoNome": 700
   },
   "cores": {
     "primaria": "#CE2E3C",
@@ -307,9 +409,12 @@ window.PORTAL_CONFIG = {
   },
   /* Um bloco por credor. A chave é o nome como o CRM devolve; o casamento é
      por "contém", então "AMIL OPERADORAS" casa com "AMIL OPERADORAS SP".
-     Campo vazio herda o valor global de "contato".                          */
+     Campo vazio herda o valor global de "contato".
+     "exibir" diz como o credor aparece no cartão: "ambos", "logo" (quando o
+     próprio logo já traz o nome) ou "nome".                                  */
   "credores": {
     "AMIL OPERADORAS": {
+      "exibir": "ambos",
       "nome": "Amil",
       "logo": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
       "whatsapp": "",
@@ -317,6 +422,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
     },
     "SANTA HELENA": {
+      "exibir": "ambos",
       "nome": "Santa Helena Saúde",
       "logo": "https://asilvino19-beep.github.io/LogoSham/LogoSham.jfif",
       "whatsapp": "",
@@ -324,6 +430,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-amil?theme=blue&pickup=y"
     },
     "SASCAR FIXA VARIAVEL": {
+      "exibir": "ambos",
       "nome": "Michelin",
       "logo": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
       "whatsapp": "",
@@ -331,6 +438,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-sascar?theme=blue&pickup=y"
     },
     "SASCAR_IRA": {
+      "exibir": "ambos",
       "nome": "Michelin | Equipamentos",
       "logo": "https://asilvino19-beep.github.io/LogoMichelin/LogoMichelin.png",
       "whatsapp": "",
@@ -338,6 +446,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ira?theme=blue&pickup=y"
     },
     "REDE AMERICAS": {
+      "exibir": "ambos",
       "nome": "Rede Américas",
       "logo": "https://asilvino19-beep.github.io/LogoRedeAmericas/LogoRedeAmericas.jfif",
       "whatsapp": "",
@@ -345,6 +454,7 @@ window.PORTAL_CONFIG = {
       "chat": "https://lh.grupoasserth.com.br:7180/chat/ass-pu-ede-americas?theme=blue&pickup=y"
     },
     "AMIL HOSPITAIS": {
+      "exibir": "ambos",
       "nome": "Amil Hospitais",
       "logo": "https://asilvino19-beep.github.io/LogoAmil/LogoAmil.jpg",
       "whatsapp": "",
@@ -371,7 +481,9 @@ window.PORTAL_CONFIG = {
     "titulo.vValidateCode": "Confirme seu e-mail",
     "texto.vValidateCode.1": "Enviamos um código de 6 dígitos para o e-mail que você informou.",
     "botao.btnValidateCode": "Confirmar",
-    "botao.btnResendCode": "Reenviar código",
+    "botao.btnResendCode": "Reenviar por e-mail",
+    "botao.btnSmsCode": "Enviar por SMS",
+    "botao.btnSmsCodeReenviar": "Reenviar por SMS",
 
     "titulo.vConfirmName": "Selecione o seu nome completo",
     "texto.vConfirmName.1": "Para seguir com segurança, confirme o nome do titular do documento informado.",
@@ -440,7 +552,7 @@ window.PORTAL_CONFIG = {
     "titulo.vIraSuccess": "Solicitação registrada",
     "texto.vIraSuccess.1": "Vamos validar a disponibilidade e confirmar o agendamento pelos contatos informados.",
 
-    "texto.vLoading.1": "Consultando..."
+    "texto.vLoading.1": "Carregando..."
   }
 };
 <\/script>
@@ -456,6 +568,8 @@ window.PORTAL_CONFIG = {
 :root{
   --marca:#CE2E3C; --marca-escura:#A3222E; --marca-rgb:206,46,60;
   --fonte:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  /* o nome da marca pode ter fonte própria; por padrão segue a aplicação */
+  --fonte-nome:var(--fonte);
 
   --tinta:#15151B; --tinta-2:#5C5C6A; --tinta-3:#8A8A98;
   --linha:#EAEAEF; --linha-2:#D9D9E1;
@@ -483,7 +597,7 @@ body[data-barra="1"] .portal{padding-bottom:132px}
 .cabeca{position:sticky;top:0;z-index:20;background:var(--papel);border-bottom:1px solid var(--linha)}
 .cabeca-topo{display:flex;align-items:center;gap:12px;height:52px;padding:0 18px}
 .cabeca-logo{height:24px;width:auto;max-width:130px;object-fit:contain;object-position:left center}
-.cabeca-nome{font-size:15.5px;font-weight:700;letter-spacing:-.022em}
+.cabeca-nome{font-family:var(--fonte-nome);font-size:15.5px;font-weight:var(--peso-nome,700);letter-spacing:-.022em}
 .cabeca-seguro{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--tinta-3);white-space:nowrap}
 .progresso{height:3px;background:var(--linha);overflow:hidden}
 .progresso i{display:block;height:100%;width:15%;background:var(--marca);transition:width .45s cubic-bezier(.4,0,.2,1)}
@@ -549,13 +663,23 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
 .btn-txt{width:auto;min-height:auto;padding:2px 0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca);text-decoration:none}
 .btn-txt:hover{color:var(--marca-escura)}
 .btn-txt:disabled{color:var(--tinta-3);cursor:not-allowed}
-.reenvio{margin-top:12px;text-align:center}
+/* Verde é reservado para economia; a confirmação do envio fica neutra. */
+.aviso-codigo{
+  margin:14px 0 0;padding:9px 12px;border-radius:var(--r-p);text-align:center;
+  font-size:12.5px;font-weight:600;color:var(--tinta-2);background:#F3F3F7;
+  display:none;
+}
+.aviso-codigo[data-ver="1"]{display:block}
+.reenvio{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.reenvio-sep{width:1px;height:13px;background:var(--linha-2)}
+@media (max-width:400px){.reenvio{gap:10px}.reenvio-sep{display:none}}
 
 /* ------------------------- cartão de pendência ---------------------------- */
 .pend{padding:16px 0;border-top:1px solid var(--linha)}
 .pend:first-child{border-top:0;padding-top:2px}
 .pend-topo{display:flex;align-items:flex-start;gap:14px;margin-bottom:11px}
 .logo-credor{height:22px;max-width:150px;width:auto;object-fit:contain;object-position:left center;display:block;margin-bottom:7px}
+.logo-credor.logo-so{height:26px;max-width:170px;margin-bottom:0}
 .pend-id{min-width:0;flex:1}
 .pend-credor{font-size:15.5px;font-weight:600;letter-spacing:-.018em}
 .pend-abrir{background:none;border:0;padding:2px;margin-left:auto;color:var(--tinta-3);flex:0 0 auto}
@@ -708,7 +832,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
 <section class="view" data-prog="40" id="vLoading">
   <div class="carregando">
     <div class="giro"></div>
-    <p class="mini" data-txt="texto.vLoading.1">Consultando...</p>
+    <p class="mini" data-txt="texto.vLoading.1">Carregando...</p>
   </div>
 </section>
 
@@ -779,8 +903,11 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <div class="acoes">
     <button class="btn btn-1" disabled="" id="btnValidateCode" type="button"><span data-txt="botao.btnValidateCode">Confirmar</span></button>
   </div>
+  <p class="aviso-codigo" id="codigoAviso" data-ver="0"></p>
   <div class="reenvio">
-    <button class="btn-txt" disabled="" id="btnResendCode" type="button"><span data-txt="botao.btnResendCode">Reenviar código</span></button>
+    <button class="btn-txt" disabled="" id="btnResendCode" type="button"><span data-txt="botao.btnResendCode">Reenviar por e-mail</span></button>
+    <span aria-hidden="true" class="reenvio-sep"></span>
+    <button class="btn-txt" disabled="" id="btnSmsCode" type="button"><span data-txt="botao.btnSmsCode">Enviar por SMS</span></button>
   </div>
 </section>
 
@@ -832,7 +959,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     <button aria-pressed="false" class="opcao" data-mode="parcelado" type="button">
       <span class="opcao-ico"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="18"><rect height="15" rx="2" width="18" x="3" y="5"></rect><path d="M3 10h18M8 15h4"></path></svg></span>
       <span class="opcao-txt"><span class="opcao-nome">Parcelado</span><span class="opcao-sub" id="optParceladoSub"></span></span>
-      <span class="opcao-dir"><span class="opcao-valor" id="optParceladoValor">-</span></span>
+      <span class="opcao-dir"><span class="opcao-valor" id="optParceladoValor">-</span><span class="opcao-eco hidden" id="optParceladoEco"></span></span>
     </button>
   </div>
   <span class="hidden" id="paymentModeButtons"></span>
@@ -863,7 +990,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <p class="sub" id="negotiationSuccessSub">Seu acordo está registrado.</p>
   <ul class="fatos">
     <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
-      <span id="negotiationSuccessBoleto">O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+      <span id="negotiationSuccessBoleto">O boleto será enviado em instantes</span></li>
     <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
       <span id="negotiationSuccessVenc">Vencimento a confirmar</span></li>
   </ul>
@@ -880,7 +1007,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <p class="sub" id="secondCopySub">Seu boleto está registrado.</p>
   <ul class="fatos">
     <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
-      <span>O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+      <span>O boleto será enviado em instantes</span></li>
     <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
       <span id="secondCopyVenc">Vencimento a confirmar</span></li>
   </ul>
@@ -931,7 +1058,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <p class="sub" data-txt="texto.vReenviado.1" id="reenviadoSub">Boleto sem alteração de valor ou de vencimento.</p>
   <ul class="fatos">
     <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
-      <span>O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+      <span>O boleto será enviado em instantes</span></li>
     <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
       <span id="reenviadoVenc">Vencimento a confirmar</span></li>
   </ul>
@@ -1096,7 +1223,11 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     'titulo.vAtendimento.especialista':{ tela: 'vAtendimento', padrao: 'Um especialista já foi acionado' },
     'texto.vAtendimento.especialista': { tela: 'vAtendimento', padrao: 'Você vai receber um contato para a elaboração da melhor condição para o seu caso.' },
     'titulo.vAtendimento.equipe':      { tela: 'vAtendimento', padrao: 'Atendimento com a nossa equipe' },
-    'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' }
+    'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' },
+    /* a mesma tela serve para código por e-mail e por SMS */
+    'texto.vValidateCode.reenvio':     { tela: 'vValidateCode', padrao: 'Enviamos um novo código de 6 dígitos para o e-mail que você informou.' },
+    'titulo.vValidateCode.sms':        { tela: 'vValidateCode', padrao: 'Confirme seu celular' },
+    'texto.vValidateCode.sms':         { tela: 'vValidateCode', padrao: 'Enviamos um código de 6 dígitos por SMS para o celular que você informou.' }
   };
 
   window.aplicarPortalConfig = function (cfg) {
@@ -1111,7 +1242,32 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     if (cores.primariaEscura) raiz.setProperty('--marca-escura', cores.primariaEscura);
 
     const marca = cfg.marca || {};
+
+    /* O portal carrega sozinho as fontes que a configuração pedir. Sem isto,
+       o arquivo entregue ao cliente cairia na fonte de sistema.              */
+    function garantirFonte(nome, id) {
+      if (!nome) return;
+      try {
+        let l = document.getElementById(id);
+        if (!l) {
+          l = document.createElement('link');
+          l.id = id; l.rel = 'stylesheet';
+          document.head.appendChild(l);
+        }
+        l.href = 'https://fonts.googleapis.com/css2?family=' +
+          encodeURIComponent(nome).replace(/%20/g, '+') +
+          ':wght@400;500;600;700&display=swap';
+      } catch (e) {}
+    }
+    garantirFonte(marca.fonte, 'fonte-aplicacao');
+    garantirFonte(marca.fonteNome, 'fonte-marca');
     if (marca.fonte) raiz.setProperty('--fonte', "'" + marca.fonte + "', system-ui, Arial, sans-serif");
+    /* A fonte do nome da marca é independente: o cliente às vezes tem uma
+       fonte só para a assinatura. Em branco, o nome segue a aplicação.      */
+    raiz.setProperty('--fonte-nome', marca.fonteNome
+      ? "'" + marca.fonteNome + "', system-ui, Arial, sans-serif"
+      : 'var(--fonte)');
+    raiz.setProperty('--peso-nome', String(marca.pesoNome || 700));
 
     const logo = document.getElementById('portalLogo');
     const nome = document.getElementById('portalNomeMarca');
@@ -1215,6 +1371,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastHumanChat = "";
     let identityAttemptCount = 0;
     let resendCodeTimer = null;
+    let smsJaEnviado = false;   /* já houve um envio por SMS nesta sessão */
     let modoPreview = false;
     const RESEND_CODE_WAIT_SECONDS = 60;
 
@@ -1277,6 +1434,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const at = e.indexOf("@");
         if (at < 1) return "o e-mail informado";
         return e.slice(0, 2) + "•••••" + e.slice(at);
+    }
+
+    /* Mostra só o DDD e os últimos dígitos: o cliente reconhece o número
+       sem que ele seja exposto inteiro na tela.                              */
+    function mascararTelefone(tel) {
+        const d = onlyDigits(tel);
+        if (d.length < 10) return "o celular informado";
+        return "(" + d.slice(0, 2) + ") •••••-" + d.slice(-4);
     }
 
     /* ===================== ícones e canais ================================= */
@@ -1360,8 +1525,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Voltar é contextual: das telas de pagamento volta para as pendências,
        do resto reinicia a consulta.                                          */
+    /* Toda tela alcançada a partir de um cartão volta para a lista de
+       pendências. Antes só a negociação e o agendamento voltavam; do
+       atendimento e do acordo o cliente caía na identificação e perdia a
+       consulta inteira.                                                     */
+    const TELAS_DE_CARTAO = [
+        "vNegotiate", "vIraSchedule", "vAtendimento", "vActiveAgreement",
+        "vReenviado", "vNegotiationSuccess", "vSecondCopySuccess",
+        "vNegotiationFailed", "vIraSuccess"
+    ];
+
+    function temCartoesNaTela() {
+        return ($("cardsGrid")?.children.length || 0) > 0;
+    }
+
     function voltarContextual() {
-        if (currentView === "vNegotiate" || currentView === "vIraSchedule") return setActiveView("vNext");
+        if (temCartoesNaTela() && TELAS_DE_CARTAO.indexOf(currentView) !== -1) {
+            return setActiveView("vNext");
+        }
+        /* telas anteriores aos cartões: aí sim recomeçar é o certo */
         goStart();
     }
 
@@ -1441,6 +1623,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function goStart() {
         currentDoc = ""; foundRecord = null; selectedCard = null;
         identityAttemptCount = 0; sessionToken = "";
+        smsJaEnviado = false; rotularBotaoSms(false); avisarCodigo("");
         sessionId = Date.now().toString();
         clearPortalForms(); setDocType("CPF");
         window.montarCanais("");           /* fora de um credor, canais globais */
@@ -1503,7 +1686,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function getCredorPresentation(credorRaw, unidade) {
         const c = norm(credorRaw);
         const cc = credorConfig(credorRaw);
-        const base = { nome: nomeDoCredor(credorRaw, unidade), logo: cc.logo || "", chat: cc.chat || chatPadrao() };
+        const base = { nome: nomeDoCredor(credorRaw, unidade), logo: cc.logo || "",
+                       chat: cc.chat || chatPadrao(), exibir: cc.exibir || "ambos" };
         if (c.includes("AMIL OPERADORAS"))      return { ...base, tipoAcao: "NEGOCIAR" };
         if (c.includes("SASCAR_IRA"))           return { ...base, tipoAcao: "AGENDAR" };
         return { ...base, tipoAcao: "HUMANO" };
@@ -1724,6 +1908,8 @@ document.addEventListener("DOMContentLoaded", () => {
             vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
             valor: valorDetalhe,
             valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
+            /* valor sem encargo da própria nota, quando o backend enviar */
+            valorOriginal: parseMoneyLike(row?.valorOriginal || row?.valorSemEncargo || 0),
             /* status de pagamento: o acordo vigente precisa saber quais
                parcelas já foram pagas para calcular o saldo restante. */
             pago: row?.pago === true || /pag/i.test(String(row?.status || "")),
@@ -1751,6 +1937,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return {
                 tipo, credor: c?.credor || "", credorNome: nomeBom,
                 logo: c?.logo || pres.logo, chatUrl: c?.chatUrl || pres.chat,
+                exibir: credorConfig(c?.credor || "").exibir || "ambos",
                 numeroContrato: c?.numeroContrato || "-", idContrato: c?.idContrato || "",
                 unidade: c?.unidade || "",
                 valorTotal, valorTotalFormatado: c?.valorTotalFormatado || formatBRL(valorTotal),
@@ -1861,17 +2048,26 @@ document.addEventListener("DOMContentLoaded", () => {
             topo.className = "pend-topo";
             const id = document.createElement("div");
             id.className = "pend-id";
-            if (card.logo) {
+
+            /* Como o credor se apresenta no cartão, definido no painel:
+               "ambos" (padrão), "logo" (o logo já traz o nome) ou "nome".
+               No modo "logo", se a imagem não carregar o nome volta — o
+               cartão nunca fica sem identidade.                              */
+            const exibir = card.exibir === "logo" || card.exibir === "nome" ? card.exibir : "ambos";
+            const nome = document.createElement("div");
+            nome.className = "pend-credor";
+            nome.textContent = card.credorNome;
+
+            if (card.logo && exibir !== "nome") {
                 const img = document.createElement("img");
                 img.className = "logo-credor";
                 img.alt = card.credorNome;
                 img.src = card.logo;
-                img.onerror = () => img.remove();
+                if (exibir === "logo") img.classList.add("logo-so");
+                img.onerror = () => { img.remove(); nome.classList.remove("hidden"); };
                 id.appendChild(img);
+                if (exibir === "logo") nome.classList.add("hidden");
             }
-            const nome = document.createElement("div");
-            nome.className = "pend-credor";
-            nome.textContent = card.credorNome;
             id.appendChild(nome);
             topo.appendChild(id);
 
@@ -2032,19 +2228,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             const rot = d.numero ? `Nota ${d.numero}` : `Nota ${i + 1}`;
-            linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${d.valorFormatado || "-"}</dd></li>`);
+            const orig = Number(d.valorOriginal || 0);
+            const atual = Number(d.valor || 0);
+            const valorNota = (orig > 0 && Math.abs(orig - atual) >= 0.01)
+                ? `${formatBRL(orig)} → ${d.valorFormatado || formatBRL(atual)}`
+                : (d.valorFormatado || "-");
+            linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${valorNota}</dd></li>`);
         });
 
         const soma = itens.reduce((a, d) => a + Number(d.valor || 0), 0);
+        /* O CRM devolve os dois: "Valor" (original) e "_Valortotal"
+           (atualizado). Quando são iguais — acordo sem encargo, por exemplo —
+           mostrar duas linhas idênticas só confunde, então fica uma só.      */
+        const somaOriginal = itens.reduce((a, d) => a + Number(d.valorOriginal || 0), 0);
         if (ehAcordo) {
             const total = Number(card.valorNegociado || 0) || soma || Number(card.valorTotal || 0);
             if (total > 0) linhas.push(`<li class="total"><dt>Valor negociado</dt><dd>${formatBRL(total)}</dd></li>`);
             const pago = itens.filter(d => d.pago).reduce((a, d) => a + Number(d.valor || 0), 0);
             if (pago > 0) linhas.push(`<li class="total"><dt>Já pago</dt><dd>${formatBRL(pago)}</dd></li>`);
         } else {
-            const original = card.valorOriginal > 0 ? card.valorOriginal : soma;
-            if (original > 0) linhas.push(`<li class="total"><dt>Valor original</dt><dd>${formatBRL(original)}</dd></li>`);
-            linhas.push(`<li class="total"><dt>Valor atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(card.valorTotal || 0)}</dd></li>`);
+            const atualizado = Number(card.valorTotal || 0) || soma;
+            const original = Number(card.valorOriginal || 0) || somaOriginal;
+            const diferem = original > 0 && Math.abs(original - atualizado) >= 0.01;
+            if (diferem) {
+                linhas.push(`<li class="total"><dt>Valor total original</dt><dd>${formatBRL(original)}</dd></li>`);
+                linhas.push(`<li class="total"><dt>Valor total atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(atualizado)}</dd></li>`);
+            } else {
+                linhas.push(`<li class="total"><dt>Valor total atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(atualizado)}</dd></li>`);
+            }
             if (card.diasAtraso > 0) linhas.push(`<li><dt>Dias em atraso</dt><dd>${card.diasAtraso}</dd></li>`);
         }
         dl.innerHTML = linhas.join("");
@@ -2168,9 +2379,16 @@ document.addEventListener("DOMContentLoaded", () => {
         block.classList.remove("hidden");
         const maxParcelas = Math.max.apply(null, parcelas);
         if ($("optParceladoSub")) $("optParceladoSub").textContent = "Em até " + maxParcelas + " vezes";
+        /* As duas opções mostram a mesma informação: o total negociado e o
+           quanto ele economiza sobre o valor atualizado. O valor de cada
+           parcela aparece na grade, no momento em que ele escolhe quantas. */
         const totalParcelado = Number(card.parcelamento.valorNegociadoParcelado || 0);
-        if ($("optParceladoValor")) {
-            $("optParceladoValor").textContent = maxParcelas + "x " + formatBRL(getInstallmentAmount(totalParcelado, maxParcelas));
+        if ($("optParceladoValor")) $("optParceladoValor").textContent = formatBRL(totalParcelado);
+        const ecoParcelado = Math.max(0, Number(card?.valorTotal || 0) - totalParcelado);
+        const elEcoParc = $("optParceladoEco");
+        if (elEcoParc) {
+            if (ecoParcelado > 0) { elEcoParc.textContent = "− " + formatBRL(ecoParcelado); elEcoParc.classList.remove("hidden"); }
+            else elEcoParc.classList.add("hidden");
         }
 
         if (instButtons) {
@@ -2354,22 +2572,76 @@ document.addEventListener("DOMContentLoaded", () => {
     /* O botão de reenvio aparece sempre, mas só fica clicável depois de 60s.
        Sem contagem visível — o cliente não precisa vigiar um cronômetro.     */
     function startResendCodeCooldown(seconds = RESEND_CODE_WAIT_SECONDS) {
-        const btn = $("btnResendCode"); if (!btn) return;
+        /* A espera vale para os dois caminhos: quem acabou de receber por
+           e-mail também aguarda antes de pedir por SMS, e vice-versa.        */
+        const botoes = [$("btnResendCode"), $("btnSmsCode")].filter(Boolean);
+        if (!botoes.length) return;
         if (resendCodeTimer) clearTimeout(resendCodeTimer);
-        btn.disabled = true;
-        resendCodeTimer = setTimeout(() => { btn.disabled = false; resendCodeTimer = null; }, (Number(seconds) || 60) * 1000);
+        botoes.forEach(b => { b.disabled = true; });
+        resendCodeTimer = setTimeout(() => {
+            botoes.forEach(b => { b.disabled = false; });
+            resendCodeTimer = null;
+        }, (Number(seconds) || 60) * 1000);
     }
 
-    function abrirTelaCodigo(isResend) {
+    /* Confirmação curta e explícita de que o novo código saiu. Antes a
+       única pista era o subtítulo mudando, e o cliente não percebia.        */
+    function avisarCodigo(texto) {
+        const el = $("codigoAviso"); if (!el) return;
+        if (!texto) { el.dataset.ver = "0"; el.textContent = ""; return; }
+        el.textContent = texto;
+        el.dataset.ver = "1";
+        clearTimeout(el._t);
+        el._t = setTimeout(() => { el.dataset.ver = "0"; }, 8000);
+    }
+
+    /* Depois de um envio por SMS o rótulo passa a "Reenviar por SMS". */
+    function rotularBotaoSms(jaEnviou) {
+        const span = $("btnSmsCode")?.querySelector("[data-txt]");
+        if (!span) return;
+        const txts = ((window.PORTAL_CONFIG || {}).textos || {});
+        const chave = jaEnviou ? "botao.btnSmsCodeReenviar" : "botao.btnSmsCode";
+        span.setAttribute("data-txt", chave);
+        span.textContent = txts[chave] || (jaEnviou ? "Reenviar por SMS" : "Enviar por SMS");
+    }
+
+    /* modo: "inicial" (primeiro envio por e-mail), "email" (reenvio por
+       e-mail) ou "sms" (envio para o celular informado no início).           */
+    function abrirTelaCodigo(modo) {
+        if (modo === true) modo = "email";
+        if (!modo) modo = "inicial";
+        const txts = ((window.PORTAL_CONFIG || {}).textos || {});
+        const ehSms = modo === "sms";
+
+        const tit = document.querySelector('#vValidateCode h1');
+        if (tit) {
+            tit.textContent = ehSms
+                ? (txts["titulo.vValidateCode.sms"] || "Confirme seu celular")
+                : (txts["titulo.vValidateCode"] || "Confirme seu e-mail");
+        }
         const txt = $("validateCodeText");
         if (txt) {
-            txt.textContent = isResend
-                ? "Enviamos um novo código de 6 dígitos para o e-mail que você informou."
-                : ((window.PORTAL_CONFIG || {}).textos || {})["texto.vValidateCode.1"]
-                  || "Enviamos um código de 6 dígitos para o e-mail que você informou.";
+            txt.textContent = ehSms
+                ? (txts["texto.vValidateCode.sms"]
+                   || "Enviamos um código de 6 dígitos por SMS para o celular que você informou.")
+                : modo === "email"
+                  ? (txts["texto.vValidateCode.reenvio"]
+                     || "Enviamos um novo código de 6 dígitos para o e-mail que você informou.")
+                  : (txts["texto.vValidateCode.1"]
+                     || "Enviamos um código de 6 dígitos para o e-mail que você informou.");
         }
         const dest = $("codigoDestino");
-        if (dest) dest.textContent = mascararEmail($("emailInput")?.value || "");
+        if (dest) {
+            dest.textContent = ehSms
+                ? mascararTelefone($("phoneInput")?.value || "")
+                : mascararEmail($("emailInput")?.value || "");
+        }
+        if (ehSms) smsJaEnviado = true;
+        rotularBotaoSms(smsJaEnviado);
+        avisarCodigo(
+            modo === "sms"   ? "Código enviado por SMS agora." :
+            modo === "email" ? "Código reenviado para o seu e-mail agora." : ""
+        );
         limparCodigo();
         hideText("validationCodeError");
         setActiveView("vValidateCode");
@@ -2468,7 +2740,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 lastHumanChat = data?.chatUrl || chatPadrao();
                 return setActiveView("vBlocked");
             }
-            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(false);
+            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo("inicial");
             if (data?.proximoStep === "validar_identidade") {
                 renderIdentityOptions(data?.options || [], data?.fullName || nome, data?.type || "CPF");
                 return setActiveView("vConfirmName");
@@ -2529,23 +2801,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    on("btnResendCode", "click", async () => {
-        if ($("btnResendCode")?.disabled) return;
+    /* Os dois caminhos usam a mesma chamada; muda só o step e o texto que a
+       tela mostra depois. O backend responde igual nos dois casos.           */
+    async function pedirNovoCodigo(step, modo) {
         hideText("validationCodeError");
+        avisarCodigo("");
+        /* Trava já no clique: se a chamada falhar, o cliente ainda não
+           consegue disparar de novo em sequência.                            */
+        startResendCodeCooldown();
         setActiveView("vLoading");
         try {
-            const data = await callBackend("reenviar_codigo_contato", {
+            const data = await callBackend(step, {
                 documento: currentDoc,
                 nomeInformado: $("nameInput")?.value.trim() || "",
                 telefoneInformado: onlyDigits($("phoneInput")?.value || ""),
                 emailInformado: $("emailInput")?.value.trim() || ""
             });
-            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(true);
+            if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(modo);
             if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
             telaErro(data?.mensagem);
         } catch (e) {
             telaErro();
         }
+    }
+
+    on("btnResendCode", "click", () => {
+        if ($("btnResendCode")?.disabled) return;
+        pedirNovoCodigo("reenviar_codigo_contato", "email");
+    });
+
+    on("btnSmsCode", "click", () => {
+        if ($("btnSmsCode")?.disabled) return;
+        pedirNovoCodigo("reenviar_codigo_sms", "sms");
     });
 
     function validatePaymentDate(dateStr) {
@@ -2644,8 +2931,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const alvo = $("negotiationSuccessBoleto");
                 if (alvo) {
                     alvo.innerHTML = qtdBoletos > 1
-                        ? `Os <b>${qtdBoletos} boletos</b> serão enviados para o seu e-mail e WhatsApp`
-                        : "O boleto será enviado para o seu e-mail e WhatsApp";
+                        ? `Os <b>${qtdBoletos} boletos</b> serão enviados em instantes`
+                        : "O boleto será enviado em instantes";
                 }
                 const venc = $("negotiationSuccessVenc");
                 if (venc) {
@@ -2979,7 +3266,7 @@ function render() {
   const box = $('edicao');
   const cabeca = {
     marca:      ['Marca', 'Logo, cores e fonte do portal. A cor primária controla o botão de ação, a barra de progresso, os links e a seleção.'],
-    credores:   ['Credores', 'Um cadastro por credor: como o nome chega do CRM, como ele aparece para o cliente, o logo e os canais de atendimento daquele projeto. Campo em branco herda o canal geral.'],
+    credores:   ['Credores', 'Um cadastro por credor: como o nome chega do CRM, como ele aparece para o cliente, o logo, a forma de exibição no cartão e os canais daquele projeto. Campo em branco herda o canal geral.'],
     canais:     ['Canais gerais e rodapé', 'Usados quando o credor não tem canal próprio, e nas telas em que ainda não há credor definido (identificação, erro, sem pendência).'],
     textos:     ['Textos e botões', 'Todo texto editável do portal, agrupado pela tela onde aparece. A estrutura das telas é fixa.'],
     integracao: ['Integração', 'Endereço do backend. Mexa aqui só com o time técnico.']
@@ -3031,6 +3318,23 @@ function renderMarca(alvo) {
           <label for="mAltura">Altura do logo no topo (px)</label>
           <input id="mAltura" type="text" value="${esc(m.logoAltura || 24)}"/>
         </div>
+        <div class="grade2">
+          <div class="campo">
+            <label for="mFonteNome">Fonte do nome da marca</label>
+            <select id="mFonteNome">
+              <option value=""${!m.fonteNome ? ' selected' : ''}>Mesma da aplicação</option>
+              ${FONTES.map(f => `<option value="${f}"${m.fonteNome === f ? ' selected' : ''}>${f}</option>`).join('')}
+            </select>
+            <p class="ajuda">Só o nome no topo. Serve para a assinatura da marca ter tipografia própria, diferente da aplicação.</p>
+          </div>
+          <div class="campo">
+            <label for="mPesoNome">Peso do nome</label>
+            <select id="mPesoNome">
+              ${[400,500,600,700].map(w => `<option value="${w}"${Number(m.pesoNome || 700) === w ? ' selected' : ''}>${w}</option>`).join('')}
+            </select>
+            <p class="ajuda">Vale quando há nome no topo, sem logo.</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3060,14 +3364,14 @@ function renderMarca(alvo) {
     </div>
 
     <div class="bloco">
-      <div class="bloco-cabeca"><h3>Fonte</h3></div>
+      <div class="bloco-cabeca"><h3>Fonte da aplicação</h3></div>
       <div class="bloco-corpo">
         <div class="campo">
           <label for="mFonte">Família tipográfica</label>
           <select id="mFonte">
             ${FONTES.map(f => `<option value="${f}"${(m.fonte || 'Inter') === f ? ' selected' : ''}>${f}</option>`).join('')}
           </select>
-          <p class="ajuda">Fontes do Google Fonts. A escala de tamanhos e os pesos são fixos.</p>
+          <p class="ajuda">Fontes do Google Fonts, usadas em todas as telas. A escala de tamanhos e os pesos são fixos. O nome da marca pode ter fonte própria, na aba Identidade acima.</p>
         </div>
       </div>
     </div>`;
@@ -3104,6 +3408,16 @@ function renderMarca(alvo) {
     carregarFonteNaPrevia(e.target.value);
     aplicar();
   });
+  $('mFonteNome').addEventListener('change', e => {
+    const v = e.target.value;
+    if (v) { CFG.marca.fonteNome = v; carregarFonteNaPrevia(v, 'fonte-previa-marca'); }
+    else delete CFG.marca.fonteNome;
+    aplicar();
+  });
+  $('mPesoNome').addEventListener('change', e => {
+    CFG.marca.pesoNome = parseInt(e.target.value, 10) || 700;
+    aplicar();
+  });
 
   $('mLogoEnviar').addEventListener('click', () => pedirImagem(dataUrl => {
     CFG.marca.logoUrl = dataUrl;
@@ -3126,10 +3440,10 @@ function escurecer(hex, fator) {
 }
 
 /* A fonte precisa existir dentro do iframe para a prévia mudar de verdade. */
-function carregarFonteNaPrevia(nome) {
+function carregarFonteNaPrevia(nome, idAlvo) {
   try {
     const doc = $('palco').contentDocument;
-    const id = 'fonte-admin';
+    const id = idAlvo || 'fonte-admin';
     let link = doc.getElementById(id);
     if (!link) {
       link = doc.createElement('link');
@@ -3225,6 +3539,14 @@ function renderCredores(alvo) {
           <input data-f="nome" placeholder="${esc(chave)}" type="text" value="${esc(c.nome || '')}"/>
           <p class="ajuda">É este nome que o cliente lê. Em branco, aparece o do CRM.</p>
         </div>
+        <div class="campo larga">
+          <label>Como aparece no cartão</label>
+          <div class="escolha" data-escolha="exibir">
+            ${[['ambos','Logo e nome'],['logo','Só o logo'],['nome','Só o nome']].map(([v, r]) =>
+              `<button aria-pressed="${(c.exibir || 'ambos') === v}" data-v="${v}" type="button">${r}</button>`).join('')}
+          </div>
+          <p class="ajuda">Use <b>Só o logo</b> quando a imagem já traz o nome escrito — evita o cliente ler o mesmo nome duas vezes. Se o logo não carregar, o nome volta sozinho.</p>
+        </div>
         <div class="campo">
           <label>WhatsApp</label>
           <input data-f="whatsapp" placeholder="${esc(g.whatsapp || 'usa o canal geral')}" type="text" value="${esc(c.whatsapp || '')}"/>
@@ -3250,6 +3572,17 @@ function renderCredores(alvo) {
         const v = e.target.value.trim();
         if (v) c[campo] = v; else delete c[campo];
         if (campo === 'nome') card.querySelector('.credor-nome').textContent = v || chave;
+        aplicar();
+      });
+    });
+
+    /* como o credor se apresenta no cartão */
+    card.querySelectorAll('[data-escolha="exibir"] button').forEach(b => {
+      b.addEventListener('click', () => {
+        const v = b.dataset.v;
+        if (v === 'ambos') delete c.exibir; else c.exibir = v;
+        card.querySelectorAll('[data-escolha="exibir"] button').forEach(o =>
+          o.setAttribute('aria-pressed', String(o.dataset.v === v)));
         aplicar();
       });
     });
