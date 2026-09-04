@@ -2157,6 +2157,7 @@ window.PORTAL_CONFIG = {
     "botao.btnValidateCode": "Confirmar",
     "botao.btnResendCode": "Reenviar por e-mail",
     "botao.btnSmsCode": "Enviar por SMS",
+    "botao.btnSmsCodeReenviar": "Reenviar por SMS",
 
     "titulo.vConfirmName": "Selecione o seu nome completo",
     "texto.vConfirmName.1": "Para seguir com segurança, confirme o nome do titular do documento informado.",
@@ -2336,6 +2337,13 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
 .btn-txt{width:auto;min-height:auto;padding:2px 0;background:none;border:0;font-size:13.5px;font-weight:600;color:var(--marca);text-decoration:none}
 .btn-txt:hover{color:var(--marca-escura)}
 .btn-txt:disabled{color:var(--tinta-3);cursor:not-allowed}
+/* Verde é reservado para economia; a confirmação do envio fica neutra. */
+.aviso-codigo{
+  margin:14px 0 0;padding:9px 12px;border-radius:var(--r-p);text-align:center;
+  font-size:12.5px;font-weight:600;color:var(--tinta-2);background:#F3F3F7;
+  display:none;
+}
+.aviso-codigo[data-ver="1"]{display:block}
 .reenvio{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
 .reenvio-sep{width:1px;height:13px;background:var(--linha-2)}
 @media (max-width:400px){.reenvio{gap:10px}.reenvio-sep{display:none}}
@@ -2569,6 +2577,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <div class="acoes">
     <button class="btn btn-1" disabled="" id="btnValidateCode" type="button"><span data-txt="botao.btnValidateCode">Confirmar</span></button>
   </div>
+  <p class="aviso-codigo" id="codigoAviso" data-ver="0"></p>
   <div class="reenvio">
     <button class="btn-txt" disabled="" id="btnResendCode" type="button"><span data-txt="botao.btnResendCode">Reenviar por e-mail</span></button>
     <span aria-hidden="true" class="reenvio-sep"></span>
@@ -2655,7 +2664,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <p class="sub" id="negotiationSuccessSub">Seu acordo está registrado.</p>
   <ul class="fatos">
     <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
-      <span id="negotiationSuccessBoleto">O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+      <span id="negotiationSuccessBoleto">O boleto será enviado em instantes</span></li>
     <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
       <span id="negotiationSuccessVenc">Vencimento a confirmar</span></li>
   </ul>
@@ -2672,7 +2681,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <p class="sub" id="secondCopySub">Seu boleto está registrado.</p>
   <ul class="fatos">
     <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
-      <span>O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+      <span>O boleto será enviado em instantes</span></li>
     <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
       <span id="secondCopyVenc">Vencimento a confirmar</span></li>
   </ul>
@@ -2723,7 +2732,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <p class="sub" data-txt="texto.vReenviado.1" id="reenviadoSub">Boleto sem alteração de valor ou de vencimento.</p>
   <ul class="fatos">
     <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
-      <span>O boleto será enviado para o seu e-mail e WhatsApp</span></li>
+      <span>O boleto será enviado em instantes</span></li>
     <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
       <span id="reenviadoVenc">Vencimento a confirmar</span></li>
   </ul>
@@ -2890,9 +2899,11 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     'titulo.vAtendimento.equipe':      { tela: 'vAtendimento', padrao: 'Atendimento com a nossa equipe' },
     'texto.vAtendimento.equipe':       { tela: 'vAtendimento', padrao: 'A condição deste contrato é montada junto com um atendente.' },
     /* a mesma tela serve para código por e-mail e por SMS */
-    'texto.vValidateCode.reenvio':     { tela: 'vValidateCode', padrao: 'Enviamos um novo código de 6 dígitos para o e-mail que você informou.' },
+    'texto.vValidateCode.reenvio':     { tela: 'vValidateCode', padrao: 'Reenviamos o código de 6 dígitos para o e-mail que você informou.' },
     'titulo.vValidateCode.sms':        { tela: 'vValidateCode', padrao: 'Confirme seu celular' },
-    'texto.vValidateCode.sms':         { tela: 'vValidateCode', padrao: 'Enviamos um código de 6 dígitos por SMS para o celular que você informou.' }
+    'texto.vValidateCode.sms':         { tela: 'vValidateCode', padrao: 'Enviamos um código de 6 dígitos por SMS para o celular que você informou.' },
+    'texto.vValidateCode.smsReenvio':  { tela: 'vValidateCode', padrao: 'Reenviamos o código de 6 dígitos por SMS para o celular que você informou.' },
+    'erro.codigoNaoEnviado':           { tela: 'vValidateCode', padrao: 'Não conseguimos enviar agora. Tente o outro caminho ou fale com a gente.' }
   };
 
   window.aplicarPortalConfig = function (cfg) {
@@ -3036,6 +3047,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastHumanChat = "";
     let identityAttemptCount = 0;
     let resendCodeTimer = null;
+    /* Contam CLIQUES, não sucessos: se o cliente já pediu por SMS uma vez, o
+       botão vira "Reenviar por SMS" mesmo que aquele envio tenha falhado. */
+    let cliquesSms = 0;
+    let smsJaEnviado = false;
+    let acordoAberto = null;    /* cartão de acordo que está na tela */
     let modoPreview = false;
     const RESEND_CODE_WAIT_SECONDS = 60;
 
@@ -3189,8 +3205,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Voltar é contextual: das telas de pagamento volta para as pendências,
        do resto reinicia a consulta.                                          */
+    /* Toda tela alcançada a partir de um cartão volta para a lista de
+       pendências. Antes só a negociação e o agendamento voltavam; do
+       atendimento e do acordo o cliente caía na identificação e perdia a
+       consulta inteira.                                                     */
+    const TELAS_DE_CARTAO = [
+        "vNegotiate", "vIraSchedule", "vAtendimento", "vActiveAgreement",
+        "vReenviado", "vNegotiationSuccess", "vSecondCopySuccess",
+        "vNegotiationFailed", "vIraSuccess"
+    ];
+
+    function temCartoesNaTela() {
+        return ($("cardsGrid")?.children.length || 0) > 0;
+    }
+
+    /* Telas anteriores aos cartões: recomeçar é o certo. */
+    const TELAS_ANTES_DOS_CARTOES = ["vValidateCode", "vConfirmName", "vIdentityError"];
+
     function voltarContextual() {
-        if (currentView === "vNegotiate" || currentView === "vIraSchedule") return setActiveView("vNext");
+        if (TELAS_ANTES_DOS_CARTOES.indexOf(currentView) !== -1) return goStart();
+        /* Depois que a lista existe, voltar é sempre voltar para ela — inclusive
+           de uma tela de erro, para o cliente não perder a consulta. */
+        if (temCartoesNaTela()) return setActiveView("vNext");
         goStart();
     }
 
@@ -3270,6 +3306,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function goStart() {
         currentDoc = ""; foundRecord = null; selectedCard = null;
         identityAttemptCount = 0; sessionToken = "";
+        cliquesSms = 0; smsJaEnviado = false;
+        rotularBotaoSms(false); avisarCodigo("");
         sessionId = Date.now().toString();
         clearPortalForms(); setDocType("CPF");
         window.montarCanais("");           /* fora de um credor, canais globais */
@@ -3554,6 +3592,8 @@ document.addEventListener("DOMContentLoaded", () => {
             vencimentoFormatado: row?.vencimentoFormatado || row?.vencimento || "-",
             valor: valorDetalhe,
             valorFormatado: row?.valorFormatado || formatBRL(valorDetalhe),
+            /* valor sem encargo da própria nota, quando o backend enviar */
+            valorOriginal: parseMoneyLike(row?.valorOriginal || row?.valorSemEncargo || 0),
             /* status de pagamento: o acordo vigente precisa saber quais
                parcelas já foram pagas para calcular o saldo restante. */
             pago: row?.pago === true || /pag/i.test(String(row?.status || "")),
@@ -3846,6 +3886,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "</b> — <b>" + (proxima.valorFormatado || formatBRL(proxima.valor || origem.valorTotal || 0)) + "</b>";
         }
 
+        acordoAberto = origem;
         montarDetalhes(origem, "acordoDetalhes", "acordo");
         lastHumanChat = origem.chatUrl || lastHumanChat;
         window.montarCanais(origem.credor || "");
@@ -3872,19 +3913,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             const rot = d.numero ? `Nota ${d.numero}` : `Nota ${i + 1}`;
-            linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${d.valorFormatado || "-"}</dd></li>`);
+            const orig = Number(d.valorOriginal || 0);
+            const atual = Number(d.valor || 0);
+            const valorNota = (orig > 0 && Math.abs(orig - atual) >= 0.01)
+                ? `${formatBRL(orig)} → ${d.valorFormatado || formatBRL(atual)}`
+                : (d.valorFormatado || "-");
+            linhas.push(`<li><dt>${rot}</dt><dd class="livre">venceu ${d.vencimentoFormatado || "-"} · ${valorNota}</dd></li>`);
         });
 
         const soma = itens.reduce((a, d) => a + Number(d.valor || 0), 0);
+        /* O CRM devolve os dois: "Valor" (original) e "_Valortotal"
+           (atualizado). Quando são iguais — acordo sem encargo, por exemplo —
+           mostrar duas linhas idênticas só confunde, então fica uma só.      */
+        const somaOriginal = itens.reduce((a, d) => a + Number(d.valorOriginal || 0), 0);
         if (ehAcordo) {
             const total = Number(card.valorNegociado || 0) || soma || Number(card.valorTotal || 0);
             if (total > 0) linhas.push(`<li class="total"><dt>Valor negociado</dt><dd>${formatBRL(total)}</dd></li>`);
             const pago = itens.filter(d => d.pago).reduce((a, d) => a + Number(d.valor || 0), 0);
             if (pago > 0) linhas.push(`<li class="total"><dt>Já pago</dt><dd>${formatBRL(pago)}</dd></li>`);
         } else {
-            const original = card.valorOriginal > 0 ? card.valorOriginal : soma;
-            if (original > 0) linhas.push(`<li class="total"><dt>Valor original</dt><dd>${formatBRL(original)}</dd></li>`);
-            linhas.push(`<li class="total"><dt>Valor atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(card.valorTotal || 0)}</dd></li>`);
+            const atualizado = Number(card.valorTotal || 0) || soma;
+            const original = Number(card.valorOriginal || 0) || somaOriginal;
+            const diferem = original > 0 && Math.abs(original - atualizado) >= 0.01;
+            if (diferem) {
+                linhas.push(`<li class="total"><dt>Valor total original</dt><dd>${formatBRL(original)}</dd></li>`);
+                linhas.push(`<li class="total"><dt>Valor total atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(atualizado)}</dd></li>`);
+            } else {
+                linhas.push(`<li class="total"><dt>Valor total atualizado</dt><dd>${card.valorTotalFormatado || formatBRL(atualizado)}</dd></li>`);
+            }
             if (card.diasAtraso > 0) linhas.push(`<li><dt>Dias em atraso</dt><dd>${card.diasAtraso}</dd></li>`);
         }
         dl.innerHTML = linhas.join("");
@@ -4213,6 +4269,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }, (Number(seconds) || 60) * 1000);
     }
 
+    /* Confirmação curta e explícita de que o novo código saiu. Antes a
+       única pista era o subtítulo mudando, e o cliente não percebia.        */
+    function avisarCodigo(texto) {
+        const el = $("codigoAviso"); if (!el) return;
+        if (!texto) { el.dataset.ver = "0"; el.textContent = ""; return; }
+        el.textContent = texto;
+        el.dataset.ver = "1";
+        clearTimeout(el._t);
+        el._t = setTimeout(() => { el.dataset.ver = "0"; }, 8000);
+    }
+
+    /* Depois de um envio por SMS o rótulo passa a "Reenviar por SMS". */
+    function rotularBotaoSms(jaEnviou) {
+        const span = $("btnSmsCode")?.querySelector("[data-txt]");
+        if (!span) return;
+        const txts = ((window.PORTAL_CONFIG || {}).textos || {});
+        const chave = jaEnviou ? "botao.btnSmsCodeReenviar" : "botao.btnSmsCode";
+        span.setAttribute("data-txt", chave);
+        span.textContent = txts[chave] || (jaEnviou ? "Reenviar por SMS" : "Enviar por SMS");
+    }
+
     /* modo: "inicial" (primeiro envio por e-mail), "email" (reenvio por
        e-mail) ou "sms" (envio para o celular informado no início).           */
     function abrirTelaCodigo(modo) {
@@ -4227,14 +4304,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? (txts["titulo.vValidateCode.sms"] || "Confirme seu celular")
                 : (txts["titulo.vValidateCode"] || "Confirme seu e-mail");
         }
+        /* Do segundo pedido em diante, no mesmo canal, a tela diz "Reenviamos".
+           O e-mail já é sempre reenvio: o primeiro saiu na consulta.        */
+        const smsRepetido = ehSms && cliquesSms > 1;
         const txt = $("validateCodeText");
         if (txt) {
             txt.textContent = ehSms
-                ? (txts["texto.vValidateCode.sms"]
-                   || "Enviamos um código de 6 dígitos por SMS para o celular que você informou.")
+                ? (smsRepetido
+                    ? (txts["texto.vValidateCode.smsReenvio"]
+                       || "Reenviamos o código de 6 dígitos por SMS para o celular que você informou.")
+                    : (txts["texto.vValidateCode.sms"]
+                       || "Enviamos um código de 6 dígitos por SMS para o celular que você informou."))
                 : modo === "email"
                   ? (txts["texto.vValidateCode.reenvio"]
-                     || "Enviamos um novo código de 6 dígitos para o e-mail que você informou.")
+                     || "Reenviamos o código de 6 dígitos para o e-mail que você informou.")
                   : (txts["texto.vValidateCode.1"]
                      || "Enviamos um código de 6 dígitos para o e-mail que você informou.");
         }
@@ -4244,6 +4327,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? mascararTelefone($("phoneInput")?.value || "")
                 : mascararEmail($("emailInput")?.value || "");
         }
+        rotularBotaoSms(smsJaEnviado);
+        avisarCodigo(
+            modo === "sms"   ? (smsRepetido ? "Reenviamos o código por SMS agora."
+                                            : "Código enviado por SMS agora.") :
+            modo === "email" ? "Reenviamos o código para o seu e-mail agora." : ""
+        );
         limparCodigo();
         hideText("validationCodeError");
         setActiveView("vValidateCode");
@@ -4313,7 +4402,27 @@ document.addEventListener("DOMContentLoaded", () => {
     on("btnNovaConsultaSegundaVia", "click", goStart);
     on("btnNovaConsultaIra", "click", goStart);
     on("btnIdentityTryAgain", "click", () => setActiveView("vConfirmName"));
-    on("btnAgreementHumano", "click", () => setActiveView("vReenviado"));
+    /* Reenviar boleto é um caminho próprio: o boleto do acordo já existe, então
+       o backend só busca os dados dele e dispara. Antes este botão apenas
+       trocava de tela e nada era enviado.                                    */
+    on("btnAgreementHumano", "click", async () => {
+        const card = acordoAberto || selectedCard;
+        if (!card) return telaErro();
+        setActiveView("vLoading");
+        try {
+            /* Só o contrato vai daqui: os boletos são resolvidos no backend a
+               partir do contexto lacrado da sessão.                          */
+            const data = await callBackend("reenviar_boleto_acordo", {
+                credor: card.credor || "",
+                idContrato: card.idContrato || ""
+            });
+            if (data?.proximoStep === "boleto_reenviado") return setActiveView("vReenviado");
+            if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
+            telaErro(data?.mensagem);
+        } catch (e) {
+            telaErro();
+        }
+    });
     on("btnVoltarAcordo", "click", () => setActiveView("vActiveAgreement"));
 
     /* ===================== fluxo com o backend ============================ */
@@ -4407,6 +4516,10 @@ document.addEventListener("DOMContentLoaded", () => {
        tela mostra depois. O backend responde igual nos dois casos.           */
     async function pedirNovoCodigo(step, modo) {
         hideText("validationCodeError");
+        avisarCodigo("");
+        /* Trava já no clique: se a chamada falhar, o cliente ainda não
+           consegue disparar de novo em sequência.                            */
+        startResendCodeCooldown();
         setActiveView("vLoading");
         try {
             const data = await callBackend(step, {
@@ -4417,10 +4530,22 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             if (data?.proximoStep === "validar_codigo_contato") return abrirTelaCodigo(modo);
             if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
-            telaErro(data?.mensagem);
+            /* Falhou o envio, mas a sessão está viva: o cliente volta para a
+               tela do código e pode tentar o outro caminho. Antes ele caía na
+               tela de indisponível e perdia a consulta.                     */
+            return falhaNoEnvioDoCodigo(data?.mensagem);
         } catch (e) {
-            telaErro();
+            return falhaNoEnvioDoCodigo();
         }
+    }
+
+    function falhaNoEnvioDoCodigo(mensagem) {
+        const txts = ((window.PORTAL_CONFIG || {}).textos || {});
+        avisarCodigo("");
+        setActiveView("vValidateCode");
+        showText("validationCodeError", mensagem
+            || txts["erro.codigoNaoEnviado"]
+            || "Não conseguimos enviar agora. Tente o outro caminho ou fale com a gente.");
     }
 
     on("btnResendCode", "click", () => {
@@ -4430,6 +4555,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     on("btnSmsCode", "click", () => {
         if ($("btnSmsCode")?.disabled) return;
+        /* Marcado no clique: o rótulo vira "Reenviar por SMS" já agora, e a
+           espera de 60s recomeça mesmo se o envio falhar.                   */
+        cliquesSms += 1;
+        smsJaEnviado = true;
+        rotularBotaoSms(true);
         pedirNovoCodigo("reenviar_codigo_sms", "sms");
     });
 
@@ -4529,8 +4659,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const alvo = $("negotiationSuccessBoleto");
                 if (alvo) {
                     alvo.innerHTML = qtdBoletos > 1
-                        ? `Os <b>${qtdBoletos} boletos</b> serão enviados para o seu e-mail e WhatsApp`
-                        : "O boleto será enviado para o seu e-mail e WhatsApp";
+                        ? `Os <b>${qtdBoletos} boletos</b> serão enviados em instantes`
+                        : "O boleto será enviado em instantes";
                 }
                 const venc = $("negotiationSuccessVenc");
                 if (venc) {
