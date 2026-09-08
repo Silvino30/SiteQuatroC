@@ -465,6 +465,9 @@ window.PORTAL_CONFIG = {
   "integracao": {
     "endpoint": "https://billowing-voice-6efd.asilvino19.workers.dev/"
   },
+  "calendario": {
+    "feriadosExtra": []
+  },
   "textos": {
     "rotulo.cabecaSeguro": "Ambiente seguro",
     "botao.btnVoltar": "Voltar",
@@ -1365,7 +1368,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-04-b";
+    window.PORTAL_BUILD = "2026-09-05-a";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -1999,14 +2002,83 @@ document.addEventListener("DOMContentLoaded", () => {
         return { canNegotiate, canSchedule, canSecondCopy, canHuman: true, chatUrl: card?.chatUrl || pres.chat };
     }
 
-    /* ===================== datas ========================================== */
+    /* ===================== datas ==========================================
+       Vencimento de boleto só faz sentido em dia com compensação bancária no
+       Brasil. Sábado, domingo e feriado bancário estão fora. Feriado de outro
+       país não entra na conta: a liquidação é brasileira.
+
+       Os feriados móveis (Carnaval, Sexta-feira Santa, Corpus Christi) saem da
+       data da Páscoa, calculada pelo algoritmo de Meeus/Butcher. Assim a regra
+       vale para qualquer ano, sem lista para manter.
+
+       Feriado municipal/estadual (aniversário da cidade, por exemplo) não é
+       calculável: entra por configuração, em
+       PORTAL_CONFIG.calendario.feriadosExtra = ["2026-01-25", ...].          */
+    function pascoa(ano) {
+        const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100;
+        const d = Math.floor(b / 4), e = b % 4;
+        const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+        const h = (19 * a + b - d - g + 15) % 30;
+        const i = Math.floor(c / 4), k = c % 4;
+        const l = (32 + 2 * e + 2 * i - h - k) % 7;
+        const m = Math.floor((a + 11 * h + 22 * l) / 451);
+        const mes = Math.floor((h + l - 7 * m + 114) / 31);
+        const dia = ((h + l - 7 * m + 114) % 31) + 1;
+        return new Date(ano, mes - 1, dia);
+    }
+
+    function somaDias(data, n) {
+        const d = new Date(data.getTime());
+        d.setDate(d.getDate() + n);
+        return d;
+    }
+
+    /* Fixos nacionais + os dois dias em que as agências não abrem (24 e 31/12,
+       prática Febraban). 20/11 é feriado nacional desde a Lei 14.759/2023.   */
+    const FERIADOS_FIXOS = [
+        "01-01", "04-21", "05-01", "09-07",
+        "10-12", "11-02", "11-15", "11-20",
+        "12-24", "12-25", "12-31"
+    ];
+
+    const _cacheFeriados = {};
+    function feriadosDoAno(ano) {
+        if (_cacheFeriados[ano]) return _cacheFeriados[ano];
+        const set = new Set(FERIADOS_FIXOS.map(md => ano + "-" + md));
+        const p = pascoa(ano);
+        [
+            somaDias(p, -48),   /* Carnaval — segunda   */
+            somaDias(p, -47),   /* Carnaval — terça     */
+            somaDias(p, -2),    /* Sexta-feira Santa    */
+            somaDias(p, 60)     /* Corpus Christi       */
+        ].forEach(d => set.add(formatDateInput(d)));
+
+        const extra = (((window.PORTAL_CONFIG || {}).calendario || {}).feriadosExtra) || [];
+        (Array.isArray(extra) ? extra : []).forEach(v => {
+            const s = String(v || "").trim();
+            if (/^\d{4}-\d{2}-\d{2}$/.test(s)) set.add(s);
+        });
+
+        _cacheFeriados[ano] = set;
+        return set;
+    }
+
+    function ehDiaUtilBancario(data) {
+        const dia = data.getDay();
+        if (dia === 0 || dia === 6) return false;
+        return !feriadosDoAno(data.getFullYear()).has(formatDateInput(data));
+    }
+
     function getBusinessDates(count = 5) {
         const dates = []; const cursor = new Date();
         cursor.setHours(0, 0, 0, 0); cursor.setDate(cursor.getDate() + 1);
-        while (dates.length < count) {
-            const day = cursor.getDay();
-            if (day !== 0 && day !== 6) dates.push(new Date(cursor));
+        /* teto de segurança: nem a maior sequência de feriados do país chega
+           perto de 60 dias — evita laço infinito se a configuração vier torta */
+        let guarda = 0;
+        while (dates.length < count && guarda < 60) {
+            if (ehDiaUtilBancario(cursor)) dates.push(new Date(cursor));
             cursor.setDate(cursor.getDate() + 1);
+            guarda += 1;
         }
         return dates;
     }
