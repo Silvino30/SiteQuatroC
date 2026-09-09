@@ -3042,7 +3042,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-05-a";
+    window.PORTAL_BUILD = "2026-09-09-a";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -3057,6 +3057,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let resendCodeTimer = null;
     /* Contam CLIQUES, não sucessos: se o cliente já pediu por SMS uma vez, o
        botão vira "Reenviar por SMS" mesmo que aquele envio tenha falhado. */
+    /* datas de vencimento vindas do backend (calendário central) */
+    let datasVencimentoServidor = [];
     let cliquesSms = 0;
     let smsJaEnviado = false;
     let acordoAberto = null;    /* cartão de acordo que está na tela */
@@ -3340,6 +3342,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!res.ok) throw new Error(`Falha backend: ${res.status}`);
         const data = await res.json();
         if (data && data.sessionToken) sessionToken = data.sessionToken;
+        /* O backend manda as datas de vencimento já filtradas pelo calendário
+           central (SharePoint). Quando vêm, mandam nelas: a conta local fica
+           só como reserva, para o caso de o calendário estar indisponível.   */
+        if (data && Array.isArray(data.datasVencimento) && data.datasVencimento.length) {
+            datasVencimentoServidor = data.datasVencimento
+                .map(s => String(s || "").trim())
+                .filter(s => /^\d{4}-\d{2}-\d{2}$/.test(s));
+        }
         return data;
     }
 
@@ -3743,7 +3753,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return !feriadosDoAno(data.getFullYear()).has(formatDateInput(data));
     }
 
+    function isoParaData(iso) {
+        const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!m) return null;
+        return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    }
+
     function getBusinessDates(count = 5) {
+        /* 1º) o que o backend mandou — é a fonte oficial, com os feriados
+           cadastrados no calendário central */
+        if (datasVencimentoServidor.length) {
+            const doServidor = datasVencimentoServidor
+                .map(isoParaData).filter(Boolean).slice(0, count);
+            if (doServidor.length) return doServidor;
+        }
+        /* 2º) reserva: mesma regra calculada aqui */
         const dates = []; const cursor = new Date();
         cursor.setHours(0, 0, 0, 0); cursor.setDate(cursor.getDate() + 1);
         /* teto de segurança: nem a maior sequência de feriados do país chega
