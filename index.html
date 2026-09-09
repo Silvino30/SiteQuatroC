@@ -2740,7 +2740,9 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
       <span id="reenviadoVenc">Vencimento a confirmar</span></li>
   </ul>
   <div class="acoes acoes-centro">
-    <button class="btn btn-2" id="btnVoltarAcordo" type="button"><span data-txt="botao.btnVoltarAcordo">Voltar ao meu acordo</span></button>
+    <!-- Tela final: nao devolve para o acordo (de la o cliente poderia pedir
+         reenvio outra vez). Reinicia, igual as outras telas de conclusao.  -->
+    <button class="btn btn-2" id="btnVoltarAcordo" type="button"><span data-txt="botao.btnNovaConsultaSucesso">Nova consulta</span></button>
   </div>
   <p class="rotulo" data-txt="rotulo.canais.duvida" style="margin-top:30px">Se ainda tiver dúvida</p>
   <div class="canais discretos" data-canais="1"></div>
@@ -3042,7 +3044,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-09-b";
+    window.PORTAL_BUILD = "2026-09-09-c";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -3188,6 +3190,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* ===================== navegação ====================================== */
+    /* Telas sem botao Voltar: o inicio, o carregamento e a lista de
+       pendencias (dela, voltar so poderia desfazer a identificacao).        */
+    const SEM_VOLTAR = ["vStart", "vLoading", "vNext"];
+
+    /* Telas finais: o atendimento terminou. Voltar aqui tem de se comportar
+       exatamente como "Nova consulta" — nunca devolver o cliente a tela de
+       negociacao, de emissao ou a lista de pendencias.                      */
+    const TELAS_FINAIS = [
+        "vNegotiationSuccess", "vSecondCopySuccess", "vNegotiationFailed",
+        "vReenviado", "vIraSuccess"
+    ];
+
     function setProgress(viewId) {
         const el = $(viewId); const pb = $("progressBar");
         if (pb && el) pb.style.width = (el.dataset.prog || 15) + "%";
@@ -3198,8 +3212,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = $(viewId);
         if (target) target.classList.add("active");
 
+        /* Voltar fica escondido em vStart/vLoading (nao ha para onde voltar) e
+           em vNext, a tela "Suas pendencias": ali voltar levaria o cliente de
+           volta a identificacao, que ele ja concluiu.                        */
         const btnVoltar = $("btnVoltar");
-        if (btnVoltar) btnVoltar.style.visibility = (viewId === "vStart" || viewId === "vLoading") ? "hidden" : "visible";
+        if (btnVoltar) btnVoltar.style.visibility = SEM_VOLTAR.indexOf(viewId) !== -1 ? "hidden" : "visible";
 
         const barra = $("barraAcao");
         const comBarra = (target && target.dataset.barra === "1") ? "1" : "0";
@@ -3240,6 +3257,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const TELAS_ANTES_DOS_CARTOES = ["vValidateCode", "vConfirmName", "vIdentityError"];
 
     function voltarContextual() {
+        /* Tela final: mesmo comportamento de "Nova consulta". */
+        if (TELAS_FINAIS.indexOf(currentView) !== -1) return goStart();
         if (TELAS_ANTES_DOS_CARTOES.indexOf(currentView) !== -1) return goStart();
         /* Depois que a lista existe, voltar é sempre voltar para ela — inclusive
            de uma tela de erro, para o cliente não perder a consulta. */
@@ -4541,7 +4560,7 @@ document.addEventListener("DOMContentLoaded", () => {
             telaErro();
         }
     });
-    on("btnVoltarAcordo", "click", () => setActiveView("vActiveAgreement"));
+    on("btnVoltarAcordo", "click", goStart);
 
     /* ===================== fluxo com o backend ============================ */
     on("btnConsultar", "click", async () => {
