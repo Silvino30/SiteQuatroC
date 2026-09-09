@@ -1368,7 +1368,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-05-a";
+    window.PORTAL_BUILD = "2026-09-09-a";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -1383,6 +1383,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let resendCodeTimer = null;
     /* Contam CLIQUES, não sucessos: se o cliente já pediu por SMS uma vez, o
        botão vira "Reenviar por SMS" mesmo que aquele envio tenha falhado. */
+    /* datas de vencimento vindas do backend (calendário central) */
+    let datasVencimentoServidor = [];
     let cliquesSms = 0;
     let smsJaEnviado = false;
     let acordoAberto = null;    /* cartão de acordo que está na tela */
@@ -1666,6 +1668,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!res.ok) throw new Error(`Falha backend: ${res.status}`);
         const data = await res.json();
         if (data && data.sessionToken) sessionToken = data.sessionToken;
+        /* O backend manda as datas de vencimento já filtradas pelo calendário
+           central (SharePoint). Quando vêm, mandam nelas: a conta local fica
+           só como reserva, para o caso de o calendário estar indisponível.   */
+        if (data && Array.isArray(data.datasVencimento) && data.datasVencimento.length) {
+            datasVencimentoServidor = data.datasVencimento
+                .map(s => String(s || "").trim())
+                .filter(s => /^\d{4}-\d{2}-\d{2}$/.test(s));
+        }
         return data;
     }
 
@@ -2069,7 +2079,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return !feriadosDoAno(data.getFullYear()).has(formatDateInput(data));
     }
 
+    function isoParaData(iso) {
+        const m = String(iso || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!m) return null;
+        return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    }
+
     function getBusinessDates(count = 5) {
+        /* 1º) o que o backend mandou — é a fonte oficial, com os feriados
+           cadastrados no calendário central */
+        if (datasVencimentoServidor.length) {
+            const doServidor = datasVencimentoServidor
+                .map(isoParaData).filter(Boolean).slice(0, count);
+            if (doServidor.length) return doServidor;
+        }
+        /* 2º) reserva: mesma regra calculada aqui */
         const dates = []; const cursor = new Date();
         cursor.setHours(0, 0, 0, 0); cursor.setDate(cursor.getDate() + 1);
         /* teto de segurança: nem a maior sequência de feriados do país chega
@@ -3406,7 +3430,7 @@ function render() {
     credores:   ['Credores', 'Um cadastro por credor: como o nome chega do CRM, como ele aparece para o cliente, o logo, a forma de exibição no cartão e os canais daquele projeto. Campo em branco herda o canal geral.'],
     canais:     ['Canais gerais e rodapé', 'Usados quando o credor não tem canal próprio, e nas telas em que ainda não há credor definido (identificação, erro, sem pendência).'],
     textos:     ['Textos e botões', 'Todo texto editável do portal, agrupado pela tela onde aparece. A estrutura das telas é fixa.'],
-    integracao: ['Integração', 'Endereço do backend. Mexa aqui só com o time técnico.']
+    integracao: ['Integração e calendário', 'Endereço do backend e a reserva de feriados. O calendário oficial fica no SharePoint da operação.']
   }[secaoAtual];
 
   box.innerHTML =
@@ -3932,6 +3956,7 @@ function itemTexto(k) {
 /* ------------------------------- integração ------------------------------- */
 function renderIntegracao(alvo) {
   const i = CFG.integracao || (CFG.integracao = {});
+  const cal = CFG.calendario || (CFG.calendario = { feriadosExtra: [] });
   alvo.innerHTML = `
     <div class="bloco">
       <div class="bloco-cabeca"><h3>Backend</h3></div>
@@ -3942,9 +3967,115 @@ function renderIntegracao(alvo) {
           <p class="ajuda">Todas as etapas do portal chamam este endereço. Só altere junto com o time técnico.</p>
         </div>
       </div>
+    </div>
+
+    <div class="bloco">
+      <div class="bloco-cabeca"><h3>Calendário de vencimento</h3></div>
+      <div class="bloco-corpo">
+        <p class="ajuda" style="margin:0 0 14px">
+          O portal só oferece <b>dia útil bancário</b>. Feriado nacional e os móveis
+          (Carnaval, Sexta-feira Santa, Corpus Christi) são calculados automaticamente,
+          para qualquer ano — não precisa cadastrar nada aqui.
+        </p>
+        <p class="ajuda" style="margin:0 0 14px">
+          <b>Feriado municipal e estadual não se cadastra mais aqui.</b> Ele fica na lista
+          <b>Calendario_Operacional</b>, no SharePoint da Operação de Cobrança, e o fluxo
+          consulta essa lista a cada consulta do cliente — um cadastro só, valendo para
+          todos os portais publicados. O campo abaixo é <b>reserva</b>: só entra em jogo
+          se o SharePoint não responder.
+        </p>
+        <div class="campo">
+          <label for="inFeriados">Reserva de feriados — uma data por linha</label>
+          <textarea id="inFeriados" rows="4" placeholder="25/01/2027&#10;09/07/2027">${esc((cal.feriadosExtra || []).map(fmtDataBR).join('\n'))}</textarea>
+          <p class="ajuda">Aceita <code>25/01/2027</code> ou <code>2027-01-25</code>. Datas passadas podem ficar: são ignoradas.</p>
+        </div>
+        <div class="campo">
+          <label>Próximas datas que o cliente vai ver</label>
+          <p class="ajuda" id="previaDatas" style="margin:0"></p>
+        </div>
+      </div>
     </div>`;
 
   $('inEndpoint').addEventListener('input', e => { CFG.integracao.endpoint = e.target.value.trim(); aplicar(); });
+
+  $('inFeriados').addEventListener('input', e => {
+    CFG.calendario = CFG.calendario || {};
+    CFG.calendario.feriadosExtra = String(e.target.value || '')
+      .split(/[\n;,]/).map(normalizarDataISO).filter(Boolean);
+    aplicar();
+    mostrarPreviaDatas();
+  });
+
+  mostrarPreviaDatas();
+}
+
+/* --------- feriados: utilitários do painel --------------------------------
+   A mesma regra que roda no portal, repetida aqui só para a prévia das datas.
+   Fixos + móveis calculados da Páscoa; municipais vêm do campo acima.      */
+function fmtDataBR(iso) {
+  const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : String(iso || '');
+}
+
+function normalizarDataISO(v) {
+  const s = String(v || '').trim();
+  if (!s) return '';
+  let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (m) return `${m[1]}-${String(m[2]).padStart(2, '0')}-${String(m[3]).padStart(2, '0')}`;
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return `${m[3]}-${String(m[2]).padStart(2, '0')}-${String(m[1]).padStart(2, '0')}`;
+  return '';
+}
+
+function mostrarPreviaDatas() {
+  const el = $('previaDatas');
+  if (!el) return;
+
+  const FIXOS = ['01-01', '04-21', '05-01', '09-07', '10-12',
+                 '11-02', '11-15', '11-20', '12-24', '12-25', '12-31'];
+
+  function fmt(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+      '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function pascoa(ano) {
+    const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100;
+    const d = Math.floor(b / 4), e = b % 4;
+    const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4), k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    return new Date(ano, Math.floor((h + l - 7 * m + 114) / 31) - 1,
+      ((h + l - 7 * m + 114) % 31) + 1);
+  }
+  function maisDias(d, n) { const x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+
+  function feriados(ano) {
+    const set = new Set(FIXOS.map(md => ano + '-' + md));
+    const p = pascoa(ano);
+    [maisDias(p, -48), maisDias(p, -47), maisDias(p, -2), maisDias(p, 60)]
+      .forEach(d => set.add(fmt(d)));
+    (((CFG || {}).calendario || {}).feriadosExtra || []).forEach(v => {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(String(v))) set.add(String(v));
+    });
+    return set;
+  }
+
+  const datas = [];
+  const cursor = new Date();
+  cursor.setHours(0, 0, 0, 0);
+  cursor.setDate(cursor.getDate() + 1);
+  let guarda = 0;
+  while (datas.length < 5 && guarda < 60) {
+    const dia = cursor.getDay();
+    if (dia !== 0 && dia !== 6 && !feriados(cursor.getFullYear()).has(fmt(cursor))) {
+      datas.push(fmtDataBR(fmt(cursor)));
+    }
+    cursor.setDate(cursor.getDate() + 1);
+    guarda += 1;
+  }
+  el.textContent = datas.join(' · ');
 }
 
 /* ===========================================================================
