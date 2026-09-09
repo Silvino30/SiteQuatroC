@@ -3042,7 +3042,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-09-a";
+    window.PORTAL_BUILD = "2026-09-09-b";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -3059,6 +3059,7 @@ document.addEventListener("DOMContentLoaded", () => {
        botão vira "Reenviar por SMS" mesmo que aquele envio tenha falhado. */
     /* datas de vencimento vindas do backend (calendário central) */
     let datasVencimentoServidor = [];
+    let datasAgendamentoServidor = [];
     let cliquesSms = 0;
     let smsJaEnviado = false;
     let acordoAberto = null;    /* cartão de acordo que está na tela */
@@ -3345,10 +3346,14 @@ document.addEventListener("DOMContentLoaded", () => {
         /* O backend manda as datas de vencimento já filtradas pelo calendário
            central (SharePoint). Quando vêm, mandam nelas: a conta local fica
            só como reserva, para o caso de o calendário estar indisponível.   */
+        const somenteISO = (lista) => lista
+            .map(s => String(s || "").trim())
+            .filter(s => /^\d{4}-\d{2}-\d{2}$/.test(s));
         if (data && Array.isArray(data.datasVencimento) && data.datasVencimento.length) {
-            datasVencimentoServidor = data.datasVencimento
-                .map(s => String(s || "").trim())
-                .filter(s => /^\d{4}-\d{2}-\d{2}$/.test(s));
+            datasVencimentoServidor = somenteISO(data.datasVencimento);
+        }
+        if (data && Array.isArray(data.datasAgendamento) && data.datasAgendamento.length) {
+            datasAgendamentoServidor = somenteISO(data.datasAgendamento);
         }
         return data;
     }
@@ -4251,6 +4256,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ===================== agendamento IRA ================================ */
     function getIraBusinessDatesWithinDays(days = 15) {
+        /* mesma fonte da negociação: o calendário central manda. A conta local
+           fica de reserva, para o caso de o backend não devolver a lista.     */
+        if (datasAgendamentoServidor.length) {
+            const doServidor = datasAgendamentoServidor.map(isoParaData).filter(Boolean);
+            if (doServidor.length) return doServidor;
+        }
         const dates = []; const today = new Date(); today.setHours(0, 0, 0, 0);
         const cursor = new Date(today); cursor.setDate(cursor.getDate() + 1);
         const limit = new Date(today); limit.setDate(limit.getDate() + days); limit.setHours(0, 0, 0, 0);
