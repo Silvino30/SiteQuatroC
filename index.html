@@ -2735,7 +2735,7 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <p class="sub" data-txt="texto.vReenviado.1" id="reenviadoSub">Boleto sem alteração de valor ou de vencimento.</p>
   <ul class="fatos">
     <li data-tom="ok"><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24" width="17"><path d="M20 6L9 17l-5-5"></path></svg></span>
-      <span>O boleto será enviado em instantes</span></li>
+      <span id="reenviadoBoletoLinha">O boleto será enviado em instantes</span></li>
     <li><span class="fatos-ico"><svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" viewbox="0 0 24 24" width="17"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg></span>
       <span id="reenviadoVenc">Vencimento a confirmar</span></li>
   </ul>
@@ -3044,7 +3044,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-09-c";
+    window.PORTAL_BUILD = "2026-09-09-d";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -3066,6 +3066,29 @@ document.addEventListener("DOMContentLoaded", () => {
     let smsJaEnviado = false;
     let acordoAberto = null;    /* cartão de acordo que está na tela */
     let modoPreview = false;
+    let reenvioCredor = "";     /* credor do acordo aberto, para a tela de reenvio */
+    let rVencBase = "";         /* linha de vencimento montada na tela do acordo */
+
+    /* A tela de reenvio fala no singular ou no plural conforme quantos boletos
+       o backend reenviou. Num acordo parcelado é um por parcela em aberto.   */
+    function ajustarTelaReenvio(qtd) {
+        const sub = $("reenviadoSub");
+        const linha = $("reenviadoBoletoLinha");
+        const venc = $("reenviadoVenc");
+        const daCarteira = reenvioCredor ? (" da " + reenvioCredor) : "";
+        if (qtd > 1) {
+            if (sub) sub.textContent = "Boletos" + daCarteira +
+                ", sem alteração de valor ou de vencimento.";
+            if (linha) linha.innerHTML = "Os <b>" + qtd +
+                " boletos</b> do acordo serão enviados em instantes";
+            if (venc && rVencBase) venc.innerHTML = rVencBase.replace("Vencimento em", "Primeiro vencimento em");
+        } else {
+            if (sub) sub.textContent = "Boleto" + daCarteira +
+                ", sem alteração de valor ou de vencimento.";
+            if (linha) linha.textContent = "O boleto será enviado em instantes";
+            if (venc && rVencBase) venc.innerHTML = rVencBase;
+        }
+    }
     const RESEND_CODE_WAIT_SECONDS = 60;
 
     /* ===================== utilitários ===================================== */
@@ -4009,12 +4032,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         /* alimenta a tela de confirmação do reenvio */
+        reenvioCredor = credor;
         const rSub = $("reenviadoSub");
         if (rSub) rSub.textContent = "Boleto da " + credor + ", sem alteração de valor ou de vencimento.";
         const rVenc = $("reenviadoVenc");
         if (rVenc) {
             rVenc.innerHTML = "Vencimento em <b>" + (proxima.vencimentoFormatado || proxima.vencimento || "--/--/----") +
                 "</b> — <b>" + (proxima.valorFormatado || formatBRL(proxima.valor || origem.valorTotal || 0)) + "</b>";
+            rVencBase = rVenc.innerHTML;
         }
 
         acordoAberto = origem;
@@ -4553,7 +4578,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 credor: card.credor || "",
                 idContrato: card.idContrato || ""
             });
-            if (data?.proximoStep === "boleto_reenviado") return setActiveView("vReenviado");
+            if (data?.proximoStep === "boleto_reenviado") {
+                /* Um acordo parcelado tem um boleto por parcela em aberto, e o
+                   backend reenvia todos. Sem isto a tela dizia "o boleto" no
+                   singular enquanto seis eram reenviados.                    */
+                ajustarTelaReenvio(Number(data.qtdBoletos || 1) || 1);
+                return setActiveView("vReenviado");
+            }
             if (data?.proximoStep === "sessao_expirada") return telaSessaoExpirada();
             telaErro(data?.mensagem);
         } catch (e) {
