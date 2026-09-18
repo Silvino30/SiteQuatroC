@@ -2736,11 +2736,11 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     <button class="btn btn-1" id="btnAgreementHumano" type="button"><span data-txt="botao.btnReenviarBoleto">Reenviar boleto</span></button>
   </div>
 
-  <div class="sanfona" data-aberta="0">
-    <button class="sanfona-cabeca" data-sanfona="1" type="button"><span data-txt="rotulo.detalhes">Detalhes da dívida</span>
-      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg></button>
-    <div class="sanfona-corpo"><dl class="dados" id="acordoDetalhes"></dl></div>
-  </div>
+  <!-- 18/09: a sanfona "Detalhes da dívida" saiu DESTA tela.
+       Ela repetia, uma a uma, as mesmas parcelas já listadas acima, e o campo
+       "Acordo" na verdade mostrava o NÚMERO DO CONTRATO — dois enganos numa
+       tela só. Aqui o acordo já está todo detalhado; a sanfona continua nas
+       outras telas, onde ainda faz sentido. -->
 </section>
 
 <!-- ==================== BOLETO REENVIADO (acordo vigente) ================== -->
@@ -3058,7 +3058,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-17-a";
+    window.PORTAL_BUILD = "2026-09-18-a";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -3338,7 +3338,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (tela === "vAtendimento" && !$("atendimentoDetalhes").children.length) {
             abrirAtendimento(cardsDemo()[0], "especialista");
         }
-        if (tela === "vActiveAgreement" && !$("acordoDetalhes").children.length) {
+        /* 18/09: era $("acordoDetalhes"), que deixou de existir nesta tela. */
+        if (tela === "vActiveAgreement" && ($("activeAgreementSub")?.textContent || "").trim() === "-") {
             abrirAcordo(normalizeCards(cardsDemo())[0]);
         }
         setActiveView(tela);
@@ -4090,7 +4091,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         acordoAberto = origem;
-        montarDetalhes(origem, "acordoDetalhes", "acordo");
+        /* Sem sanfona nesta tela desde 18/09 — as parcelas já estão na lista. */
         lastHumanChat = origem.chatUrl || lastHumanChat;
         window.montarCanais(origem.credor || "");
         setActiveView("vActiveAgreement");
