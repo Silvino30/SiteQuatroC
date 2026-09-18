@@ -643,6 +643,19 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   background-repeat:no-repeat;background-position:right 13px center;padding-right:38px;
 }
 .caixa.com-ico input{padding-left:41px}
+/* Alternador de teclado do campo de documento (17/09).
+   O campo abre com teclado numérico, que é o certo para o CPF. O CNPJ
+   alfanumérico precisa de letras, e no celular o teclado numérico não tem
+   letra nenhuma — daí o botão. */
+.doc-teclado{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  min-width:38px;height:28px;padding:0 9px;display:inline-flex;align-items:center;
+  justify-content:center;border:1px solid var(--linha-2);border-radius:9px;
+  background:#fff;color:var(--tinta-3);font-size:11px;font-weight:700;
+  letter-spacing:.04em;cursor:pointer;transition:color .16s,border-color .16s,background .16s}
+.doc-teclado:hover{color:var(--marca);border-color:var(--marca)}
+.doc-teclado[aria-pressed="true"]{color:var(--marca);border-color:var(--marca);background:#FFF7F8}
+.caixa.com-doc input{padding-right:56px}
+
 .campo input::placeholder{color:#B6B6C3;font-weight:400}
 .campo input:focus,.campo select:focus{outline:none;border-color:var(--marca);box-shadow:0 0 0 3px rgba(var(--marca-rgb),.10)}
 .caixa:focus-within > svg{color:var(--marca)}
@@ -847,9 +860,10 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
   <div class="campo">
     <label for="docInput"><span data-txt="rotulo.campoDoc">CPF ou CNPJ</span>
       <span class="tipo-doc opacity-0" id="docBadge">CPF</span></label>
-    <div class="caixa com-ico">
+    <div class="caixa com-ico com-doc">
       <svg fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="17"><rect height="15" rx="2" width="18" x="3" y="5"></rect><circle cx="9" cy="11" r="2.2"></circle><path d="M5.5 17c.7-1.6 2-2.3 3.5-2.3s2.8.7 3.5 2.3M15 10h4M15 13.5h4"></path></svg>
-      <input autocomplete="off" id="docInput" inputmode="numeric" placeholder="000.000.000-00" type="text"/>
+      <input aria-describedby="docTeclado" autocapitalize="characters" autocomplete="off" autocorrect="off" id="docInput" inputmode="numeric" placeholder="000.000.000-00" spellcheck="false" type="text"/>
+      <button aria-label="Alternar para teclado com letras (CNPJ alfanumérico)" aria-pressed="false" class="doc-teclado" id="docTeclado" title="CNPJ com letras" type="button">abc</button>
     </div>
   </div>
 
@@ -1048,11 +1062,11 @@ h1,.titulo{margin:0 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.03em;f
     <button class="btn btn-1" id="btnAgreementHumano" type="button"><span data-txt="botao.btnReenviarBoleto">Reenviar boleto</span></button>
   </div>
 
-  <div class="sanfona" data-aberta="0">
-    <button class="sanfona-cabeca" data-sanfona="1" type="button"><span data-txt="rotulo.detalhes">Detalhes da dívida</span>
-      <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg></button>
-    <div class="sanfona-corpo"><dl class="dados" id="acordoDetalhes"></dl></div>
-  </div>
+  <!-- 18/09: a sanfona "Detalhes da dívida" saiu DESTA tela.
+       Ela repetia, uma a uma, as mesmas parcelas já listadas acima, e o campo
+       "Acordo" na verdade mostrava o NÚMERO DO CONTRATO — dois enganos numa
+       tela só. Aqui o acordo já está todo detalhado; a sanfona continua nas
+       outras telas, onde ainda faz sentido. -->
 </section>
 
 <!-- ==================== BOLETO REENVIADO (acordo vigente) ================== -->
@@ -1368,7 +1382,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Etiqueta da versão. Serve para saber, em 3 segundos, se a página aberta
        no navegador é a última publicada: F12 → Console mostra a linha abaixo.  */
-    window.PORTAL_BUILD = "2026-09-09-b";
+    window.PORTAL_BUILD = "2026-09-18-a";
     try { console.info("Portal Quatro C · build " + window.PORTAL_BUILD); } catch (e) {}
 
     let currentView = "vStart";
@@ -1390,7 +1404,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let smsJaEnviado = false;
     let acordoAberto = null;    /* cartão de acordo que está na tela */
     let modoPreview = false;
-    const RESEND_CODE_WAIT_SECONDS = 60;
+    const RESEND_CODE_WAIT_SECONDS = 120;
 
     /* ===================== utilitários ===================================== */
     function onlyDigits(str) { return String(str || "").replace(/\D/g, ""); }
@@ -1414,14 +1428,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
     }
     function maskCPF(digits) {
-        const d = digits.slice(0, 11); let out = d;
+        const d = onlyDigits(digits).slice(0, 11); let out = d;
         if (d.length > 3) out = d.slice(0, 3) + "." + d.slice(3);
         if (d.length > 6) out = out.slice(0, 7) + "." + out.slice(7);
         if (d.length > 9) out = out.slice(0, 11) + "-" + out.slice(11);
         return out;
     }
+    /* Serve ao CNPJ numérico e ao alfanumérico: só posiciona separadores. */
     function maskCNPJ(digits) {
-        const d = digits.slice(0, 14); let out = d;
+        const d = String(digits || "").slice(0, 14); let out = d;
         if (d.length > 2) out = d.slice(0, 2) + "." + d.slice(2);
         if (d.length > 5) out = out.slice(0, 6) + "." + out.slice(6);
         if (d.length > 8) out = out.slice(0, 10) + "/" + out.slice(10);
@@ -1432,7 +1447,30 @@ document.addEventListener("DOMContentLoaded", () => {
         const d = onlyDigits(value).slice(0, 8);
         return d.length <= 5 ? d : `${d.slice(0, 5)}-${d.slice(5)}`;
     }
-    function detectTypeFromDigits(d) { return d.length >= 12 ? "CNPJ" : "CPF"; }
+
+    /* ===================== documento: CPF e CNPJ =========================
+       O CNPJ alfanumérico tem 14 posições: as 12 primeiras aceitam letra ou
+       dígito, as 2 últimas são sempre dígitos. Por isso o documento deixou de
+       ser tratado como "só números" e passou a ser tratado como caracteres.  */
+    function soDocChars(str) {
+        return String(str || "").toUpperCase().replace(/[^0-9A-Z]/g, "");
+    }
+    function temLetra(s) { return /[A-Z]/.test(String(s || "")); }
+
+    /* CPF: 11 dígitos, sem letra. CNPJ: 14 posições, as duas últimas numéricas. */
+    function docCompleto(chars) {
+        if (!chars) return "";
+        if (!temLetra(chars) && chars.length === 11) return "CPF";
+        if (chars.length === 14 && /^[0-9A-Z]{12}[0-9]{2}$/.test(chars)) return "CNPJ";
+        return "";
+    }
+
+    /* Enquanto o cliente digita: a letra já entrega que é CNPJ; só com dígitos,
+       vira CNPJ ao passar de 11. Nunca trava — quem passa de 11 continua. */
+    function detectTypeFromDoc(chars) {
+        if (temLetra(chars)) return "CNPJ";
+        return chars.length > 11 ? "CNPJ" : "CPF";
+    }
 
     function normalizarNomeInvisivel(str) {
         const conectores = ["de", "da", "do", "dos", "das", "e", "em"];
@@ -1584,7 +1622,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (tela === "vAtendimento" && !$("atendimentoDetalhes").children.length) {
             abrirAtendimento(cardsDemo()[0], "especialista");
         }
-        if (tela === "vActiveAgreement" && !$("acordoDetalhes").children.length) {
+        /* 18/09: era $("acordoDetalhes"), que deixou de existir nesta tela. */
+        if (tela === "vActiveAgreement" && ($("activeAgreementSub")?.textContent || "").trim() === "-") {
             abrirAcordo(normalizeCards(cardsDemo())[0]);
         }
         setActiveView(tela);
@@ -1613,18 +1652,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ===================== documento e formulário ========================= */
+    /* CORRIGIDO (17/09) — a trava dos 11 dígitos estava aqui.
+       Com docType "CPF" o campo recebia maxLength = 14, que é o tamanho do CPF
+       JÁ MASCARADO ("000.000.000-00"). Só que o tipo só virava CNPJ a partir do
+       12º dígito — e esse 12º dígito nunca chegava a ser digitado, porque o
+       campo estava cheio. Resultado: parava em 11 e não deixava nem colar o
+       CNPJ inteiro. Agora o limite é sempre o do CNPJ; quem corta o excesso é
+       a máscara, que conhece o tipo certo.                                   */
     function applyMask() {
         const input = $("docInput"); if (!input) return;
-        const digits = onlyDigits(input.value);
-        if (docType === "CPF") { input.value = maskCPF(digits); input.maxLength = 14; }
-        else { input.value = maskCNPJ(digits); input.maxLength = 18; }
+        input.maxLength = 18;                     /* 00.000.000/0000-00 */
+        const chars = soDocChars(input.value);
+        docType = detectTypeFromDoc(chars);
+        input.value = docType === "CPF" ? maskCPF(chars) : maskCNPJ(chars);
+        input.placeholder = docType === "CPF" ? "000.000.000-00" : "00.000.000/0000-00";
     }
     function setDocType(type) { docType = type; applyMask(); }
 
     function engineValidacaoFormulario() {
-        const docDigitos = onlyDigits($("docInput")?.value || "");
+        const docChars = soDocChars($("docInput")?.value || "");
         const phoneDigitos = onlyDigits($("phoneInput")?.value || "");
-        const docValido = (docDigitos.length === 11 || docDigitos.length === 14);
+        const docValido = Boolean(docCompleto(docChars));
         const nameValido = ($("nameInput")?.value.trim().length || 0) >= 3;
         const phoneValido = (phoneDigitos.length === 10 || phoneDigitos.length === 11);
         const emailValido = isValidEmail($("emailInput")?.value.trim());
@@ -2325,7 +2373,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         acordoAberto = origem;
-        montarDetalhes(origem, "acordoDetalhes", "acordo");
+        /* Sem sanfona nesta tela desde 18/09 — as parcelas já estão na lista. */
         lastHumanChat = origem.chatUrl || lastHumanChat;
         window.montarCanais(origem.credor || "");
         setActiveView("vActiveAgreement");
@@ -2698,7 +2746,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    /* O botão de reenvio aparece sempre, mas só fica clicável depois de 60s.
+    /* O botão de reenvio aparece sempre, mas só fica clicável depois de
+       RESEND_CODE_WAIT_SECONDS (120s desde 16/09).
        Sem contagem visível — o cliente não precisa vigiar um cronômetro.     */
     function startResendCodeCooldown(seconds = RESEND_CODE_WAIT_SECONDS) {
         /* A espera vale para os dois caminhos: quem acabou de receber por
@@ -2710,7 +2759,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resendCodeTimer = setTimeout(() => {
             botoes.forEach(b => { b.disabled = false; });
             resendCodeTimer = null;
-        }, (Number(seconds) || 60) * 1000);
+        }, (Number(seconds) || RESEND_CODE_WAIT_SECONDS) * 1000);
     }
 
     /* Confirmação curta e explícita de que o novo código saiu. Antes a
@@ -2789,19 +2838,44 @@ document.addEventListener("DOMContentLoaded", () => {
         const el = $(id); if (el) el.addEventListener(eventName, handler);
     }
 
+    /* A etiqueta ao lado do rótulo diz, enquanto se digita, o que o campo já é:
+       a letra entrega CNPJ na hora; só com números, "CPF" aparece aos 11 e vira
+       "CNPJ" quando o cliente continua. */
+    function atualizarBadgeDoc(chars) {
+        const badge = $("docBadge"); if (!badge) return;
+        let rotulo = "";
+        if (temLetra(chars)) rotulo = "CNPJ";
+        else if (chars.length === 11) rotulo = "CPF";
+        else if (chars.length > 11) rotulo = "CNPJ";
+        if (rotulo) { badge.textContent = rotulo; badge.classList.remove("opacity-0"); }
+        else badge.classList.add("opacity-0");
+    }
+
     on("docInput", "input", (e) => {
-        const digits = onlyDigits(e.target.value);
-        const inferred = detectTypeFromDigits(digits);
-        if (inferred !== docType) setDocType(inferred);
+        const noFim = e.target.selectionStart === e.target.value.length;
         applyMask();
-        const badge = $("docBadge");
-        if (badge) {
-            if (digits.length === 11) { badge.textContent = "CPF"; badge.classList.remove("opacity-0"); }
-            else if (digits.length === 14) { badge.textContent = "CNPJ"; badge.classList.remove("opacity-0"); }
-            else badge.classList.add("opacity-0");
+        if (noFim) {
+            const fim = e.target.value.length;
+            try { e.target.setSelectionRange(fim, fim); } catch (err) {}
         }
+        atualizarBadgeDoc(soDocChars(e.target.value));
         hideText("startError");
         engineValidacaoFormulario();
+    });
+
+    /* O teclado do celular abre numérico, que é o certo para o CPF — a maioria.
+       Quem tem CNPJ com letra toca no "abc" e o teclado passa a ter letras.   */
+    on("docTeclado", "click", () => {
+        const input = $("docInput"); const btn = $("docTeclado");
+        if (!input || !btn) return;
+        const letras = btn.getAttribute("aria-pressed") === "true";
+        btn.setAttribute("aria-pressed", letras ? "false" : "true");
+        btn.textContent = letras ? "abc" : "123";
+        btn.title = letras ? "CNPJ com letras" : "Voltar ao teclado numérico";
+        input.setAttribute("inputmode", letras ? "numeric" : "text");
+        input.focus();
+        const fim = input.value.length;
+        try { input.setSelectionRange(fim, fim); } catch (err) {}
     });
 
     on("nameInput", "input", () => { hideText("startError"); engineValidacaoFormulario(); });
@@ -2874,7 +2948,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!engineValidacaoFormulario()) return;
         hideText("startError");
 
-        const documento = onlyDigits($("docInput")?.value || "");
+        /* 17/09: era onlyDigits, que apagava as letras de um CNPJ alfanumérico. */
+        const documento = soDocChars($("docInput")?.value || "");
         const nome = $("nameInput")?.value.trim() || "";
         const telefone = onlyDigits($("phoneInput")?.value || "");
         const email = $("emailInput")?.value.trim() || "";
